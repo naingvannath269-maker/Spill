@@ -877,10 +877,17 @@ body.whisper-body {
 }
 
 .avatar-placeholder {
+  display: flex;
   width: 40px;
   height: 40px;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
-  background: #e4e6eb;
+  background-color: var(--avatar-background, #e4e6eb);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
   margin-right: 12px;
   flex-shrink: 0;
 }
@@ -941,10 +948,18 @@ body.whisper-body {
   gap: 8px;
 }
 
+.bubble-actions form {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .comment-button {
   display: inline-flex;
-  height: 26px;
+  min-height: 36px;
   align-items: center;
+  justify-content: center;
   padding: 0 10px;
   border: 1px solid rgba(50, 68, 83, 0.1);
   border-radius: 6px;
@@ -953,11 +968,27 @@ body.whisper-body {
   font: inherit;
   font-size: 0.72rem;
   font-weight: 700;
+  text-align: center;
   cursor: pointer;
 }
 
 .comment-button:hover {
   background: #ffffff;
+}
+
+@media (max-width: 650px) {
+  .bubble-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .bubble-actions form {
+    width: 100%;
+  }
+
+  .comment-button {
+    width: 100%;
+  }
 }
 
 html[data-theme="dark"] {
@@ -1040,10 +1071,6 @@ html[data-theme="dark"] .auth-layout--login .auth-field .form-control {
 html[data-theme="dark"] .submit-panel textarea::placeholder,
 html[data-theme="dark"] .fake-input {
   color: #a7b1bb;
-}
-
-html[data-theme="dark"] .avatar-placeholder {
-  background: #434c55;
 }
 
 html[data-theme="dark"] .fake-input,

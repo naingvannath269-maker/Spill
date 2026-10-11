@@ -1,9 +1,65 @@
 from django.test import TestCase
+from django.test import override_settings
 from django.db import IntegrityError, transaction
 from django.urls import reverse
 
 from accounts.models import CustomUser
 from .models import Confession, Reaction
+
+
+class ConfessionSubmissionTests(TestCase):
+  def setUp(self):
+    self.user = CustomUser.objects.create_user(
+        email='submitter@example.com',
+        password='test-password',
+    )
+    self.client.force_login(self.user)
+
+  @override_settings(INAPPROPRIATE_WORDS=('badword',))
+  def test_confession_with_blocked_word_is_rejected_without_saving(self):
+    response = self.client.post(
+        reverse('wall'),
+        {'content': 'This is a BADWORD confession.'},
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(Confession.objects.count(), 0)
+    self.assertContains(
+        response,
+        'Please remove inappropriate language before posting.',
+    )
+    self.assertContains(response, 'This is a BADWORD confession.')
+    self.assertContains(
+        response,
+        'id="expanded-composer"\n      style="display: block"',
+    )
+    self.assertContains(
+        response,
+        'id="simple-trigger"\n      class="simple-composer"\n      style="display: none"',
+    )
+
+  @override_settings(INAPPROPRIATE_WORDS=('badword',))
+  def test_blocked_word_inside_another_word_is_allowed(self):
+    response = self.client.post(
+        reverse('wall'),
+        {'content': 'This story is about a badworded name.'},
+    )
+
+    self.assertRedirects(response, reverse('wall'))
+    self.assertEqual(
+        Confession.objects.get().content,
+        'This story is about a badworded name.',
+    )
+
+  @override_settings(INAPPROPRIATE_WORDS=('badword',))
+  def test_punctuation_cannot_be_used_to_bypass_word_filter(self):
+    response = self.client.post(
+        reverse('wall'),
+        {'content': 'This is a b.a.d.w.o.r.d confession.'},
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(Confession.objects.count(), 0)
 
 
 class ReactionTests(TestCase):
@@ -103,6 +159,11 @@ class ReactionTests(TestCase):
 
     response = self.client.get(reverse('wall'))
 
+    self.assertContains(
+        response,
+        f'data-username="{self.user.username}"',
+    )
+    self.assertContains(response, f'>{self.user.username[0].upper()}</div>')
     self.assertContains(response, 'class="reaction-button like-button selected"')
     self.assertContains(
         response,
