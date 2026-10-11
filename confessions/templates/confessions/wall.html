@@ -1,8 +1,6 @@
-{% extends 'confessions/base.html' %} {% load static %}
-{% block page_css %}
+{% extends 'confessions/base.html' %} {% load static %} {% block page_css %}
 <link rel="stylesheet" href="{% static 'confessions/CSS/unlike.css' %}" />
-{% endblock %}
-{% block content %}
+{% endblock %} {% block content %}
 <div
   class="whisper-page{% if user.is_authenticated %} whisper-page--composer{% endif %}"
 >
@@ -67,7 +65,9 @@
           >
             <span class="like-button-icon" aria-hidden="true">👍</span>
             <span>Like</span>
-            <span class="reaction-count like-count">{{ confession.like_count }}</span>
+            <span class="reaction-count like-count"
+              >{{ confession.like_count }}</span
+            >
           </button>
           <button
             type="submit"
@@ -79,7 +79,9 @@
           >
             <span class="unlike-button-icon" aria-hidden="true">👎</span>
             <span>Unlike</span>
-            <span class="reaction-count unlike-count">{{ confession.unlike_count }}</span>
+            <span class="reaction-count unlike-count"
+              >{{ confession.unlike_count }}</span
+            >
           </button>
           <span class="like-status visually-hidden" role="status"></span>
         </form>
@@ -99,18 +101,47 @@
   {% if user.is_authenticated %}
   <section class="submit-panel" id="submit-whisper">
     <!-- NEW: The Facebook-style collapsed view -->
-    <div id="simple-trigger" class="simple-composer">
-      <div class="avatar-placeholder"></div>
+    <div
+      id="simple-trigger"
+      class="simple-composer"
+      {%
+      if
+      form.content.errors
+      %}style="display: none"
+      {%
+      endif
+      %}
+    >
+      <div
+        class="avatar-placeholder"
+        data-username="{{ user.username }}"
+        role="img"
+        aria-label="Profile avatar for {{ user.username }}"
+      >
+        {{ user.username|first|upper }}
+      </div>
       <div class="fake-input">
         What's on your mind, {{ user.username|default:'Sopheareat' }}?
       </div>
     </div>
 
     <!-- NEW: Wrapper for your original content (starts hidden) -->
-    <div id="expanded-composer" style="display: none">
+    <div
+      id="expanded-composer"
+      {%
+      if
+      form.content.errors
+      %}style="display: block"
+      {%
+      else
+      %}style="display: none"
+      {%
+      endif
+      %}
+    >
       <div>
         <p class="wall-kicker">Your turn</p>
-        <h2>Submit your whisper</h2>
+        <h2>Post your whisper</h2>
       </div>
       <form method="POST" action="">
         {% csrf_token %}
@@ -123,8 +154,27 @@
           rows="3"
           maxlength="500"
           placeholder="Type your confession here... (keep it kind)"
+          aria-invalid="{% if form.content.errors %}true{% else %}false{% endif %}"
+          {%
+          if
+          form.content.errors
+          %}aria-describedby="confession-content-error"
+          {%
+          endif
+          %}
           required
-        ></textarea>
+        >
+{{ form.content.value|default_if_none:'' }}</textarea
+        >
+        {% if form.content.errors %}
+        <div
+          id="confession-content-error"
+          class="text-danger small"
+          role="alert"
+        >
+          {{ form.content.errors }}
+        </div>
+        {% endif %}
         <div class="submit-actions">
           <span>Up to 500 characters</span>
           <button type="submit" class="submit-button">
@@ -134,7 +184,7 @@
       </form>
     </div>
   </section>
-  <script src="{% static 'confessions/JS/composer.js' %}" defer></script>
+  <script src="{% static 'confessions/JS/composer.js' %}?v=2" defer></script>
   {% endif %}
 </div>
 {% endblock %}
