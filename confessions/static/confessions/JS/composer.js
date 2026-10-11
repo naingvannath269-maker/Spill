@@ -1,4 +1,29 @@
 document.addEventListener('DOMContentLoaded', function () {
+  const avatarColors = [
+    '#2563eb',
+    '#7c3aed',
+    '#c026d3',
+    '#db2777',
+    '#dc2626',
+    '#ea580c',
+    '#059669',
+    '#0d9488',
+  ];
+
+  document.querySelectorAll('.avatar-placeholder[data-username]').forEach(
+      function (avatar) {
+        const username = avatar.dataset.username.toLowerCase();
+        const colorIndex = Array.from(username).reduce(
+            (hash, character) => (hash * 31 + character.codePointAt(0)) >>> 0,
+            0,
+        ) % avatarColors.length;
+        avatar.style.setProperty(
+            '--avatar-background',
+            avatarColors[colorIndex],
+        );
+      },
+  );
+
   const simpleTrigger = document.getElementById('simple-trigger');
   const expandedComposer = document.getElementById('expanded-composer');
   const textarea = document.getElementById('confession-content');
