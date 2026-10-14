@@ -45,9 +45,9 @@
       <p class="confession-content">{{ confession.content }}</p>
       {% endif %}
       <header class="bubble-header">
-        <span class="confession-author"
+        <!-- <span class="confession-author"
           >@{{ confession.author.username|default:'anonymous' }}</span
-        >
+        > -->
         <time datetime="{{ confession.created_at|date:'c' }}"
           >{{ confession.created_at|date:"M j, Y, g:i A" }}</time
         >

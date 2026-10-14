@@ -77,6 +77,16 @@ def wall_view(request):
 
 
 @login_required
+def upvote_view(request, confession_id):
+    # If accessed via GET (e.g. after login redirect), send user back to the wall
+    if request.method != 'POST':
+        return redirect('wall')  # Replace 'wall' with your actual home/wall URL pattern name
+
+    # Handle actual POST upvote logic here
+    confession = get_object_or_404(Confession, id=confession_id)
+    # ... your upvote logic ...
+    
+    return redirect('wall')
 @require_POST
 @transaction.atomic
 def upvote_confession(request, pk):
