@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.test import override_settings
 from django.db import IntegrityError, transaction
 from django.urls import reverse
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
 
 from accounts.models import CustomUser
 from .models import Confession, Reaction
@@ -38,7 +40,7 @@ class ConfessionSubmissionTests(TestCase):
         {'content': 'This story is about a badworded name.'},
     )
 
-    self.assertRedirects(response, reverse('wall'))
+    self.assertRedirects(response, reverse('confession'))
     self.assertEqual(
         Confession.objects.get().content,
         'This story is about a badworded name.',
@@ -58,12 +60,43 @@ class ConfessionSubmissionTests(TestCase):
     response = self.client.post(
         reverse('confession'),
         {'content': 'I am glad I shared this.'},
+        follow=True,
     )
 
-    self.assertRedirects(response, reverse('wall'))
+    self.assertRedirects(response, reverse('confession'))
+    self.assertContains(response, 'Your confession was shared successfully.')
     confession = Confession.objects.get()
     self.assertEqual(confession.author, self.user)
     self.assertEqual(confession.content, 'I am glad I shared this.')
+    self.assertContains(response, confession.content)
+
+  @override_settings(INAPPROPRIATE_WORDS=('badword',))
+  def test_invalid_confession_reopens_modal_and_preserves_submitted_text(self):
+    response = self.client.post(
+        reverse('confession'),
+        {'content': 'This is a BADWORD confession.'},
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(response, 'data-auto-open="true"')
+    self.assertContains(response, 'Please remove inappropriate language')
+    self.assertContains(response, 'This is a BADWORD confession.')
+    self.assertEqual(response.content.decode().count('id="confession-content"'), 1)
+
+  def test_confession_page_uses_one_modal_form_for_both_entry_points(self):
+    Confession.objects.create(
+        author=self.user,
+        content='Keep the empty-state link out of this modal test.',
+    )
+    response = self.client.get(reverse('confession'))
+
+    self.assertContains(response, 'class="confession-modal"')
+    self.assertContains(response, 'data-open-confession', count=2)
+    self.assertContains(response, 'Write a confession')
+    self.assertContains(response, 'class="floating-confess"')
+    self.assertEqual(response.content.decode().count('id="confession-content"'), 1)
+    self.assertContains(response, 'confessions/JS/confession-modal.js')
+    self.assertContains(response, 'confessions/CSS/confession-modal.css')
 
   def test_legacy_wall_submission_still_uses_existing_submission_flow(self):
     response = self.client.post(
@@ -71,18 +104,27 @@ class ConfessionSubmissionTests(TestCase):
         {'content': 'A whisper from the old form route.'},
     )
 
-    self.assertRedirects(response, reverse('wall'))
+    self.assertRedirects(response, reverse('confession'))
     self.assertEqual(Confession.objects.get().author, self.user)
 
-  def test_confession_page_requires_login(self):
+  def test_confession_page_is_public_but_only_authenticated_users_get_form(self):
+    Confession.objects.create(
+        author=self.user,
+        content='A public whisper.',
+    )
     self.client.logout()
 
     response = self.client.get(reverse('confession'))
 
-    self.assertRedirects(
-        response,
-        f"{reverse('login')}?next={reverse('confession')}",
-    )
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(response, 'A public whisper.')
+    self.assertContains(response, f'href="{reverse("login")}?next=')
+    self.assertNotContains(response, 'id="confession-content"')
+
+    self.client.force_login(self.user)
+    response = self.client.get(reverse('confession'))
+
+    self.assertContains(response, 'id="confession-content"')
 
 
 class ReactionTests(TestCase):
@@ -180,7 +222,7 @@ class ReactionTests(TestCase):
   def test_wall_renders_user_like_state_and_unique_count(self):
     Reaction.objects.create(user=self.user, confession=self.confession)
 
-    response = self.client.get(reverse('wall'))
+    response = self.client.get(reverse('confession'))
 
     self.assertContains(
         response,
@@ -215,14 +257,28 @@ class HomeAndProfileTests(TestCase):
     )
 
   def test_home_shows_empty_state_and_navigation(self):
-    response = self.client.get(reverse('wall'))
+    confession = Confession.objects.create(
+        author=self.user,
+        content='This must only appear on the confession page.',
+    )
 
-    self.assertContains(response, 'Welcome to Whisper')
-    self.assertContains(response, 'The wall is quiet')
+    with CaptureQueriesContext(connection) as queries:
+      response = self.client.get(reverse('wall'))
+
+    self.assertContains(response, 'Welcome to WhisperSpace')
+    self.assertContains(response, 'share your thoughts, feelings, and experiences')
+    self.assertNotContains(response, confession.content)
+    self.assertNotContains(response, 'Latest whispers')
+    self.assertNotContains(response, 'Community activity')
+    self.assertNotContains(response, 'confession-content')
     self.assertContains(response, reverse('confession'))
     self.assertContains(response, reverse('profile'))
     self.assertContains(response, reverse('login'))
     self.assertContains(response, reverse('signup'))
+    self.assertFalse(
+        any(Confession._meta.db_table.lower() in query['sql'].lower() for query in queries),
+        'Home page should not query confession records.',
+    )
 
   def test_profile_only_shows_signed_in_users_confessions_and_private_details(self):
     own_confession = Confession.objects.create(
@@ -253,7 +309,7 @@ class HomeAndProfileTests(TestCase):
         f"{reverse('login')}?next={reverse('profile')}",
     )
 
-  def test_home_displays_each_confession_author_username(self):
+  def test_confession_page_displays_each_confession_author_username(self):
     own_confession = Confession.objects.create(
         author=self.user,
         content='First author confession.',
@@ -263,7 +319,7 @@ class HomeAndProfileTests(TestCase):
         content='Second author confession.',
     )
 
-    response = self.client.get(reverse('wall'))
+    response = self.client.get(reverse('confession'))
     page = response.content.decode()
 
     for confession, author in (

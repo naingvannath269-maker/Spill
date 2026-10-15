@@ -210,37 +210,47 @@ body.whisper-body {
 }
 
 .tone-lime {
-  background: #c8d9ba;
+  background: #e2f0cb;
 }
+
 .tone-yellow {
-  background: #e0d2a7;
+  background: #fff1b8;
 }
+
 .tone-blue {
-  background: #b9cedc;
+  background: #d6e8ff;
 }
+
 .tone-pink {
-  background: #dfbec7;
+  background: #ffdce5;
 }
+
 .tone-lavender {
-  background: #cbbfe0;
+  background: #e8ddff;
 }
+
 .tone-mint {
-  background: #b8d2c5;
+  background: #d5f5e3;
 }
+
 .tone-coral {
-  background: #dfbeb1;
+  background: #ffd9cc;
 }
+
 .tone-sky {
-  background: #b9cede;
+  background: #d9f3ff;
 }
+
 .tone-peach {
-  background: #e0c5a9;
+  background: #ffe5cc;
 }
+
 .tone-seafoam {
-  background: #b4d2c8;
+  background: #ccefe8;
 }
+
 .tone-rose {
-  background: #ddbdce;
+  background: #f8d7e8;
 }
 
 .confession-content {

@@ -23,6 +23,49 @@
   color: #657686;
 }
 
+.home-welcome {
+  display: flex;
+  min-height: min(680px, calc(100vh - 150px));
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(32px, 8vw, 88px) 18px;
+  text-align: center;
+}
+
+.home-welcome h1 {
+  max-width: 780px;
+  margin: 0;
+  color: #880085;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(2.1rem, 7vw, 3.7rem);
+  font-weight: 800;
+  line-height: 1.12;
+}
+
+.home-welcome__intro {
+  max-width: 660px;
+  margin: 20px 0 0;
+  color: #435969;
+  font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+  line-height: 1.65;
+}
+
+.home-welcome__how {
+  max-width: 580px;
+  margin: 12px 0 0;
+  color: #657686;
+  line-height: 1.7;
+}
+
+.home-welcome__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
 .page-primary-link {
   display: inline-flex;
   min-height: 44px;
@@ -41,6 +84,28 @@
   cursor: pointer;
 }
 
+.page-secondary-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border: 1px solid #d9c5dc;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #650063;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.page-secondary-link:hover,
+.page-secondary-link:focus-visible {
+  border-color: #880085;
+  background: #fbf5fc;
+  color: #650063;
+}
+
 .page-primary-link:hover,
 .page-primary-link:focus-visible {
   background: #650063;
@@ -48,7 +113,8 @@
 }
 
 .page-primary-link:focus-visible,
-.page-text-link:focus-visible {
+.page-text-link:focus-visible,
+.page-secondary-link:focus-visible {
   outline: 3px solid #3978d4;
   outline-offset: 3px;
 }
@@ -182,6 +248,11 @@
   margin: 16px 0 0;
 }
 
+.confession-login-prompt {
+  margin: 0 0 24px;
+  text-align: center;
+}
+
 @media (max-width: 640px) {
   .page-shell {
     padding-top: 10px;
@@ -203,6 +274,12 @@
     align-items: flex-start;
     flex-direction: column;
   }
+
+  .home-welcome {
+    min-height: min(620px, calc(100vh - 125px));
+    padding-right: 4px;
+    padding-left: 4px;
+  }
 }
 
 html[data-theme="dark"] .activity-panel,
@@ -210,6 +287,30 @@ html[data-theme="dark"] .profile-card,
 html[data-theme="dark"] .confession-compose {
   border-color: #39434d;
   background: rgba(31, 37, 43, 0.96);
+}
+
+html[data-theme="dark"] .home-welcome h1 {
+  color: #ffef00;
+}
+
+html[data-theme="dark"] .home-welcome__intro {
+  color: #d3dce2;
+}
+
+html[data-theme="dark"] .home-welcome__how,
+html[data-theme="dark"] .confession-login-prompt {
+  color: #a7b1bb;
+}
+
+html[data-theme="dark"] .page-secondary-link {
+  border-color: #56616b;
+  background: #20262b;
+  color: #edf1f4;
+}
+
+html[data-theme="dark"] .page-secondary-link:hover,
+html[data-theme="dark"] .page-secondary-link:focus-visible {
+  background: #303840;
 }
 
 html[data-theme="dark"] .activity-panel h2,

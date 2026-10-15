@@ -1,5 +1,6 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.db import IntegrityError, transaction
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
 from django.http import JsonResponse
@@ -69,34 +70,42 @@ def _create_confession(request):
     confession = form.save(commit=False)
     confession.author = request.user
     confession.save()
-    return redirect('wall')
+    messages.success(request, 'Your confession was shared successfully.')
+    return redirect('confession')
 
-  return render(request, 'confessions/confession.html', {'form': form})
+  return render(
+      request,
+      'confessions/confession.html',
+      _confession_page_context(request, form),
+  )
+
+
+def _confession_page_context(request, form=None):
+  approved_confessions = Confession.objects.filter(is_approved=True)
+  activity = approved_confessions.aggregate(
+      whisper_count=Count('pk', distinct=True),
+      reaction_count=Count('reactions__pk', distinct=True),
+  )
+  context = {
+      'confessions': _annotate_reactions(
+          approved_confessions.order_by('-created_at'),
+          request.user,
+      ),
+      'confession_count': activity['whisper_count'],
+      'reaction_count': activity['reaction_count'],
+  }
+  if request.user.is_authenticated:
+    context['form'] = form if form is not None else ConfessionForm()
+  return context
 
 
 def wall_view(request):
   if request.method == 'POST':
     return _create_confession(request)
 
-  approved_confessions = Confession.objects.filter(is_approved=True)
-  confessions = _annotate_reactions(
-      approved_confessions.order_by('-created_at')[:10],
-      request.user,
-  )
-  activity = approved_confessions.aggregate(
-      whisper_count=Count('pk', distinct=True),
-      reaction_count=Count('reactions__pk', distinct=True),
-  )
-
-  context = {
-      'confessions': confessions,
-      'confession_count': activity['whisper_count'],
-      'reaction_count': activity['reaction_count'],
-  }
-  return render(request, 'confessions/wall.html', context)
+  return render(request, 'confessions/wall.html')
 
 
-@login_required
 def confession_view(request):
   if request.method == 'POST':
     return _create_confession(request)
@@ -104,7 +113,7 @@ def confession_view(request):
   return render(
       request,
       'confessions/confession.html',
-      {'form': ConfessionForm()},
+      _confession_page_context(request),
   )
 
 
@@ -184,4 +193,4 @@ def upvote_confession(request, pk):
         'liked': current_choice == 'like',
         'unliked': current_choice == 'unlike',
     })
-  return redirect('wall')
+  return redirect('confession')
