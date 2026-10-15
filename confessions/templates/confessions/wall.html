@@ -1,51 +1,24 @@
 {% extends 'confessions/base.html' %} {% load static %} {% block content %}
 <div class="whisper-page">
-  <header class="wall-heading">
+  <section class="home-welcome" aria-labelledby="welcome-title">
     <p class="wall-kicker">A little honesty goes a long way</p>
-    <h1>Welcome to Whisper</h1>
-    <p class="wall-intro">
-      A kind, anonymous community for the thoughts that feel lighter when shared.
+    <h1 id="welcome-title">Welcome to WhisperSpace</h1>
+    <p class="home-welcome__intro">
+      A kind, anonymous place to share your thoughts, feelings, and experiences
+      without attaching your name.
     </p>
-    <a class="page-primary-link" href="{% url 'confession' %}">
-      Share a confession <span aria-hidden="true">↗</span>
-    </a>
-  </header>
-
-  <section class="activity-panel" aria-labelledby="activity-title">
-    <div>
-      <p class="wall-kicker">Together, one whisper at a time</p>
-      <h2 id="activity-title">Community activity</h2>
-    </div>
-    <dl class="activity-stats">
-      <div>
-        <dt>Whispers shared</dt>
-        <dd>{{ confession_count }}</dd>
-      </div>
-      <div>
-        <dt>Community reactions</dt>
-        <dd>{{ reaction_count }}</dd>
-      </div>
-    </dl>
-  </section>
-
-  <section aria-labelledby="latest-title">
-    <div class="feed-heading">
-      <h2 id="latest-title">Latest whispers</h2>
-      <span>{{ confession_count }} shared</span>
-    </div>
-    <div class="confessions-feed" aria-label="Latest confessions">
-      {% for confession in confessions %}
-        {% include 'confessions/includes/confession_card.html' with confession=confession %}
-      {% empty %}
-      <div class="empty-state">
-        <span aria-hidden="true">✳</span>
-        <h2>The wall is quiet</h2>
-        <p>There are no whispers yet. Be the first to share one.</p>
-        <a class="page-text-link" href="{% url 'confession' %}">Write the first whisper</a>
-      </div>
-      {% endfor %}
+    <p class="home-welcome__how">
+      Write what is on your mind, share it with the community, and read or react
+      to the thoughts others have chosen to share.
+    </p>
+    <div class="home-welcome__actions">
+      <a class="page-primary-link" href="{% url 'confession' %}">
+        Explore Confessions <span aria-hidden="true">↗</span>
+      </a>
+      <a class="page-secondary-link" href="{% url 'confession' %}">
+        Share Your Thoughts
+      </a>
     </div>
   </section>
 </div>
-<script src="{% static 'confessions/JS/wall.js' %}" defer></script>
 {% endblock %}
