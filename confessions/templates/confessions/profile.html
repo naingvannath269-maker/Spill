@@ -1,0 +1,45 @@
+{% extends 'confessions/base.html' %}
+{% block content %}
+<div class="page-shell profile-page">
+  <section class="profile-card" aria-labelledby="profile-title">
+    <p class="wall-kicker">Your private space</p>
+    <h1 id="profile-title">{{ user.username }}</h1>
+    <dl class="profile-details">
+      <div>
+        <dt>Email</dt>
+        <dd>{{ user.email }}</dd>
+      </div>
+      <div>
+        <dt>Member since</dt>
+        <dd>{{ user.date_joined|date:"M j, Y" }}</dd>
+      </div>
+      <div>
+        <dt>Whispers shared</dt>
+        <dd>{{ confession_count }}</dd>
+      </div>
+    </dl>
+    <p class="profile-privacy">
+      Your account details are private. Your confessions remain anonymous on the wall.
+    </p>
+  </section>
+
+  <section aria-labelledby="history-title">
+    <div class="feed-heading">
+      <h2 id="history-title">Your confession history</h2>
+      <span>{{ confession_count }} shared</span>
+    </div>
+    <div class="confessions-feed">
+      {% for confession in confessions %}
+        {% include 'confessions/includes/confession_card.html' with confession=confession %}
+      {% empty %}
+      <div class="empty-state">
+        <span aria-hidden="true">✳</span>
+        <h2>Your story starts here</h2>
+        <p>You have not shared a confession yet.</p>
+        <a class="page-text-link" href="{% url 'confession' %}">Write your first whisper</a>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

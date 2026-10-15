@@ -1006,13 +1006,16 @@ html[data-theme="dark"] body.whisper-body {
     #15191d !important;
 }
 
-html[data-theme="dark"] .whisper-nav {
+html[data-theme="dark"] .site-nav {
   background: rgba(25, 30, 35, 0.96);
   border-bottom-color: #343d46;
 }
 
-html[data-theme="dark"] .whisper-brand,
+html[data-theme="dark"] .site-nav__brand,
 html[data-theme="dark"] .theme-toggle,
+html[data-theme="dark"] .site-nav__links a,
+html[data-theme="dark"] .page-heading h1,
+html[data-theme="dark"] .profile-card h1,
 html[data-theme="dark"] .wall-heading h1,
 html[data-theme="dark"] .submit-panel h2,
 html[data-theme="dark"] .feed-heading h2,
@@ -1020,33 +1023,29 @@ html[data-theme="dark"] .empty-state h2 {
   color: var(--ink) !important;
 }
 
-html[data-theme="dark"] .whisper-brand,
+html[data-theme="dark"] .site-nav__brand,
 html[data-theme="dark"] .wall-heading h1 {
   color: #ffef00 !important;
 }
 
-html[data-theme="dark"] .whisper-nav .theme-toggle {
+html[data-theme="dark"] .site-nav .theme-toggle,
+html[data-theme="dark"] .site-nav .site-nav__links a {
   border-color: var(--line);
-  color: #ffef00 !important;
+  color: #edf1f4;
 }
 
-html[data-theme="dark"] .whisper-nav .nav-link,
-html[data-theme="dark"] .whisper-nav .text-warning,
-html[data-theme="dark"] .whisper-nav .btn {
-  color: #ffef00 !important;
+html[data-theme="dark"] .site-nav__links a:hover,
+html[data-theme="dark"] .site-nav__links a:focus-visible {
+  background: #303840;
 }
 
-html[data-theme="dark"] .whisper-brand-mark {
+html[data-theme="dark"] .site-nav__links a[aria-current="page"] {
+  background: #39333d;
+}
+
+html[data-theme="dark"] .site-nav__brand-mark {
   background: #293c43;
   color: #a6dce7;
-}
-
-html[data-theme="dark"] .navbar-toggler {
-  border-color: #56616b;
-}
-
-html[data-theme="dark"] .navbar-toggler-icon {
-  filter: invert(1);
 }
 
 html[data-theme="dark"] .empty-state {

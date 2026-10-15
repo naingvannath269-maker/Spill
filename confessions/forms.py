@@ -16,7 +16,9 @@ class ConfessionForm(forms.ModelForm):
             attrs={
                 'class': 'form-control',
                 'rows': 3,
+                'maxlength': 500,
                 'placeholder': 'Type your confession here... (keep it kind)',
+                'id': 'confession-content',
             }
         ),
     }

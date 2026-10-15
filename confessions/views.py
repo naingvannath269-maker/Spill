@@ -22,10 +22,8 @@ def signup_view(request):
   return render(request, 'accounts/signup.html', {'form': form})
 
 
-def wall_view(request):
-  confessions = Confession.objects.filter(is_approved=True).order_by(
-      '-created_at'
-  ).annotate(
+def _annotate_reactions(confessions, user):
+  confessions = confessions.annotate(
       like_count=Count(
           'reactions',
           filter=Q(reactions__is_like=True),
@@ -37,19 +35,19 @@ def wall_view(request):
           distinct=True,
       ),
   )
-  if request.user.is_authenticated:
+  if user.is_authenticated:
     confessions = confessions.annotate(
         has_liked=Exists(
             Reaction.objects.filter(
                 confession_id=OuterRef('pk'),
-                user=request.user,
+                user=user,
                 is_like=True,
             )
         ),
         has_unliked=Exists(
             Reaction.objects.filter(
                 confession_id=OuterRef('pk'),
-                user=request.user,
+                user=user,
                 is_like=False,
             )
         )
@@ -59,21 +57,71 @@ def wall_view(request):
         has_liked=Value(False, output_field=BooleanField()),
         has_unliked=Value(False, output_field=BooleanField()),
     )
+  return confessions
 
+
+def _create_confession(request):
+  if not request.user.is_authenticated:
+    return redirect('login')
+
+  form = ConfessionForm(request.POST)
+  if form.is_valid():
+    confession = form.save(commit=False)
+    confession.author = request.user
+    confession.save()
+    return redirect('wall')
+
+  return render(request, 'confessions/confession.html', {'form': form})
+
+
+def wall_view(request):
   if request.method == 'POST':
-    if not request.user.is_authenticated:
-      return redirect('login')
-    form = ConfessionForm(request.POST)
-    if form.is_valid():
-      confession = form.save(commit=False)
-      confession.author = request.user
-      confession.save()
-      return redirect('wall')
-  else:
-    form = ConfessionForm()
+    return _create_confession(request)
 
-  context = {'confessions': confessions, 'form': form}
+  approved_confessions = Confession.objects.filter(is_approved=True)
+  confessions = _annotate_reactions(
+      approved_confessions.order_by('-created_at')[:10],
+      request.user,
+  )
+  activity = approved_confessions.aggregate(
+      whisper_count=Count('pk', distinct=True),
+      reaction_count=Count('reactions__pk', distinct=True),
+  )
+
+  context = {
+      'confessions': confessions,
+      'confession_count': activity['whisper_count'],
+      'reaction_count': activity['reaction_count'],
+  }
   return render(request, 'confessions/wall.html', context)
+
+
+@login_required
+def confession_view(request):
+  if request.method == 'POST':
+    return _create_confession(request)
+
+  return render(
+      request,
+      'confessions/confession.html',
+      {'form': ConfessionForm()},
+  )
+
+
+@login_required
+def profile_view(request):
+  confessions = _annotate_reactions(
+      Confession.objects.filter(author=request.user).order_by('-created_at'),
+      request.user,
+  )
+  return render(
+      request,
+      'confessions/profile.html',
+      {
+          'confessions': confessions,
+          'confession_count': confessions.count(),
+      },
+  )
 
 
 @login_required
