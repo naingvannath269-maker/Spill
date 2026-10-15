@@ -1,0 +1,30 @@
+{% extends 'confessions/base.html' %}
+{% block content %}
+<section class="page-shell confession-page" aria-labelledby="confession-title">
+  <header class="page-heading">
+    <p class="wall-kicker">This space is yours</p>
+    <h1 id="confession-title">Share a confession</h1>
+    <p>Your post is shown publicly without your account name.</p>
+  </header>
+
+  <div class="confession-compose">
+    <form method="post" action="{% url 'confession' %}">
+      {% csrf_token %}
+      {% for error in form.non_field_errors %}
+      <p class="form-error" role="alert">{{ error }}</p>
+      {% endfor %}
+      <label for="{{ form.content.id_for_label }}">Your confession</label>
+      {{ form.content }}
+      {% for error in form.content.errors %}
+      <p class="form-error" role="alert">{{ error }}</p>
+      {% endfor %}
+      <div class="compose-footer">
+        <span>Up to 500 characters. Please keep it kind.</span>
+        <button class="page-primary-link" type="submit">
+          Post anonymously <span aria-hidden="true">↗</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
