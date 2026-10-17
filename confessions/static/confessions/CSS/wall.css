@@ -210,37 +210,47 @@ body.whisper-body {
 }
 
 .tone-lime {
-  background: #c8d9ba;
+  background: #e2f0cb;
 }
+
 .tone-yellow {
-  background: #e0d2a7;
+  background: #fff1b8;
 }
+
 .tone-blue {
-  background: #b9cedc;
+  background: #d6e8ff;
 }
+
 .tone-pink {
-  background: #dfbec7;
+  background: #ffdce5;
 }
+
 .tone-lavender {
-  background: #cbbfe0;
+  background: #e8ddff;
 }
+
 .tone-mint {
-  background: #b8d2c5;
+  background: #d5f5e3;
 }
+
 .tone-coral {
-  background: #dfbeb1;
+  background: #ffd9cc;
 }
+
 .tone-sky {
-  background: #b9cede;
+  background: #d9f3ff;
 }
+
 .tone-peach {
-  background: #e0c5a9;
+  background: #ffe5cc;
 }
+
 .tone-seafoam {
-  background: #b4d2c8;
+  background: #ccefe8;
 }
+
 .tone-rose {
-  background: #ddbdce;
+  background: #f8d7e8;
 }
 
 .confession-content {
@@ -1006,13 +1016,16 @@ html[data-theme="dark"] body.whisper-body {
     #15191d !important;
 }
 
-html[data-theme="dark"] .whisper-nav {
+html[data-theme="dark"] .site-nav {
   background: rgba(25, 30, 35, 0.96);
   border-bottom-color: #343d46;
 }
 
-html[data-theme="dark"] .whisper-brand,
+html[data-theme="dark"] .site-nav__brand,
 html[data-theme="dark"] .theme-toggle,
+html[data-theme="dark"] .site-nav__links a,
+html[data-theme="dark"] .page-heading h1,
+html[data-theme="dark"] .profile-card h1,
 html[data-theme="dark"] .wall-heading h1,
 html[data-theme="dark"] .submit-panel h2,
 html[data-theme="dark"] .feed-heading h2,
@@ -1020,33 +1033,29 @@ html[data-theme="dark"] .empty-state h2 {
   color: var(--ink) !important;
 }
 
-html[data-theme="dark"] .whisper-brand,
+html[data-theme="dark"] .site-nav__brand,
 html[data-theme="dark"] .wall-heading h1 {
   color: #ffef00 !important;
 }
 
-html[data-theme="dark"] .whisper-nav .theme-toggle {
+html[data-theme="dark"] .site-nav .theme-toggle,
+html[data-theme="dark"] .site-nav .site-nav__links a {
   border-color: var(--line);
-  color: #ffef00 !important;
+  color: #edf1f4;
 }
 
-html[data-theme="dark"] .whisper-nav .nav-link,
-html[data-theme="dark"] .whisper-nav .text-warning,
-html[data-theme="dark"] .whisper-nav .btn {
-  color: #ffef00 !important;
+html[data-theme="dark"] .site-nav__links a:hover,
+html[data-theme="dark"] .site-nav__links a:focus-visible {
+  background: #303840;
 }
 
-html[data-theme="dark"] .whisper-brand-mark {
+html[data-theme="dark"] .site-nav__links a[aria-current="page"] {
+  background: #39333d;
+}
+
+html[data-theme="dark"] .site-nav__brand-mark {
   background: #293c43;
   color: #a6dce7;
-}
-
-html[data-theme="dark"] .navbar-toggler {
-  border-color: #56616b;
-}
-
-html[data-theme="dark"] .navbar-toggler-icon {
-  filter: invert(1);
 }
 
 html[data-theme="dark"] .empty-state {

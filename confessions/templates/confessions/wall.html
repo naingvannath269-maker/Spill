@@ -1,190 +1,24 @@
-{% extends 'confessions/base.html' %} {% load static %} {% block page_css %}
-<link rel="stylesheet" href="{% static 'confessions/CSS/unlike.css' %}" />
-{% endblock %} {% block content %}
-<div
-  class="whisper-page{% if user.is_authenticated %} whisper-page--composer{% endif %}"
->
-  <header class="wall-heading">
+{% extends 'confessions/base.html' %} {% load static %} {% block content %}
+<div class="whisper-page">
+  <section class="home-welcome" aria-labelledby="welcome-title">
     <p class="wall-kicker">A little honesty goes a long way</p>
-    <h1>Whisper Wall</h1>
-    <p class="wall-intro">
-      Small thoughts, secrets, and stories. Shared anonymously.
+    <h1 id="welcome-title">Welcome to WhisperSpace</h1>
+    <p class="home-welcome__intro">
+      A kind, anonymous place to share your thoughts, feelings, and experiences
+      without attaching your name.
     </p>
-  </header>
-
-  <div class="feed-heading">
-    <h2>Latest whisper</h2>
-    <span>{{ confessions|length }} shared</span>
-  </div>
-
-  <section class="confessions-feed" aria-label="Latest confessions">
-    {% for confession in confessions %}
-    <article
-      class="confession-bubble {% cycle 'side-right' 'side-left' %} {% cycle 'tone-lime' 'tone-yellow' 'tone-blue' 'tone-pink' 'tone-lavender' 'tone-mint' 'tone-coral' 'tone-sky' 'tone-peach' 'tone-seafoam' 'tone-rose' %}"
-    >
-      <span class="confession-author"
-        >@{{ confession.author.username|default:'anonymous' }}</span
-      >
-      {% if confession.content|length > 180 %}
-      <div class="bubble-body">... existing content here ...</div>
-      <details class="confession-expand">
-        <summary>
-          <span class="confession-preview"
-            >{{ confession.content|truncatewords:28 }}</span
-          >
-          <span class="confession-toggle confession-toggle--more"
-            >Read full whisper</span
-          >
-          <span class="confession-toggle confession-toggle--less"
-            >Show less</span
-          >
-        </summary>
-        <p class="confession-full">{{ confession.content }}</p>
-      </details>
-      {% else %}
-      <p class="confession-content">{{ confession.content }}</p>
-      {% endif %}
-      <header class="bubble-header">
-        <span class="confession-author"
-          >@{{ confession.author.username|default:'anonymous' }}</span
-        >
-        <time datetime="{{ confession.created_at|date:'c' }}"
-          >{{ confession.created_at|date:"M j, Y, g:i A" }}</time
-        >
-      </header>
-      <footer class="bubble-actions">
-        <form action="{% url 'upvote' confession.pk %}" method="POST">
-          {% csrf_token %}
-          <button
-            type="submit"
-            name="reaction"
-            value="like"
-            class="reaction-button like-button{% if confession.has_liked %} selected{% endif %}"
-            aria-label="Like confession"
-            aria-pressed="{{ confession.has_liked|yesno:'true,false' }}"
-          >
-            <span class="like-button-icon" aria-hidden="true">👍</span>
-            <span>Like</span>
-            <span class="reaction-count like-count"
-              >{{ confession.like_count }}</span
-            >
-          </button>
-          <button
-            type="submit"
-            name="reaction"
-            value="unlike"
-            class="reaction-button unlike-button{% if confession.has_unliked %} selected{% endif %}"
-            aria-label="Unlike confession"
-            aria-pressed="{{ confession.has_unliked|yesno:'true,false' }}"
-          >
-            <span class="unlike-button-icon" aria-hidden="true">👎</span>
-            <span>Unlike</span>
-            <span class="reaction-count unlike-count"
-              >{{ confession.unlike_count }}</span
-            >
-          </button>
-          <span class="like-status visually-hidden" role="status"></span>
-        </form>
-        <button type="button" class="comment-button">Comment and Reply</button>
-      </footer>
-    </article>
-    {% empty %}
-    <div class="empty-state">
-      <span aria-hidden="true">✳</span>
-      <h2>The wall is quiet</h2>
-      <p>Be the first to leave a whisper.</p>
-    </div>
-    {% endfor %}
-  </section>
-  <script src="{% static 'confessions/JS/wall.js' %}" defer></script>
-
-  {% if user.is_authenticated %}
-  <section class="submit-panel" id="submit-whisper">
-    <!-- NEW: The Facebook-style collapsed view -->
-    <div
-      id="simple-trigger"
-      class="simple-composer"
-      {%
-      if
-      form.content.errors
-      %}style="display: none"
-      {%
-      endif
-      %}
-    >
-      <div
-        class="avatar-placeholder"
-        data-username="{{ user.username }}"
-        role="img"
-        aria-label="Profile avatar for {{ user.username }}"
-      >
-        {{ user.username|first|upper }}
-      </div>
-      <div class="fake-input">
-        What's on your mind, {{ user.username|default:'Sopheareat' }}?
-      </div>
-    </div>
-
-    <!-- NEW: Wrapper for your original content (starts hidden) -->
-    <div
-      id="expanded-composer"
-      {%
-      if
-      form.content.errors
-      %}style="display: block"
-      {%
-      else
-      %}style="display: none"
-      {%
-      endif
-      %}
-    >
-      <div>
-        <p class="wall-kicker">Your turn</p>
-        <h2>Post your whisper</h2>
-      </div>
-      <form method="POST" action="">
-        {% csrf_token %}
-        <label class="visually-hidden" for="confession-content"
-          >Your confession</label
-        >
-        <textarea
-          id="confession-content"
-          name="content"
-          rows="3"
-          maxlength="500"
-          placeholder="Type your confession here... (keep it kind)"
-          aria-invalid="{% if form.content.errors %}true{% else %}false{% endif %}"
-          {%
-          if
-          form.content.errors
-          %}aria-describedby="confession-content-error"
-          {%
-          endif
-          %}
-          required
-        >
-{{ form.content.value|default_if_none:'' }}</textarea
-        >
-        {% if form.content.errors %}
-        <div
-          id="confession-content-error"
-          class="text-danger small"
-          role="alert"
-        >
-          {{ form.content.errors }}
-        </div>
-        {% endif %}
-        <div class="submit-actions">
-          <span>Up to 500 characters</span>
-          <button type="submit" class="submit-button">
-            Post anonymously <span aria-hidden="true">↗</span>
-          </button>
-        </div>
-      </form>
+    <p class="home-welcome__how">
+      Write what is on your mind, share it with the community, and read or react
+      to the thoughts others have chosen to share.
+    </p>
+    <div class="home-welcome__actions">
+      <a class="page-primary-link" href="{% url 'confession' %}">
+        Explore Confessions <span aria-hidden="true">↗</span>
+      </a>
+      <a class="page-secondary-link" href="{% url 'confession' %}">
+        Share Your Thoughts
+      </a>
     </div>
   </section>
-  <script src="{% static 'confessions/JS/composer.js' %}?v=2" defer></script>
-  {% endif %}
 </div>
 {% endblock %}

@@ -21,68 +21,13 @@
       rel="stylesheet"
       href="{% static 'confessions/CSS/wall.css' %}?v=3"
     />
+    <link rel="stylesheet" href="{% static 'confessions/CSS/nav.css' %}" />
+    <link rel="stylesheet" href="{% static 'confessions/CSS/pages.css' %}" />
+    <link rel="stylesheet" href="{% static 'confessions/CSS/unlike.css' %}" />
     {% block page_css %}{% endblock %}
   </head>
   <body class="bg-light whisper-body">
-    <!-- Responsive Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light whisper-nav">
-      <div class="container">
-        <a class="navbar-brand fw-bold whisper-brand" href="{% url 'wall' %}">
-          <span class="whisper-brand-mark" aria-hidden="true">•••</span>
-          Whisper
-        </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto align-items-center">
-            <li class="nav-item me-3">
-              <button
-                class="theme-toggle"
-                id="theme-toggle"
-                type="button"
-                aria-label="Switch to dark mode"
-                aria-pressed="false"
-              >
-                <span class="theme-toggle-icon" aria-hidden="true">☾</span>
-                <span class="theme-toggle-label">Dark mode</span>
-              </button>
-            </li>
-            {% if user.is_authenticated %}
-            <li class="nav-item me-3">
-              <span class="text-warning small"
-                >Logged in as: <strong>@{{ user.username }}</strong></span
-              >
-            </li>
-            <li class="nav-item">
-              <form action="{% url 'logout' %}" method="post" class="d-inline">
-                {% csrf_token %}
-                <button type="submit" class="theme-toggle">
-                  Logout
-                </button>
-              </form>
-            </li>
-            {% else %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'login' %}">Login</a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="theme-toggle"
-                href="{% url 'signup' %}"
-                >Sign Up</a
-              >
-            </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </nav>
+    {% include 'confessions/includes/nav.html' %}
 
     <!-- Main Content Container -->
     <main class="container mb-5 whisper-main">
