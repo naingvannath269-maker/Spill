@@ -1,3 +1,5 @@
+import re
+
 from django.test import TestCase
 from django.test import override_settings
 from django.db import IntegrityError, transaction
@@ -97,6 +99,54 @@ class ConfessionSubmissionTests(TestCase):
     self.assertEqual(response.content.decode().count('id="confession-content"'), 1)
     self.assertContains(response, 'confessions/JS/confession-modal.js')
     self.assertContains(response, 'confessions/CSS/confession-modal.css')
+
+  def test_confession_card_colors_are_individual_and_stable_on_all_card_pages(self):
+    for index in range(13):
+      Confession.objects.create(
+          author=self.user,
+          content=f'Color palette test confession {index}.',
+      )
+
+    def card_tones(response):
+      card_classes = re.findall(
+          r'class="(confession-bubble[^"]*)"',
+          response.content.decode(),
+      )
+      return [
+          tone
+          for card_class in card_classes
+          for tone in re.findall(r'\btone-[a-z]+\b', card_class)
+      ]
+
+    confession_response = self.client.get(reverse('confession'))
+    profile_response = self.client.get(reverse('profile'))
+    expected_tones = card_tones(confession_response)
+
+    self.assertEqual(len(expected_tones), 13)
+    self.assertEqual(len(set(expected_tones)), 11)
+    self.assertTrue(
+        all(first != second for first, second in zip(expected_tones, expected_tones[1:]))
+    )
+    self.assertEqual(card_tones(profile_response), expected_tones)
+    self.assertEqual(
+        card_tones(self.client.get(reverse('confession'))),
+        expected_tones,
+    )
+
+    Confession.objects.create(
+        author=self.user,
+        content='A newly created confession gets its own tone.',
+    )
+    updated_tones = card_tones(self.client.get(reverse('confession')))
+    self.assertEqual(len(updated_tones), 14)
+    self.assertEqual(len(set(updated_tones)), 11)
+    self.assertTrue(
+        all(first != second for first, second in zip(updated_tones, updated_tones[1:]))
+    )
+    self.assertEqual(
+        card_tones(self.client.get(reverse('confession'))),
+        updated_tones,
+    )
 
   def test_legacy_wall_submission_still_uses_existing_submission_flow(self):
     response = self.client.post(
@@ -256,6 +306,16 @@ class HomeAndProfileTests(TestCase):
         password='test-password',
     )
 
+  def test_authentication_pages_use_spill_branding(self):
+    for route in ('login', 'signup'):
+      with self.subTest(route=route):
+        response = self.client.get(reverse(route))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'SPILL')
+        self.assertContains(response, 'LET IT OUT, LEAVE YOUR NAME OUT.')
+        self.assertContains(response, '<meta property="og:site_name" content="Spill"')
+
   def test_home_shows_empty_state_and_navigation(self):
     confession = Confession.objects.create(
         author=self.user,
@@ -265,7 +325,11 @@ class HomeAndProfileTests(TestCase):
     with CaptureQueriesContext(connection) as queries:
       response = self.client.get(reverse('wall'))
 
-    self.assertContains(response, 'Welcome to WhisperSpace')
+    self.assertContains(response, 'Welcome to Spill')
+    self.assertContains(response, 'Let it out, leave your name out.')
+    self.assertContains(response, '<title>Spill — Let it out, leave your name out.</title>')
+    self.assertContains(response, 'og:site_name" content="Spill')
+    self.assertContains(response, 'spill.')
     self.assertContains(response, 'share your thoughts, feelings, and experiences')
     self.assertNotContains(response, confession.content)
     self.assertNotContains(response, 'Latest whispers')

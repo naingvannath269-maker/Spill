@@ -23,6 +23,9 @@ body.whisper-body {
     ),
     #eef5f8 !important;
   font-family: "DM Sans", sans-serif;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
 }
 
 .whisper-nav {
