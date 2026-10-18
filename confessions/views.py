@@ -10,6 +10,10 @@ from accounts.forms import CustomUserCreationForm
 from .forms import ConfessionForm
 from .models import Confession, Reaction
 
+# Change this line:
+from .forms import ConfessionForm
+# To this:
+from .forms import ConfessionForm, CustomUserChangeForm
 
 def signup_view(request):
   if request.method == 'POST':
@@ -194,3 +198,18 @@ def upvote_confession(request, pk):
         'unliked': current_choice == 'unlike',
     })
   return redirect('confession')
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated successfully.')
+            return redirect('profile')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+            return redirect('profile')
+    return redirect('profile')
