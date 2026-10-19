@@ -1026,7 +1026,6 @@ html[data-theme="dark"] .site-nav {
 
 html[data-theme="dark"] .site-nav__brand,
 html[data-theme="dark"] .theme-toggle,
-html[data-theme="dark"] .site-nav__links a,
 html[data-theme="dark"] .page-heading h1,
 html[data-theme="dark"] .profile-card h1,
 html[data-theme="dark"] .wall-heading h1,
@@ -1041,19 +1040,9 @@ html[data-theme="dark"] .wall-heading h1 {
   color: #ffef00 !important;
 }
 
-html[data-theme="dark"] .site-nav .theme-toggle,
-html[data-theme="dark"] .site-nav .site-nav__links a {
+html[data-theme="dark"] .site-nav .theme-toggle {
   border-color: var(--line);
   color: #edf1f4;
-}
-
-html[data-theme="dark"] .site-nav__links a:hover,
-html[data-theme="dark"] .site-nav__links a:focus-visible {
-  background: #303840;
-}
-
-html[data-theme="dark"] .site-nav__links a[aria-current="page"] {
-  background: #39333d;
 }
 
 html[data-theme="dark"] .site-nav__brand-mark {

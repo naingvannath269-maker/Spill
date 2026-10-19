@@ -27,14 +27,18 @@
     <div class="site-nav__menu" id="site-nav-menu">
       <ul class="site-nav__links" aria-label="Primary">
         <li>
-          <a href="{% url 'wall' %}" data-i18n="nav_home"{% if request.resolver_match.url_name == 'wall' %} aria-current="page"{% endif %}>Home</a>
+          <a href="{% url 'wall' %}" data-i18n="nav_home"
+            {% if request.resolver_match.url_name == 'wall' %} aria-current="page"{% endif %}>Home</a>
         </li>
         <li>
           {% url 'confession' as confession_url %}
-          <a href="{% if user.is_authenticated %}{{ confession_url }}{% else %}{% url 'login' %}?next={{ confession_url|urlencode }}{% endif %}" data-i18n="nav_confession"{% if request.resolver_match.url_name == 'confession' %} aria-current="page"{% endif %}>Confession</a>
+          <a href="{% if user.is_authenticated %}{{ confession_url }}{% else %}{% url 'login' %}?next={{ confession_url|urlencode }}{% endif %}"
+            data-i18n="nav_confession"
+            {% if request.resolver_match.url_name == 'confession' %} aria-current="page"{% endif %}>Confession</a>
         </li>
         <li>
-          <a href="{% url 'profile' %}" data-i18n="nav_profile"{% if request.resolver_match.url_name == 'profile' %} aria-current="page"{% endif %}>Profile</a>
+          <a href="{% url 'profile' %}" data-i18n="nav_profile"
+            {% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'update_profile' %} aria-current="page"{% endif %}>Profile</a>
         </li>
       </ul>
       <ul class="site-nav__actions" aria-label="Account">
