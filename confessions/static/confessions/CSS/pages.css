@@ -1,3 +1,17 @@
+main.whisper-main {
+  animation: whisper-page-enter 280ms ease-out;
+}
+
+@keyframes whisper-page-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .page-shell {
   width: min(760px, 100%);
   margin: 0 auto;
@@ -97,6 +111,12 @@
   font: inherit;
   font-weight: 700;
   text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main.whisper-main {
+    animation: none;
+  }
 }
 
 .page-secondary-link:hover,
@@ -280,6 +300,14 @@
     padding-right: 4px;
     padding-left: 4px;
   }
+
+  .settings-modal-overlay {
+    padding: 68px 10px 16px;
+  }
+
+  .settings-modal-dialog {
+    max-height: calc(100dvh - 80px);
+  }
 }
 
 html[data-theme="dark"] .activity-panel,
@@ -337,3 +365,170 @@ html[data-theme="dark"] .confession-compose textarea {
   background: #191e23;
   color: #edf1f4;
 }
+
+/* Settings / Edit Profile Modal */
+.settings-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(18, 28, 36, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(72px, 10vh, 92px) 16px 24px;
+  overflow-y: auto;
+}
+
+.settings-modal-dialog {
+  width: 100%;
+  max-width: 600px;
+  max-height: calc(100dvh - clamp(90px, 13vh, 115px));
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  color: #192b3a;
+  border-radius: 18px;
+  border: 1px solid rgba(39, 65, 83, 0.12);
+  box-shadow: 0 24px 70px rgba(19, 35, 48, 0.35);
+  overflow: hidden;
+  animation: whisper-page-enter 180ms ease-out;
+}
+
+.settings-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid #edf2f5;
+  flex-shrink: 0;
+}
+
+.settings-modal-header h2 {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #192b3a;
+}
+
+.settings-modal-close {
+  display: inline-grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid #dbe6ed;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #526575;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.settings-modal-close:hover {
+  background: #f1f6f8;
+  color: #192b3a;
+}
+
+.settings-modal-form {
+  padding: 16px 20px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.settings-form-group {
+  margin-bottom: 12px;
+}
+
+.settings-form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: #263b4b;
+}
+
+.settings-form-group input {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.92rem;
+  font-family: inherit;
+  border: 1px solid #cddce5;
+  border-radius: 8px;
+  background: #fbfdfe;
+  color: #192b3a;
+  box-sizing: border-box;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.settings-form-group input:focus {
+  outline: none;
+  border-color: #880085;
+  box-shadow: 0 0 0 3px rgba(136, 0, 133, 0.16);
+}
+
+.settings-modal-divider {
+  margin: 14px 0;
+  border: 0;
+  border-top: 1px solid #edf2f5;
+}
+
+.settings-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+  flex-shrink: 0;
+}
+
+/* Dark theme support for settings modal */
+html[data-theme="dark"] .settings-modal-dialog {
+  background: #1f252b;
+  color: #edf1f4;
+  border-color: #39434d;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+}
+
+html[data-theme="dark"] .settings-modal-header {
+  border-bottom-color: #2e3740;
+}
+
+html[data-theme="dark"] .settings-modal-header h2 {
+  color: #edf1f4;
+}
+
+html[data-theme="dark"] .settings-modal-close {
+  border-color: #46515b;
+  background: #252c32;
+  color: #d3dce2;
+}
+
+html[data-theme="dark"] .settings-modal-close:hover {
+  background: #303840;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .settings-form-group label {
+  color: #d3dce2;
+}
+
+html[data-theme="dark"] .settings-form-group input {
+  border-color: #46515b;
+  background: #191e23;
+  color: #edf1f4;
+}
+
+html[data-theme="dark"] .settings-form-group input:focus {
+  border-color: #b545b2;
+  box-shadow: 0 0 0 3px rgba(181, 69, 178, 0.25);
+}
+
+html[data-theme="dark"] .settings-modal-divider {
+  border-top-color: #2e3740;
+}
+

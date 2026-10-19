@@ -168,6 +168,18 @@
   align-items: flex-end;
 }
 
+.confession-modal__form .page-primary-link {
+  border: 1px solid #650063;
+  background: #880085;
+  color: #fff;
+}
+
+.confession-modal__form .page-primary-link:hover {
+  border-color: #4b0049;
+  background: #650063;
+  color: #fff;
+}
+
 .confession-success {
   margin: 0 0 18px;
   padding: 12px 15px;
@@ -179,17 +191,17 @@
 }
 
 .floating-confess {
-  position: fixed;
+  position: fixed !important;
   z-index: 1040;
-  right: max(24px, calc((100vw - 1080px) / 2));
-  bottom: max(24px, env(safe-area-inset-bottom));
+  right: max(28px, env(safe-area-inset-right)) !important;
+  bottom: max(28px, env(safe-area-inset-bottom)) !important;
   display: inline-flex;
   min-height: 54px;
   align-items: center;
   justify-content: center;
   gap: 7px;
   padding: 0 20px;
-  border: 0;
+  border: 1px solid #650063;
   border-radius: 999px;
   background: #880085;
   box-shadow: 0 9px 26px rgba(86, 0, 84, 0.26);

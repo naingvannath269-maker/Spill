@@ -2,11 +2,11 @@
 {% block content %}
 <div class="page-shell profile-page">
   <section class="profile-card" aria-labelledby="profile-title">
-    <p class="wall-kicker">Your private space</p>
+    <p class="wall-kicker" data-i18n="profile_kicker">Your private space</p>
     <!-- <h1 id="profile-title">{{ user.username }}</h1> -->
      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px;">
   <h1 id="profile-title" style="margin-bottom: 0;">{{ user.username }}</h1>
-  <button type="button" id="openSettingsBtn" style="background: transparent; border: none; cursor: pointer; color: #880085; padding: 5px;" aria-label="Edit Profile">
+  <button type="button" id="openSettingsBtn" style="background: transparent; border: none; cursor: pointer; color: #880085; padding: 5px;" aria-label="Edit Profile" data-i18n-aria-label="aria_edit_profile">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="3"></circle>
       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -16,27 +16,27 @@
 
     <dl class="profile-details">
       <div>
-        <dt>Email</dt>
+        <dt data-i18n="label_email">Email</dt>
         <dd>{{ user.email }}</dd>
       </div>
       <div>
-        <dt>Member since</dt>
+        <dt data-i18n="label_member_since">Member since</dt>
         <dd>{{ user.date_joined|date:"M j, Y" }}</dd>
       </div>
       <div>
-        <dt>Whispers shared</dt>
+        <dt data-i18n="label_whispers_shared_profile">Whispers shared</dt>
         <dd>{{ confession_count }}</dd>
       </div>
     </dl>
-    <p class="profile-privacy">
+    <p class="profile-privacy" data-i18n="profile_privacy_note">
       Your account details are private. Your confessions remain anonymous on the wall.
     </p>
   </section>
 
   <section aria-labelledby="history-title">
     <div class="feed-heading">
-      <h2 id="history-title">Your confession history</h2>
-      <span>{{ confession_count }} shared</span>
+      <h2 id="history-title" data-i18n="profile_history_title">Your confession history</h2>
+      <span>{{ confession_count }} <span data-i18n="text_shared_count">shared</span></span>
     </div>
     <div class="confessions-feed">
       {% for confession in confessions %}
@@ -44,9 +44,9 @@
       {% empty %}
       <div class="empty-state">
         <span aria-hidden="true">✳</span>
-        <h2>Your story starts here</h2>
-        <p>You have not shared a confession yet.</p>
-        <a class="page-text-link" href="{% url 'confession' %}">Write your first whisper</a>
+        <h2 data-i18n="profile_empty_title">Your story starts here</h2>
+        <p data-i18n="profile_empty_desc">You have not shared a confession yet.</p>
+        <a class="page-text-link" href="{% url 'confession' %}" data-i18n="profile_first_whisper">Write your first whisper</a>
       </div>
       {% endfor %}
     </div>
@@ -54,34 +54,37 @@
 </div>
 
 <!-- Settings Modal -->
-<div id="settingsModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-  <div style="background: white; width: 100%; max-width: 500px; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-    <div style="display: flex; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eee;">
-      <h2 style="margin: 0; font-size: 1.25rem;">My Profile</h2>
-      <button type="button" id="closeSettingsBtn" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+<div id="settingsModal" class="settings-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+  <div class="settings-modal-dialog">
+    <div class="settings-modal-header">
+      <div>
+        <p class="wall-kicker" data-i18n="profile_kicker" style="margin-bottom: 2px;">Your private space</p>
+        <h2 id="settingsModalTitle" data-i18n="profile_settings_title">My Profile</h2>
+      </div>
+      <button type="button" id="closeSettingsBtn" class="settings-modal-close" aria-label="Close profile settings" data-i18n-aria-label="profile_close_settings">&times;</button>
     </div>
-    <form method="POST" action="{% url 'update_profile' %}" style="padding: 20px;">
+    <form method="POST" action="{% url 'update_profile' %}" class="settings-modal-form">
       {% csrf_token %}
-      <div style="margin-bottom: 15px;">
-        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Username</label>
-        <input type="text" name="username" value="{{ user.username }}" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      <div class="settings-form-group">
+        <label for="id_username" data-i18n="label_username">Username</label>
+        <input type="text" id="id_username" name="username" value="{{ user.username }}" required autocomplete="username">
       </div>
-      <div style="margin-bottom: 15px;">
-        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Email</label>
-        <input type="email" name="email" value="{{ user.email }}" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      <div class="settings-form-group">
+        <label for="id_email" data-i18n="label_email">Email</label>
+        <input type="email" id="id_email" name="email" value="{{ user.email }}" required autocomplete="email">
       </div>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-      <div style="margin-bottom: 15px;">
-        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Current password</label>
-        <input type="password" name="current_password" placeholder="Only needed if changing password" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      <hr class="settings-modal-divider">
+      <div class="settings-form-group">
+        <label for="id_current_password" data-i18n="profile_current_password">Current password</label>
+        <input type="password" id="id_current_password" name="current_password" placeholder="Only needed if changing password" data-i18n-placeholder="profile_current_password_hint" autocomplete="current-password">
       </div>
-      <div style="margin-bottom: 15px;">
-        <label style="display: block; font-weight: bold; margin-bottom: 5px;">New password</label>
-        <input type="password" name="new_password" placeholder="Leave blank to keep current" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      <div class="settings-form-group">
+        <label for="id_new_password" data-i18n="profile_new_password">New password</label>
+        <input type="password" id="id_new_password" name="new_password" placeholder="Leave blank to keep current" data-i18n-placeholder="profile_new_password_hint" autocomplete="new-password">
       </div>
-      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-        <button type="button" id="cancelSettingsBtn" class="page-secondary-link">Cancel</button>
-        <button type="submit" class="page-primary-link">Save changes</button>
+      <div class="settings-modal-actions">
+        <button type="button" id="cancelSettingsBtn" class="page-secondary-link" data-i18n="profile_cancel">Cancel</button>
+        <button type="submit" class="page-primary-link" data-i18n="profile_save_changes">Save changes</button>
       </div>
     </form>
   </div>
@@ -90,10 +93,52 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     const modal = document.getElementById("settingsModal");
-    document.getElementById("openSettingsBtn").addEventListener("click", () => modal.style.display = "flex");
-    document.getElementById("closeSettingsBtn").addEventListener("click", () => modal.style.display = "none");
-    document.getElementById("cancelSettingsBtn").addEventListener("click", () => modal.style.display = "none");
-    window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+    const openBtn = document.getElementById("openSettingsBtn");
+    const closeBtn = document.getElementById("closeSettingsBtn");
+    const cancelBtn = document.getElementById("cancelSettingsBtn");
+    const form = modal ? modal.querySelector("form") : null;
+
+    function openModal() {
+      if (!modal) return;
+      window.scrollTo({ top: 0, behavior: "instant" });
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+      const usernameInput = document.getElementById("id_username");
+      if (usernameInput) {
+        usernameInput.focus();
+      }
+    }
+
+    function closeModal() {
+      if (!modal) return;
+      modal.style.display = "none";
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    }
+
+    if (openBtn) openBtn.addEventListener("click", openModal);
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
+
+    window.addEventListener("click", function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    window.addEventListener("keydown", function(e) {
+      if (e.key === "Escape" && modal && modal.style.display === "flex") {
+        closeModal();
+      }
+    });
+
+    if (form) {
+      form.addEventListener("submit", function() {
+        document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
+      });
+    }
   });
 </script>
 

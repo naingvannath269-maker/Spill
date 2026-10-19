@@ -9,7 +9,7 @@
     <meta property="og:site_name" content="Spill" />
     <meta property="og:title" content="Spill" />
     <meta property="og:description" content="Let it out, leave your name out." />
-    <title>Spill — Let it out, leave your name out.</title>
+    <title data-i18n="document_title">Spill — Let it out, leave your name out.</title>
     <script>
       try {
         if (localStorage.getItem("whisper-theme") === "dark") {
@@ -24,10 +24,10 @@
     />
     <link
       rel="stylesheet"
-      href="{% static 'confessions/CSS/wall.css' %}?v=4"
+      href="{% static 'confessions/CSS/wall.css' %}?v=6"
     />
-    <link rel="stylesheet" href="{% static 'confessions/CSS/nav.css' %}?v=5" />
-    <link rel="stylesheet" href="{% static 'confessions/CSS/pages.css' %}" />
+    <link rel="stylesheet" href="{% static 'confessions/CSS/nav.css' %}?v=15" />
+    <link rel="stylesheet" href="{% static 'confessions/CSS/pages.css' %}?v=5" />
     <link rel="stylesheet" href="{% static 'confessions/CSS/unlike.css' %}" />
     {% block page_css %}{% endblock %}
   </head>
@@ -39,81 +39,11 @@
       {% block content %} {% endblock %}
     </main>
 
+    {% block floating_actions %}{% endblock %}
+
     <!-- Bootstrap 5 JS Bundle CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      const navToggle = document.getElementById("site-nav-toggle");
-      const navMenu = document.getElementById("site-nav-menu");
-
-      if (navToggle && navMenu) {
-        const setMenuOpen = (isOpen) => {
-          navMenu.classList.toggle("is-open", isOpen);
-          navToggle.setAttribute("aria-expanded", String(isOpen));
-          navToggle.setAttribute(
-            "aria-label",
-            isOpen ? "Close navigation menu" : "Open navigation menu"
-          );
-        };
-
-        setMenuOpen(false);
-
-        navToggle.addEventListener("click", () => {
-          setMenuOpen(navToggle.getAttribute("aria-expanded") !== "true");
-        });
-
-        document.addEventListener("click", (event) => {
-          if (!navMenu.contains(event.target) && !navToggle.contains(event.target)) {
-            setMenuOpen(false);
-          }
-        });
-
-        document.addEventListener("keydown", (event) => {
-          if (event.key === "Escape" && navToggle.getAttribute("aria-expanded") === "true") {
-            setMenuOpen(false);
-            navToggle.focus();
-          }
-        });
-
-        navMenu.querySelectorAll("a").forEach((link) => {
-          link.addEventListener("click", () => setMenuOpen(false));
-        });
-
-        const desktopNavQuery = window.matchMedia("(min-width: 821px)");
-        const closeMenuOnDesktop = (event) => {
-          if (event.matches) {
-            setMenuOpen(false);
-          }
-        };
-        if (desktopNavQuery.addEventListener) {
-          desktopNavQuery.addEventListener("change", closeMenuOnDesktop);
-        } else {
-          desktopNavQuery.addListener(closeMenuOnDesktop);
-        }
-      }
-
-      const themeToggle = document.getElementById("theme-toggle");
-      if (themeToggle) {
-        const themeLabel = themeToggle.querySelector(".theme-toggle-label");
-        const themeIcon = themeToggle.querySelector(".theme-toggle-icon");
-
-        const updateThemeToggle = () => {
-          const isDark = document.documentElement.dataset.theme === "dark";
-          themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
-          themeIcon.textContent = isDark ? "☀" : "☾";
-          themeToggle.setAttribute("aria-label", `Switch to ${isDark ? "light" : "dark"} mode`);
-          themeToggle.setAttribute("aria-pressed", String(isDark));
-        };
-
-        updateThemeToggle();
-        themeToggle.addEventListener("click", () => {
-          const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-          document.documentElement.dataset.theme = nextTheme;
-          try {
-            localStorage.setItem("whisper-theme", nextTheme);
-          } catch {}
-          updateThemeToggle();
-        });
-      }
-    </script>
+    <script src="{% static 'confessions/JS/language.js' %}"></script>
+    <script src="{% static 'confessions/JS/base.js' %}"></script>
   </body>
 </html>

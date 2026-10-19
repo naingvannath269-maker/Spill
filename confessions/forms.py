@@ -21,6 +21,7 @@ class ConfessionForm(forms.ModelForm):
                 'rows': 3,
                 'maxlength': 500,
                 'placeholder': 'Type your confession here... (keep it kind)',
+                'data-i18n-placeholder': 'placeholder_confession',
                 'id': 'confession-content',
             }
         ),

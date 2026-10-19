@@ -174,4 +174,5 @@ INAPPROPRIATE_WORDS = (
     'sluts',
     'whore',
     'whores',
+    "អាឡប់",
 )
