@@ -1,3 +1,5 @@
+import hashlib
+
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -9,6 +11,50 @@ from django.views.decorators.http import require_POST
 from accounts.forms import CustomUserCreationForm
 from .forms import ConfessionForm
 from .models import Confession, Reaction
+
+# Change this line:
+from .forms import ConfessionForm
+# To this:
+from .forms import ConfessionForm, CustomUserChangeForm
+
+_CONFESSION_TONES = (
+    'lime',
+    'yellow',
+    'blue',
+    'pink',
+    'lavender',
+    'mint',
+    'coral',
+    'sky',
+    'peach',
+    'seafoam',
+    'rose',
+)
+
+
+def _assign_confession_tones(confessions):
+  used_tones = set()
+  previous_tone = None
+
+  for confession in confessions:
+    tone_index = int.from_bytes(
+        hashlib.sha256(str(confession.pk).encode('ascii')).digest()[:4],
+        'big',
+    ) % len(_CONFESSION_TONES)
+    if len(used_tones) == len(_CONFESSION_TONES):
+      used_tones.clear()
+
+    for offset in range(len(_CONFESSION_TONES)):
+      candidate = (tone_index + offset) % len(_CONFESSION_TONES)
+      if candidate not in used_tones and candidate != previous_tone:
+        tone_index = candidate
+        break
+
+    confession.tone_class = f'tone-{_CONFESSION_TONES[tone_index]}'
+    used_tones.add(tone_index)
+    previous_tone = tone_index
+
+  return confessions
 
 
 def signup_view(request):
@@ -87,9 +133,11 @@ def _confession_page_context(request, form=None):
       reaction_count=Count('reactions__pk', distinct=True),
   )
   context = {
-      'confessions': _annotate_reactions(
-          approved_confessions.order_by('-created_at'),
-          request.user,
+      'confessions': _assign_confession_tones(
+          _annotate_reactions(
+              approved_confessions.order_by('-created_at'),
+              request.user,
+          )
       ),
       'confession_count': activity['whisper_count'],
       'reaction_count': activity['reaction_count'],
@@ -119,16 +167,18 @@ def confession_view(request):
 
 @login_required
 def profile_view(request):
-  confessions = _annotate_reactions(
-      Confession.objects.filter(author=request.user).order_by('-created_at'),
-      request.user,
+  confessions = _assign_confession_tones(
+      _annotate_reactions(
+          Confession.objects.filter(author=request.user).order_by('-created_at'),
+          request.user,
+      )
   )
   return render(
       request,
       'confessions/profile.html',
       {
           'confessions': confessions,
-          'confession_count': confessions.count(),
+          'confession_count': len(confessions),
       },
   )
 
@@ -194,3 +244,18 @@ def upvote_confession(request, pk):
         'unliked': current_choice == 'unlike',
     })
   return redirect('confession')
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated successfully.')
+            return redirect('profile')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+            return redirect('profile')
+    return redirect('profile')

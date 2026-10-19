@@ -6,4 +6,5 @@ urlpatterns = [
     path('confession/', views.confession_view, name='confession'),
     path('profile/', views.profile_view, name='profile'),
     path('upvote/<int:pk>/', views.upvote_confession, name='upvote'),
+    path('profile/update/', views.update_profile, name='update_profile'),
 ]
