@@ -191,10 +191,10 @@
 }
 
 .floating-confess {
-  position: fixed;
+  position: fixed !important;
   z-index: 1040;
-  right: max(24px, calc((100vw - 1080px) / 2));
-  bottom: max(24px, env(safe-area-inset-bottom));
+  right: max(28px, env(safe-area-inset-right)) !important;
+  bottom: max(28px, env(safe-area-inset-bottom)) !important;
   display: inline-flex;
   min-height: 54px;
   align-items: center;

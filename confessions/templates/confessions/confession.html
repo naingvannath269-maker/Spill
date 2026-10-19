@@ -1,6 +1,6 @@
 {% extends 'confessions/base.html' %} {% load static %}
 {% block page_css %}
-<link rel="stylesheet" href="{% static 'confessions/CSS/confession-modal.css' %}" />
+<link rel="stylesheet" href="{% static 'confessions/CSS/confession-modal.css' %}?v=3" />
 {% endblock %}
 {% block content %}
 
@@ -33,10 +33,6 @@
       </form>
     </div>
   </dialog>
-
-  <button class="floating-confess" type="button" data-open-confession>
-    <span aria-hidden="true">＋</span> <span data-i18n="btn_floating_confess">Confess</span>
-  </button>
   {% endif %}
 
   <section class="confession-wall-content" aria-labelledby="latest-title">
@@ -83,4 +79,12 @@
 {% if user.is_authenticated %}
 <script src="{% static 'confessions/JS/confession-modal.js' %}" defer></script>
 {% endif %}
+{% endblock %}
+
+{% block floating_actions %}
+  {% if user.is_authenticated %}
+  <button class="floating-confess" type="button" data-open-confession>
+    <span aria-hidden="true">＋</span> <span data-i18n="btn_floating_confess">Confess</span>
+  </button>
+  {% endif %}
 {% endblock %}
