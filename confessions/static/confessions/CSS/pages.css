@@ -1,3 +1,19 @@
+main.whisper-main {
+  animation: whisper-page-enter 280ms ease-out both;
+}
+
+@keyframes whisper-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .page-shell {
   width: min(760px, 100%);
   margin: 0 auto;
@@ -97,6 +113,12 @@
   font: inherit;
   font-weight: 700;
   text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main.whisper-main {
+    animation: none;
+  }
 }
 
 .page-secondary-link:hover,

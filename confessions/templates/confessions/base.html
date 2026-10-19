@@ -9,7 +9,7 @@
     <meta property="og:site_name" content="Spill" />
     <meta property="og:title" content="Spill" />
     <meta property="og:description" content="Let it out, leave your name out." />
-    <title>Spill — Let it out, leave your name out.</title>
+    <title data-i18n="document_title">Spill — Let it out, leave your name out.</title>
     <script>
       try {
         if (localStorage.getItem("whisper-theme") === "dark") {
@@ -26,8 +26,8 @@
       rel="stylesheet"
       href="{% static 'confessions/CSS/wall.css' %}?v=4"
     />
-    <link rel="stylesheet" href="{% static 'confessions/CSS/nav.css' %}?v=5" />
-    <link rel="stylesheet" href="{% static 'confessions/CSS/pages.css' %}" />
+    <link rel="stylesheet" href="{% static 'confessions/CSS/nav.css' %}?v=10" />
+    <link rel="stylesheet" href="{% static 'confessions/CSS/pages.css' %}?v=2" />
     <link rel="stylesheet" href="{% static 'confessions/CSS/unlike.css' %}" />
     {% block page_css %}{% endblock %}
   </head>
@@ -41,7 +41,79 @@
 
     <!-- Bootstrap 5 JS Bundle CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'confessions/JS/language.js' %}"></script>
     <script>
+      const primaryNav = document.querySelector(".site-nav__links");
+      if (primaryNav) {
+        const primaryLinks = Array.from(primaryNav.querySelectorAll("a"));
+        const activeLink = primaryNav.querySelector('a[aria-current="page"]');
+        const navigationStorageKey = "previousPrimaryNavIndex";
+        let previousIndex = null;
+
+        try {
+          const storedIndex = sessionStorage.getItem(navigationStorageKey);
+          if (storedIndex !== null) {
+            previousIndex = Number(storedIndex);
+          }
+          sessionStorage.removeItem(navigationStorageKey);
+        } catch (error) {
+          console.warn("Unable to restore the previous navigation item.", error);
+        }
+
+        primaryLinks.forEach((link, index) => {
+          link.addEventListener("click", () => {
+            try {
+              sessionStorage.setItem(navigationStorageKey, String(index));
+            } catch (error) {
+              console.warn("Unable to save the previous navigation item.", error);
+            }
+          });
+        });
+
+        if (activeLink) {
+          const activeIndex = primaryLinks.indexOf(activeLink);
+          const setIndicatorPosition = (link) => {
+            const navBounds = primaryNav.getBoundingClientRect();
+            const linkBounds = link.getBoundingClientRect();
+            primaryNav.style.setProperty(
+              "--active-link-x",
+              `${linkBounds.left - navBounds.left}px`
+            );
+            primaryNav.style.setProperty(
+              "--active-link-y",
+              `${linkBounds.top - navBounds.top}px`
+            );
+            primaryNav.style.setProperty("--active-link-width", `${linkBounds.width}px`);
+            primaryNav.style.setProperty("--active-link-height", `${linkBounds.height}px`);
+          };
+
+          const previousLink =
+            Number.isInteger(previousIndex) &&
+            previousIndex >= 0 &&
+            previousIndex < primaryLinks.length &&
+            previousIndex !== activeIndex
+              ? primaryLinks[previousIndex]
+              : null;
+
+          if (previousLink) {
+            setIndicatorPosition(previousLink);
+            primaryNav.classList.add("has-active-link");
+            primaryNav.getBoundingClientRect();
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                primaryNav.classList.add("is-transitioning");
+                setIndicatorPosition(activeLink);
+              });
+            });
+          } else {
+            setIndicatorPosition(activeLink);
+            primaryNav.classList.add("has-active-link");
+          }
+
+          window.addEventListener("resize", () => setIndicatorPosition(activeLink));
+        }
+      }
+
       const navToggle = document.getElementById("site-nav-toggle");
       const navMenu = document.getElementById("site-nav-menu");
 
@@ -51,7 +123,9 @@
           navToggle.setAttribute("aria-expanded", String(isOpen));
           navToggle.setAttribute(
             "aria-label",
-            isOpen ? "Close navigation menu" : "Open navigation menu"
+            translations[document.documentElement.lang][
+              isOpen ? "nav_close_menu" : "nav_open_menu"
+            ]
           );
         };
 
@@ -93,12 +167,10 @@
 
       const themeToggle = document.getElementById("theme-toggle");
       if (themeToggle) {
-        const themeLabel = themeToggle.querySelector(".theme-toggle-label");
         const themeIcon = themeToggle.querySelector(".theme-toggle-icon");
 
         const updateThemeToggle = () => {
           const isDark = document.documentElement.dataset.theme === "dark";
-          themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
           themeIcon.textContent = isDark ? "☀" : "☾";
           themeToggle.setAttribute("aria-label", `Switch to ${isDark ? "light" : "dark"} mode`);
           themeToggle.setAttribute("aria-pressed", String(isDark));
@@ -112,6 +184,7 @@
             localStorage.setItem("whisper-theme", nextTheme);
           } catch {}
           updateThemeToggle();
+          changeLanguage(document.documentElement.lang);
         });
       }
     </script>
