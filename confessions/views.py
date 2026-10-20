@@ -5,9 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import IntegrityError, transaction
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
-from django.http import JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 from accounts.forms import CustomUserCreationForm
 from .forms import ConfessionForm
 from .models import Confession, Reaction
@@ -132,12 +132,19 @@ def _confession_page_context(request, form=None):
       whisper_count=Count('pk', distinct=True),
       reaction_count=Count('reactions__pk', distinct=True),
   )
-  context = {
-      'confessions': _assign_confession_tones(
+  confessions = list(
+      _assign_confession_tones(
           _annotate_reactions(
               approved_confessions.order_by('-created_at'),
               request.user,
           )
+      )
+  )
+  context = {
+      'confessions': confessions,
+      'latest_confession_id': max(
+          (confession.pk for confession in confessions),
+          default=0,
       ),
       'confession_count': activity['whisper_count'],
       'reaction_count': activity['reaction_count'],
@@ -165,6 +172,39 @@ def confession_view(request):
   )
 
 
+@require_GET
+def confession_updates(request):
+  try:
+    after_id = int(request.GET.get('after', '0'))
+  except ValueError:
+    return HttpResponseBadRequest('Invalid confession cursor.')
+  if after_id < 0:
+    return HttpResponseBadRequest('Invalid confession cursor.')
+
+  confessions = list(
+      _assign_confession_tones(
+          _annotate_reactions(
+              Confession.objects.filter(
+                  is_approved=True,
+                  pk__gt=after_id,
+              ).order_by('pk'),
+              request.user,
+          )
+      )
+  )
+  if not confessions:
+    return HttpResponse(status=204)
+
+  return render(
+      request,
+      'confessions/includes/confession_updates.html',
+      {
+          'confessions': confessions,
+          'latest_confession_id': confessions[-1].pk,
+      },
+  )
+
+
 @login_required
 def profile_view(request):
   confessions = _assign_confession_tones(
@@ -175,7 +215,7 @@ def profile_view(request):
   )
   return render(
       request,
-      'confessions/profile.html',
+      'accounts/profile.html',
       {
           'confessions': confessions,
           'confession_count': len(confessions),
