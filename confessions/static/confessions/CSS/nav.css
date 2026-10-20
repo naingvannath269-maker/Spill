@@ -376,13 +376,9 @@
   .site-nav .theme-toggle {
     width: 100%;
     min-height: 44px;
-    justify-content: flex-start;
-    padding: 0 12px;
-    text-align: left;
-  }
-
-  .site-nav__actions form .site-nav__action {
     justify-content: center;
+    padding: 0 12px;
+    text-align: center;
   }
 
   html[data-theme="dark"] .site-nav__menu {

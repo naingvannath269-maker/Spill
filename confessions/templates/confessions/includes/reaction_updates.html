@@ -1,0 +1,3 @@
+{% for confession in confessions %}
+  {% include 'confessions/includes/reaction_form.html' with confession=confession oob=True %}
+{% endfor %}

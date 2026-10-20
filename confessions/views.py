@@ -7,13 +7,11 @@ from django.db import IntegrityError, transaction
 from django.db.models import BooleanField, Count, Exists, OuterRef, Q, Value
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
 from accounts.forms import CustomUserCreationForm
 from .forms import ConfessionForm
-from .models import Confession, Reaction
-
-# Change this line:
-from .forms import ConfessionForm
+from .models import Confession, Reaction, Comment
 # To this:
 from .forms import ConfessionForm, CustomUserChangeForm
 
@@ -128,10 +126,7 @@ def _create_confession(request):
 
 def _confession_page_context(request, form=None):
   approved_confessions = Confession.objects.filter(is_approved=True)
-  activity = approved_confessions.aggregate(
-      whisper_count=Count('pk', distinct=True),
-      reaction_count=Count('reactions__pk', distinct=True),
-  )
+  activity = _community_activity_counts()
   confessions = list(
       _assign_confession_tones(
           _annotate_reactions(
@@ -146,12 +141,19 @@ def _confession_page_context(request, form=None):
           (confession.pk for confession in confessions),
           default=0,
       ),
-      'confession_count': activity['whisper_count'],
+      'confession_count': activity['confession_count'],
       'reaction_count': activity['reaction_count'],
   }
   if request.user.is_authenticated:
     context['form'] = form if form is not None else ConfessionForm()
   return context
+
+
+def _community_activity_counts():
+  return Confession.objects.filter(is_approved=True).aggregate(
+      confession_count=Count('pk', distinct=True),
+      reaction_count=Count('reactions__pk', distinct=True),
+  )
 
 
 def wall_view(request):
@@ -202,6 +204,70 @@ def confession_updates(request):
           'confessions': confessions,
           'latest_confession_id': confessions[-1].pk,
       },
+  )
+
+
+@require_GET
+def activity_updates(request):
+  return render(
+      request,
+      'confessions/includes/activity_updates.html',
+      _community_activity_counts(),
+  )
+
+
+@require_GET
+def reaction_updates(request):
+  try:
+    confession_ids = {
+        int(value)
+        for value in request.GET.getlist('confession_id')
+    }
+  except ValueError:
+    return HttpResponseBadRequest('Invalid confession id.')
+
+  if not confession_ids:
+    return HttpResponse(status=204)
+
+  visible_confessions = Confession.objects.filter(
+      pk__in=confession_ids,
+      is_approved=True,
+  )
+  if request.user.is_authenticated:
+    visible_confessions = visible_confessions | Confession.objects.filter(
+        pk__in=confession_ids,
+        author=request.user,
+    )
+
+  confessions = list(
+      _annotate_reactions(
+          visible_confessions.order_by('pk'),
+          request.user,
+      )
+  )
+  if not confessions:
+    return HttpResponse(status=204)
+
+  return render(
+      request,
+      'confessions/includes/reaction_updates.html',
+      {'confessions': confessions},
+  )
+
+
+@require_GET
+def comment_list(request, confession_id):
+  visible_confessions = Confession.objects.filter(is_approved=True)
+  if request.user.is_authenticated:
+    visible_confessions = visible_confessions | Confession.objects.filter(
+        pk=confession_id,
+        author=request.user,
+    )
+  confession = get_object_or_404(visible_confessions, pk=confession_id)
+  return render(
+      request,
+      'confessions/includes/comment_list.html',
+      {'confession': confession},
   )
 
 
@@ -299,3 +365,30 @@ def update_profile(request):
                     messages.error(request, f"{field}: {error}")
             return redirect('profile')
     return redirect('profile')
+
+@require_POST
+def add_comment(request, confession_id):
+    confession = get_object_or_404(Confession, pk=confession_id)
+    content = request.POST.get('content', '').strip()
+    if not content:
+        return HttpResponseBadRequest('Comment cannot be empty.')
+
+    parent_id = request.POST.get('parent_id')
+    parent_comment = None
+    if parent_id:
+        parent_comment = get_object_or_404(
+            Comment,
+            pk=parent_id,
+            confession=confession,
+            parent__isnull=True,
+        )
+
+    Comment.objects.create(
+        author=request.user if request.user.is_authenticated else None,
+        confession=confession,
+        parent=parent_comment,
+        content=content,
+    )
+
+    target_id = f'comments-modal-{confession.pk}'
+    return redirect(f'{reverse("confession")}#{target_id}')
