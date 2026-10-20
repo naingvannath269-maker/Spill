@@ -203,7 +203,7 @@ const translations = {
   },
 };
 
-function changeLanguage(lang) {
+function changeLanguage(lang, persist = true) {
   if (!Object.hasOwn(translations, lang)) {
     lang = "en";
   }
@@ -271,12 +271,21 @@ function changeLanguage(lang) {
     );
   }
 
-  try {
-    localStorage.setItem("selectedLanguage", lang);
-  } catch (error) {
-    console.warn("Unable to save the selected language.", error);
+  if (persist) {
+    try {
+      localStorage.setItem("selectedLanguage", lang);
+    } catch (error) {
+      console.warn("Unable to save the selected language.", error);
+    }
   }
+
+  document.dispatchEvent(new Event("app:languagechange"));
 }
+
+document.addEventListener("htmx:afterSwap", () => {
+  changeLanguage(document.documentElement.lang, false);
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   let savedLang = "km";
   try {

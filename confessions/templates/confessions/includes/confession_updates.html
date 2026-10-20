@@ -1,0 +1,11 @@
+{% for confession in confessions %}
+  {% include 'confessions/includes/confession_card.html' with confession=confession %}
+{% endfor %}
+<input
+  type="hidden"
+  id="latest-confession-id"
+  name="after"
+  value="{{ latest_confession_id }}"
+  hx-swap-oob="outerHTML"
+/>
+<div id="confessions-empty-state" hx-swap-oob="delete"></div>

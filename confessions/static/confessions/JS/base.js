@@ -66,6 +66,9 @@ if (primaryNav) {
     }
 
     window.addEventListener("resize", () => setIndicatorPosition(activeLink));
+    document.addEventListener("app:languagechange", () =>
+      setIndicatorPosition(activeLink)
+    );
   }
 }
 

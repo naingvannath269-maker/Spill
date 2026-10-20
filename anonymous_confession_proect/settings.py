@@ -147,6 +147,7 @@ INAPPROPRIATE_WORDS = (
     'bastards',
     'bitch',
     'b*tch',
+    'btch'
     'bitches',
     'bollocks',
     'bugger',
