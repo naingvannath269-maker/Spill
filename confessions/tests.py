@@ -177,6 +177,72 @@ class ConfessionSubmissionTests(TestCase):
     self.assertContains(response, 'id="confession-content"')
 
 
+class ConfessionUpdatesTests(TestCase):
+  def setUp(self):
+    self.user = CustomUser.objects.create_user(
+        email='updates@example.com',
+        password='test-password',
+    )
+
+  def test_confession_page_polls_with_htmx_every_three_seconds(self):
+    response = self.client.get(reverse('confession'))
+
+    self.assertContains(response, 'hx-trigger="every 3s"')
+    self.assertContains(response, 'hx-swap="afterbegin"')
+    self.assertContains(response, 'https://unpkg.com/htmx.org@1.9.12')
+
+  def test_updates_return_only_new_approved_confessions_and_advance_cursor(self):
+    previous = Confession.objects.create(
+        author=self.user,
+        content='Already on the page.',
+    )
+    new_confession = Confession.objects.create(
+        author=self.user,
+        content='A new confession.',
+    )
+    Confession.objects.create(
+        author=self.user,
+        content='Waiting for approval.',
+        is_approved=False,
+    )
+
+    response = self.client.get(
+        reverse('confession_updates'),
+        {'after': previous.pk},
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(response, 'A new confession.')
+    self.assertNotContains(response, 'Already on the page.')
+    self.assertNotContains(response, 'Waiting for approval.')
+    self.assertContains(
+        response,
+        f'value="{new_confession.pk}"',
+    )
+    self.assertContains(response, 'hx-swap-oob="delete"')
+
+  def test_updates_return_no_content_when_there_are_no_new_confessions(self):
+    confession = Confession.objects.create(
+        author=self.user,
+        content='Already on the page.',
+    )
+
+    response = self.client.get(
+        reverse('confession_updates'),
+        {'after': confession.pk},
+    )
+
+    self.assertEqual(response.status_code, 204)
+
+  def test_updates_reject_an_invalid_cursor(self):
+    response = self.client.get(
+        reverse('confession_updates'),
+        {'after': 'not-a-number'},
+    )
+
+    self.assertEqual(response.status_code, 400)
+
+
 class ReactionTests(TestCase):
   def setUp(self):
     self.user = CustomUser.objects.create_user(

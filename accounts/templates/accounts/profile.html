@@ -1,4 +1,8 @@
 {% extends 'confessions/base.html' %}
+{% load static %}
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'accounts/profile.css' %}?v=1" />
+{% endblock %}
 {% block content %}
 <div class="page-shell profile-page">
   <section class="profile-card" aria-labelledby="profile-title">

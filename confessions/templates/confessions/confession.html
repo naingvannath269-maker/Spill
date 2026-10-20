@@ -57,11 +57,21 @@
       <h2 id="latest-title" data-i18n="heading_latest_whispers">Latest whispers</h2>
       <span>{{ confession_count }} <span data-i18n="text_shared_count">shared</span></span>
     </div>
-    <div class="confessions-feed" aria-label="Latest confessions" data-i18n-aria-label="aria_latest_confessions">
+    <div
+      class="confessions-feed"
+      id="confessions-feed"
+      aria-label="Latest confessions"
+      data-i18n-aria-label="aria_latest_confessions"
+      hx-get="{% url 'confession_updates' %}"
+      hx-trigger="every 3s"
+      hx-include="#latest-confession-id"
+      hx-swap="afterbegin"
+    >
+      <input type="hidden" id="latest-confession-id" name="after" value="{{ latest_confession_id }}" />
       {% for confession in confessions %}
         {% include 'confessions/includes/confession_card.html' with confession=confession %}
       {% empty %}
-      <div class="empty-state">
+      <div class="empty-state" id="confessions-empty-state">
         <span aria-hidden="true">✳</span>
         <h2 data-i18n="empty_title">The wall is quiet</h2>
         <p data-i18n="empty_desc">There are no whispers yet. Be the first to share one.</p>
