@@ -1,0 +1,78 @@
+{% for comment in confession.main_comments %}
+<article class="fb-comment-item" id="comment-item-{{ comment.id }}">
+  <span class="fb-comment-avatar" aria-hidden="true">
+    {{ comment.author.username|default:'A'|slice:':1'|upper }}
+  </span>
+  <div class="fb-comment-body">
+    <div class="fb-comment-bubble">
+      <strong class="fb-comment-author">
+        @{{ comment.author.username|default:'anonymous' }}
+      </strong>
+      <div class="fb-comment-text">{{ comment.content }}</div>
+    </div>
+
+    <div class="fb-comment-actions">
+      <small>{{ comment.created_at|timesince }} ago</small>
+      <button
+        type="button"
+        class="fb-action-btn"
+        data-toggle-section="reply-form-{{ comment.id }}"
+        data-focus-input="reply-input-{{ comment.id }}"
+      >
+        <span data-i18n="btn_reply">Reply</span>
+      </button>
+    </div>
+
+    <div class="fb-reply-thread">
+      {% for reply in comment.replies.all %}
+      <article class="fb-comment-item">
+        <span class="fb-comment-avatar" aria-hidden="true">
+          {{ reply.author.username|default:'A'|slice:':1'|upper }}
+        </span>
+        <div class="fb-comment-body">
+          <div class="fb-comment-bubble">
+            <strong class="fb-comment-author">
+              @{{ reply.author.username|default:'anonymous' }}
+            </strong>
+            <div class="fb-comment-text">{{ reply.content }}</div>
+          </div>
+          <small class="fb-comment-time">
+            {{ reply.created_at|timesince }} ago
+          </small>
+        </div>
+      </article>
+      {% endfor %}
+
+      <form
+        id="reply-form-{{ comment.id }}"
+        method="POST"
+        action="{% url 'add_comment' confession.pk %}"
+        class="d-none fb-comment-form fb-reply-form"
+      >
+        {% csrf_token %}
+        <input type="hidden" name="parent_id" value="{{ comment.id }}" />
+        <input
+          type="text"
+          id="reply-input-{{ comment.id }}"
+          name="content"
+          class="form-control fb-input-pill"
+          placeholder="Write a reply..."
+          data-i18n-placeholder="placeholder_reply"
+          required
+        />
+        <button
+          type="submit"
+          class="page-primary-link"
+          data-i18n="btn_reply"
+        >
+          Reply
+        </button>
+      </form>
+    </div>
+  </div>
+</article>
+{% empty %}
+<p class="fb-comment-empty" data-i18n="comments_empty">
+  No comments yet. Be the first!
+</p>
+{% endfor %}
