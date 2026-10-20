@@ -82,7 +82,8 @@ const translations = {
     login_here: "Log in here",
     auth_eyebrow: "LET IT OUT, LEAVE YOUR NAME OUT.",
     auth_story_heading: "Some things feel lighter when shared.",
-    auth_story_intro: "Make room for the thoughts you have been carrying around.",
+    auth_story_intro:
+      "Make room for the thoughts you have been carrying around.",
     auth_note_label: "A NOTE TO SELF",
     auth_note_message: "You can be honest here.",
     auth_story_footer: "READ, WRITE, LET GO",
@@ -103,7 +104,7 @@ const translations = {
     // Navigation
     nav_home: "ទំព័រដើម",
     nav_confession: "សារភាព",
-    nav_profile: "គណនីផ្ទាល់ខ្លួន",
+    nav_profile: "គណនី",
     nav_dark_mode: "ងងឹត",
     nav_light_mode: "ពន្លឺ",
     nav_login: "ចូលប្រើ",
@@ -239,7 +240,9 @@ function changeLanguage(lang) {
     themeLabel.textContent = translations[lang][themeKey];
     themeToggle.setAttribute(
       "aria-label",
-      translations[lang][isDark ? "theme_switch_to_light" : "theme_switch_to_dark"]
+      translations[lang][
+        isDark ? "theme_switch_to_light" : "theme_switch_to_dark"
+      ],
     );
   }
 
@@ -255,7 +258,7 @@ function changeLanguage(lang) {
         nextLang === "en"
           ? "language_aria_switch_to_en"
           : "language_aria_switch_to_km"
-      ]
+      ],
     );
   }
 
@@ -264,7 +267,7 @@ function changeLanguage(lang) {
     const isOpen = navToggle.getAttribute("aria-expanded") === "true";
     navToggle.setAttribute(
       "aria-label",
-      translations[lang][isOpen ? "nav_close_menu" : "nav_open_menu"]
+      translations[lang][isOpen ? "nav_close_menu" : "nav_open_menu"],
     );
   }
 
