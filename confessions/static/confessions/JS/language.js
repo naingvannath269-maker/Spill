@@ -37,6 +37,8 @@ const translations = {
     modal_kicker: "This space is yours",
     modal_title: "Write Your Confession",
     label_your_confession: "Your confession",
+    error_inappropriate_language:
+      "Please remove inappropriate language before posting.",
     compose_footer_hint: "Up to 500 characters. Please keep it kind.",
     btn_post_anonymously: "Post anonymously",
     btn_floating_confess: "Confess",
@@ -147,6 +149,8 @@ const translations = {
     modal_kicker: "ទីកន្លែងនេះជារបស់អ្នក",
     modal_title: "សរសេរសារសារភាពរបស់អ្នក",
     label_your_confession: "សារសារភាពរបស់អ្នក",
+    error_inappropriate_language:
+      "សូមលុបពាក្យមិនសមរម្យចេញ មុនពេលបង្ហោះ។",
     compose_footer_hint: "អតិបរមា ៥០០ តួអក្សរ។ សូមរក្សាពាក្យសម្តីសមរម្យ។",
     btn_post_anonymously: "បង្ហោះជាអនាមិក",
     btn_floating_confess: "សារភាព",
