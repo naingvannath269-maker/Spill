@@ -52,4 +52,4 @@ class CustomUser(AbstractUser):
   REQUIRED_FIELDS = []  # No extra fields required for createsuperuser besides email & password
 
   def __str__(self):
-    return self.email
+    return self.username

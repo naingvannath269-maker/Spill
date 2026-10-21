@@ -1,6 +1,10 @@
 {% for comment in confession.main_comments %}
 <article class="fb-comment-item" id="comment-item-{{ comment.id }}">
-  <span class="fb-comment-avatar" aria-hidden="true">
+  <span
+    class="fb-comment-avatar"
+    data-username="{{ comment.author.username|default:'anonymous' }}"
+    aria-hidden="true"
+  >
     {{ comment.author.username|default:'A'|slice:':1'|upper }}
   </span>
   <div class="fb-comment-body">
@@ -26,7 +30,11 @@
     <div class="fb-reply-thread">
       {% for reply in comment.replies.all %}
       <article class="fb-comment-item">
-        <span class="fb-comment-avatar" aria-hidden="true">
+        <span
+          class="fb-comment-avatar"
+          data-username="{{ reply.author.username|default:'anonymous' }}"
+          aria-hidden="true"
+        >
           {{ reply.author.username|default:'A'|slice:':1'|upper }}
         </span>
         <div class="fb-comment-body">

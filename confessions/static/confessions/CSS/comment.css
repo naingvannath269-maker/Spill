@@ -103,6 +103,16 @@
   font-size: 0.8rem;
 }
 
+.comments-modal-status.is-error {
+  margin: 0 20px 12px;
+  padding: 10px 12px;
+  border: 1px solid #e7b8b8;
+  border-radius: 8px;
+  background: #fff1f1;
+  color: #a12727;
+  font-size: 0.9rem;
+}
+
 .comments-modal-compose {
   flex-shrink: 0;
   padding: 14px 20px;
@@ -159,8 +169,8 @@
   flex: 0 0 32px;
   place-items: center;
   border-radius: 50%;
-  background: #dce7f2;
-  color: #344652;
+  background: var(--avatar-background, #dce7f2);
+  color: #ffffff;
   font-size: 0.8rem;
   font-weight: 700;
 }
@@ -273,8 +283,7 @@ html[data-theme="dark"] .fb-comment-author {
 }
 
 html[data-theme="dark"] .fb-comment-avatar {
-  background: #45535f;
-  color: #edf1f4;
+  color: #ffffff;
 }
 
 html[data-theme="dark"] .fb-reply-thread {

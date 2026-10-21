@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
 from accounts.forms import CustomUserCreationForm
-from .forms import ConfessionForm
+from .forms import ConfessionForm, contains_inappropriate_language
 from .models import Confession, Reaction, Comment
 # To this:
 from .forms import ConfessionForm, CustomUserChangeForm
@@ -372,6 +372,12 @@ def add_comment(request, confession_id):
     content = request.POST.get('content', '').strip()
     if not content:
         return HttpResponseBadRequest('Comment cannot be empty.')
+    if contains_inappropriate_language(content):
+        response = HttpResponseBadRequest(
+            'Please remove inappropriate language before posting.'
+        )
+        response['X-Comment-Error'] = 'inappropriate_language'
+        return response
 
     parent_id = request.POST.get('parent_id')
     parent_comment = None
@@ -389,6 +395,13 @@ def add_comment(request, confession_id):
         parent=parent_comment,
         content=content,
     )
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(
+            request,
+            'confessions/includes/comment_list.html',
+            {'confession': confession},
+        )
 
     target_id = f'comments-modal-{confession.pk}'
     return redirect(f'{reverse("confession")}#{target_id}')

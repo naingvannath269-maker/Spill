@@ -32,6 +32,7 @@ class ConfessionSubmissionTests(TestCase):
         response,
         'Please remove inappropriate language before posting.',
     )
+    self.assertContains(response, 'data-i18n="error_inappropriate_language"')
     self.assertContains(response, 'This is a BADWORD confession.')
     self.assertContains(response, 'id="confession-content"')
 
@@ -57,6 +58,49 @@ class ConfessionSubmissionTests(TestCase):
 
     self.assertEqual(response.status_code, 200)
     self.assertEqual(Confession.objects.count(), 0)
+
+  def test_additional_english_profanity_words_and_phrases_are_rejected(self):
+    for content in (
+        'That was a jackass move.',
+        'Please fuck off.',
+        'You are a piece of shit.',
+    ):
+      with self.subTest(content=content):
+        response = self.client.post(
+            reverse('confession'),
+            {'content': content},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Confession.objects.count(), 0)
+
+  @override_settings(INAPPROPRIATE_WORDS=('អាឆ្កួត',))
+  def test_khmer_blocked_word_is_rejected_next_to_other_khmer_text(self):
+    response = self.client.post(
+        reverse('confession'),
+        {'content': 'គាត់អាឆ្កួតណាស់'},
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(Confession.objects.count(), 0)
+
+  def test_additional_khmer_profanity_terms_are_rejected(self):
+    for content in (
+        'អាល្ងង់',
+        'មីល្ងង់',
+        'អាសំផឹង',
+        'មីសំផឹង',
+        'អាមនុស្សថោក',
+        'មីថោកទាប',
+    ):
+      with self.subTest(content=content):
+        response = self.client.post(
+            reverse('confession'),
+            {'content': content},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Confession.objects.count(), 0)
 
   def test_confession_page_saves_using_existing_form_and_author(self):
     response = self.client.post(
@@ -327,6 +371,18 @@ class CommentTests(TestCase):
         'This comment should appear.',
     )
 
+  def test_ajax_comment_is_saved_without_redirecting_from_the_thread(self):
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': 'Keep the thread open.'},
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertFalse(response.has_header('Location'))
+    self.assertContains(response, 'Keep the thread open.')
+    self.assertEqual(Comment.objects.get().content, 'Keep the thread open.')
+
   def test_comment_list_endpoint_returns_only_the_selected_confession_thread(self):
     other_confession = Confession.objects.create(
         author=self.user,
@@ -385,6 +441,26 @@ class CommentTests(TestCase):
         'A reply in the thread.',
     )
 
+  def test_ajax_reply_is_saved_without_redirecting_from_the_thread(self):
+    parent = Comment.objects.create(
+        author=self.user,
+        confession=self.confession,
+        content='Parent comment.',
+    )
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': 'Keep the reply thread open.', 'parent_id': parent.pk},
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertFalse(response.has_header('Location'))
+    self.assertContains(response, 'Keep the reply thread open.')
+    self.assertEqual(
+        Comment.objects.get(parent=parent).content,
+        'Keep the reply thread open.',
+    )
+
   def test_anonymous_comment_can_still_be_posted(self):
     response = self.client.post(
         reverse('add_comment', args=(self.confession.pk,)),
@@ -402,6 +478,40 @@ class CommentTests(TestCase):
 
     self.assertEqual(response.status_code, 400)
     self.assertFalse(Comment.objects.exists())
+
+  @override_settings(INAPPROPRIATE_WORDS=('fuck off',))
+  def test_comment_with_blocked_english_phrase_is_rejected(self):
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': 'Please fuck off.'},
+    )
+
+    self.assertEqual(response.status_code, 400)
+    self.assertContains(
+        response,
+        'Please remove inappropriate language before posting.',
+        status_code=400,
+    )
+    self.assertEqual(
+        response['X-Comment-Error'],
+        'inappropriate_language',
+    )
+    self.assertFalse(Comment.objects.exists())
+
+  @override_settings(INAPPROPRIATE_WORDS=('អាឆ្កួត',))
+  def test_reply_with_blocked_khmer_word_is_rejected(self):
+    parent = Comment.objects.create(
+        author=self.user,
+        confession=self.confession,
+        content='A polite parent comment.',
+    )
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': 'គាត់អាឆ្កួតណាស់', 'parent_id': parent.pk},
+    )
+
+    self.assertEqual(response.status_code, 400)
+    self.assertEqual(Comment.objects.count(), 1)
 
   def test_updates_reject_an_invalid_cursor(self):
     response = self.client.get(
