@@ -197,12 +197,134 @@ function closeCommentsModal(modal) {
   modal.setAttribute("aria-hidden", "true");
   document.body.style.overflow = modal.dataset.previousBodyOverflow ?? "";
   delete modal.dataset.previousBodyOverflow;
+  window.clearInterval(commentRefreshTimers.get(modal));
+  commentRefreshTimers.delete(modal);
+  commentRefreshRequests.get(modal)?.abort();
+  commentRefreshRequests.delete(modal);
   if (modal.dataset.openerId) {
     document.getElementById(modal.dataset.openerId)?.focus();
   }
 }
 
 const commentRefreshRequests = new WeakMap();
+const commentRefreshTimers = new WeakMap();
+const commentAvatarColors = [
+  "#2563eb",
+  "#7c3aed",
+  "#c026d3",
+  "#be185d",
+  "#b91c1c",
+  "#c2410c",
+  "#a16207",
+  "#4d7c0f",
+  "#15803d",
+  "#0f766e",
+  "#0e7490",
+  "#0369a1",
+  "#4338ca",
+  "#6d28d9",
+  "#9d174d",
+  "#4f46e5",
+  "#047857",
+  "#a21caf",
+  "#9f1239",
+  "#854d0e",
+];
+
+function applyCommentAvatarColors(container = document) {
+  const avatars = [
+    ...container.querySelectorAll(".fb-comment-avatar[data-username]"),
+  ];
+  avatars.forEach((avatar) => {
+    const username = avatar.dataset.username.toLowerCase();
+    const preferredIndex = Array.from(username).reduce(
+      (value, character) => (value * 31 + character.codePointAt(0)) >>> 0,
+      0,
+    ) % commentAvatarColors.length;
+    avatar.style.setProperty(
+      "--avatar-background",
+      commentAvatarColors[preferredIndex],
+    );
+  });
+}
+
+applyCommentAvatarColors();
+
+document.addEventListener("submit", async (event) => {
+  const form = event.target;
+  if (!(form instanceof HTMLFormElement) || !form.matches(".fb-comment-form")) {
+    return;
+  }
+
+  event.preventDefault();
+  const modal = form.closest(".comments-modal-overlay");
+  const status = modal?.querySelector("[data-comment-status]");
+  const submitButton = form.querySelector('button[type="submit"]');
+  if (!modal || !status) {
+    return;
+  }
+
+  status.textContent = "";
+  status.classList.remove("is-error");
+  status.removeAttribute("data-i18n");
+  if (submitButton) {
+    submitButton.disabled = true;
+  }
+
+  try {
+    const response = await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        Accept: "text/plain",
+      },
+      credentials: "same-origin",
+    });
+
+    if (response.redirected) {
+      window.location.assign(response.url);
+      return;
+    }
+
+    if (!response.ok) {
+      status.textContent = await response.text();
+      status.classList.add("is-error");
+      if (response.headers.get("X-Comment-Error") === "inappropriate_language") {
+        status.setAttribute("data-i18n", "error_inappropriate_language");
+        changeLanguage(document.documentElement.lang, false);
+      }
+      return;
+    }
+
+    const commentList = modal.querySelector("[data-comment-list]");
+    if (!commentList) {
+      throw new Error("Comment list container is missing.");
+    }
+
+    const updatedComments = await response.text();
+    commentRefreshRequests.get(modal)?.abort();
+    commentRefreshRequests.delete(modal);
+    form.reset();
+    commentList.innerHTML = updatedComments;
+    applyCommentAvatarColors(commentList);
+    changeLanguage(document.documentElement.lang, false);
+    const commentContent = modal.querySelector(".comments-modal-content");
+    if (commentContent) {
+      commentContent.scrollTop = commentContent.scrollHeight;
+    }
+  } catch (error) {
+    console.error("Unable to post or display comment.", error);
+    status.textContent =
+      translations[document.documentElement.lang]?.comments_load_error ??
+      "Could not refresh comments. Please try again.";
+    status.classList.add("is-error");
+  } finally {
+    if (submitButton) {
+      submitButton.disabled = false;
+    }
+  }
+});
 
 async function refreshComments(modal) {
   const commentList = modal.querySelector("[data-comment-list]");
@@ -217,6 +339,8 @@ async function refreshComments(modal) {
   commentRefreshRequests.set(modal, controller);
   if (status) {
     status.textContent = "";
+    status.classList.remove("is-error");
+    status.removeAttribute("data-i18n");
   }
 
   try {
@@ -230,8 +354,50 @@ async function refreshComments(modal) {
       throw new Error(`Comment refresh failed with status ${response.status}.`);
     }
 
-    commentList.innerHTML = await response.text();
-    changeLanguage(document.documentElement.lang, false);
+    const updatedComments = await response.text();
+    if (commentList.innerHTML !== updatedComments) {
+      const formState = [...commentList.querySelectorAll(".fb-comment-form")].map(
+        (form) => ({
+          id: form.id,
+          hidden: form.classList.contains("d-none"),
+          values: [...form.querySelectorAll("input")].map((input) => [
+            input.id,
+            input.value,
+          ]),
+        }),
+      );
+      const focusedInputId =
+        document.activeElement instanceof HTMLInputElement
+          ? document.activeElement.id
+          : null;
+      const content = modal.querySelector(".comments-modal-content");
+      const wasAtBottom = content
+        ? content.scrollHeight - content.scrollTop - content.clientHeight < 24
+        : false;
+
+      commentList.innerHTML = updatedComments;
+      applyCommentAvatarColors(commentList);
+      for (const state of formState) {
+        const form = document.getElementById(state.id);
+        if (!form) {
+          continue;
+        }
+        form.classList.toggle("d-none", state.hidden);
+        for (const [inputId, value] of state.values) {
+          const input = document.getElementById(inputId);
+          if (input instanceof HTMLInputElement) {
+            input.value = value;
+          }
+        }
+      }
+      if (focusedInputId) {
+        document.getElementById(focusedInputId)?.focus();
+      }
+      if (wasAtBottom && content) {
+        content.scrollTop = content.scrollHeight;
+      }
+      changeLanguage(document.documentElement.lang, false);
+    }
   } catch (error) {
     if (error.name === "AbortError") {
       return;
@@ -249,6 +415,18 @@ async function refreshComments(modal) {
   }
 }
 
+function startCommentPolling(modal) {
+  if (commentRefreshTimers.has(modal)) {
+    return;
+  }
+  const timer = window.setInterval(() => {
+    if (modal.classList.contains("is-open")) {
+      refreshComments(modal);
+    }
+  }, 3000);
+  commentRefreshTimers.set(modal, timer);
+}
+
 document.addEventListener("click", (event) => {
   if (!(event.target instanceof Element)) {
     return;
@@ -262,6 +440,7 @@ document.addEventListener("click", (event) => {
     if (modal) {
       openCommentsModal(modal, openCommentsButton);
       refreshComments(modal);
+      startCommentPolling(modal);
     }
     return;
   }
@@ -313,6 +492,8 @@ if (window.location.hash) {
       : target.closest(".comments-modal-overlay");
     if (commentsModal) {
       openCommentsModal(commentsModal);
+      refreshComments(commentsModal);
+      startCommentPolling(commentsModal);
     }
   }
 }

@@ -21,8 +21,8 @@
         {% endfor %}
         <label for="{{ form.content.id_for_label }}" data-i18n="label_your_confession">Your confession</label>
         {{ form.content }}
-        {% for error in form.content.errors %}
-        <p class="form-error" role="alert">{{ error }}</p>
+        {% for error in form.content_errors_with_codes %}
+        <p class="form-error" role="alert"{% if error.code == 'inappropriate_language' %} data-i18n="error_inappropriate_language"{% endif %}>{{ error.message }}</p>
         {% endfor %}
         <div class="compose-footer">
           <span data-i18n="compose_footer_hint">Up to 500 characters. Please keep it kind.</span>
