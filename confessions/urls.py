@@ -8,6 +8,11 @@ urlpatterns = [
     path('confession/reactions/', views.reaction_updates, name='reaction_updates'),
     path('confession/activity/', views.activity_updates, name='activity_updates'),
     path(
+        'confession/<int:confession_id>/delete/',
+        views.delete_confession,
+        name='delete_confession',
+    ),
+    path(
         'confession/<int:confession_id>/comments/',
         views.comment_list,
         name='comment_list',

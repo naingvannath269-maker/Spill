@@ -1,4 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700;800&display=swap");
+
+html[lang="km"] body,
+html[lang="km"] body * {
+  font-family: "Kantumruy Pro", "Khmer OS Siemreap", sans-serif !important;
+}
 
 :root {
   --ink: #192b3a;
@@ -8,6 +14,8 @@
 }
 
 body.whisper-body {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   color: var(--ink);
   background:
@@ -24,8 +32,8 @@ body.whisper-body {
     #eef5f8 !important;
   font-family: "DM Sans", sans-serif;
   transition:
-    background 150ms ease,
-    color 150ms ease;
+    background 1s ease,
+    color 2s ease;
 }
 
 .whisper-nav {
@@ -111,6 +119,7 @@ body.whisper-body {
 }
 
 .whisper-main {
+  flex: 1 0 auto;
   max-width: 1080px;
   padding-top: 22px;
 }
@@ -961,11 +970,29 @@ body.whisper-body {
   gap: 8px;
 }
 
-.bubble-actions form {
+.bubble-actions .reaction-form,
+.bubble-actions .delete-confession-form {
   display: flex;
   min-width: 0;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.delete-confession-button {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid #e4b7b7;
+  border-radius: 6px;
+  background: #fff7f7;
+  color: #a12626;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.delete-confession-button:hover {
+  background: #ffebeb;
 }
 
 @media (max-width: 650px) {
@@ -974,10 +1001,10 @@ body.whisper-body {
     flex-direction: column;
   }
 
-  .bubble-actions form {
+  .bubble-actions .reaction-form,
+  .bubble-actions .delete-confession-form {
     width: 100%;
   }
-
 }
 
 html[data-theme="dark"] {
@@ -990,8 +1017,16 @@ html[data-theme="dark"] {
 html[data-theme="dark"] body.whisper-body {
   color: var(--ink);
   background:
-    radial-gradient(ellipse at 8% 8%, rgba(60, 72, 76, 0.28), transparent 26rem),
-    radial-gradient(ellipse at 94% 24%, rgba(44, 62, 68, 0.34), transparent 30rem),
+    radial-gradient(
+      ellipse at 8% 8%,
+      rgba(60, 72, 76, 0.28),
+      transparent 26rem
+    ),
+    radial-gradient(
+      ellipse at 94% 24%,
+      rgba(44, 62, 68, 0.34),
+      transparent 30rem
+    ),
     #15191d !important;
 }
 
@@ -1075,7 +1110,13 @@ html[data-theme="dark"] .auth-form > .auth-error {
 html[data-theme="dark"] .auth-story {
   border-color: #3c554e;
   background:
-    repeating-linear-gradient(135deg, transparent 0, transparent 21px, rgba(164, 205, 183, 0.035) 22px, rgba(164, 205, 183, 0.035) 23px),
+    repeating-linear-gradient(
+      135deg,
+      transparent 0,
+      transparent 21px,
+      rgba(164, 205, 183, 0.035) 22px,
+      rgba(164, 205, 183, 0.035) 23px
+    ),
     #263833;
 }
 

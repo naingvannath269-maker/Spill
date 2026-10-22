@@ -4,7 +4,7 @@ from django.db import models
 
 class Confession(models.Model):
   author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-  content = models.TextField(max_length=500)
+  content = models.TextField(max_length=1000)
   created_at = models.DateTimeField(auto_now_add=True)
   is_approved = models.BooleanField(
       default=True

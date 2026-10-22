@@ -116,6 +116,24 @@ class ConfessionSubmissionTests(TestCase):
     self.assertEqual(confession.content, 'I am glad I shared this.')
     self.assertContains(response, confession.content)
 
+  def test_confession_content_accepts_1000_characters_but_rejects_1001(self):
+    response = self.client.post(
+        reverse('confession'),
+        {'content': 'a' * 1000},
+    )
+
+    self.assertRedirects(response, reverse('confession'))
+    self.assertEqual(Confession.objects.get().content, 'a' * 1000)
+
+    response = self.client.post(
+        reverse('confession'),
+        {'content': 'a' * 1001},
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(Confession.objects.count(), 1)
+    self.assertContains(response, 'maxlength="1000"')
+
   @override_settings(INAPPROPRIATE_WORDS=('badword',))
   def test_invalid_confession_reopens_modal_and_preserves_submitted_text(self):
     response = self.client.post(
@@ -143,6 +161,7 @@ class ConfessionSubmissionTests(TestCase):
     self.assertEqual(response.content.decode().count('id="confession-content"'), 1)
     self.assertContains(response, 'confessions/JS/confession-modal.js')
     self.assertContains(response, 'confessions/CSS/confession-modal.css')
+    self.assertContains(response, 'class="confession-character-count"')
 
   def test_confession_card_colors_are_individual_and_stable_on_all_card_pages(self):
     for index in range(13):
@@ -221,6 +240,83 @@ class ConfessionSubmissionTests(TestCase):
     self.assertContains(response, 'id="confession-content"')
 
 
+class ConfessionDeletionTests(TestCase):
+  def setUp(self):
+    self.author = CustomUser.objects.create_user(
+        email='confession-author@example.com',
+        password='test-password',
+    )
+    self.other_user = CustomUser.objects.create_user(
+        email='other-user@example.com',
+        password='test-password',
+    )
+    self.confession = Confession.objects.create(
+        author=self.author,
+        content='A confession that can be deleted by its author.',
+    )
+
+  def test_delete_button_is_only_shown_to_the_author(self):
+    self.client.force_login(self.author)
+    response = self.client.get(reverse('confession'))
+    self.assertContains(response, 'class="delete-confession-button"')
+    self.assertContains(
+        response,
+        f'action="{reverse("delete_confession", args=(self.confession.pk,))}"',
+    )
+
+    self.client.force_login(self.other_user)
+    response = self.client.get(reverse('confession'))
+    self.assertNotContains(response, 'class="delete-confession-button"')
+
+    self.client.logout()
+    response = self.client.get(reverse('confession'))
+    self.assertNotContains(response, 'class="delete-confession-button"')
+
+  def test_author_can_delete_their_confession(self):
+    self.client.force_login(self.author)
+
+    response = self.client.post(
+        reverse('delete_confession', args=(self.confession.pk,)),
+    )
+
+    self.assertRedirects(response, reverse('confession'))
+    self.assertFalse(Confession.objects.filter(pk=self.confession.pk).exists())
+
+  def test_author_can_delete_confession_with_ajax_without_page_redirect(self):
+    self.client.force_login(self.author)
+
+    response = self.client.post(
+        reverse('delete_confession', args=(self.confession.pk,)),
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+    )
+
+    self.assertEqual(response.status_code, 204)
+    self.assertFalse(response.has_header('Location'))
+    self.assertFalse(Confession.objects.filter(pk=self.confession.pk).exists())
+
+  def test_another_user_cannot_delete_the_confession(self):
+    self.client.force_login(self.other_user)
+
+    response = self.client.post(
+        reverse('delete_confession', args=(self.confession.pk,)),
+    )
+
+    self.assertEqual(response.status_code, 404)
+    self.assertTrue(Confession.objects.filter(pk=self.confession.pk).exists())
+
+  def test_delete_requires_authentication_and_post(self):
+    delete_url = reverse('delete_confession', args=(self.confession.pk,))
+
+    response = self.client.post(delete_url)
+    self.assertEqual(response.status_code, 302)
+    self.assertTrue(Confession.objects.filter(pk=self.confession.pk).exists())
+
+    self.client.force_login(self.author)
+    response = self.client.get(delete_url)
+    self.assertEqual(response.status_code, 405)
+    self.assertTrue(Confession.objects.filter(pk=self.confession.pk).exists())
+
+
 class ConfessionUpdatesTests(TestCase):
   def setUp(self):
     self.user = CustomUser.objects.create_user(
@@ -233,6 +329,11 @@ class ConfessionUpdatesTests(TestCase):
 
     self.assertContains(response, 'hx-trigger="every 3s"')
     self.assertContains(response, 'hx-swap="afterbegin"')
+    self.assertContains(
+        response,
+        'hx-include="#latest-confession-id, #confessions-feed [data-visible-confession]"',
+    )
+    self.assertContains(response, 'name="visible_id"')
     self.assertContains(response, 'https://unpkg.com/htmx.org@1.9.12')
     self.assertContains(
         response,
@@ -283,6 +384,55 @@ class ConfessionUpdatesTests(TestCase):
     )
 
     self.assertEqual(response.status_code, 204)
+
+  def test_updates_remove_confessions_deleted_since_the_last_poll(self):
+    deleted_confession = Confession.objects.create(
+        author=self.user,
+        content='This confession was deleted while the feed was open.',
+    )
+    visible_confession = Confession.objects.create(
+        author=self.user,
+        content='This confession remains visible.',
+    )
+    deleted_id = deleted_confession.pk
+    deleted_confession.delete()
+
+    response = self.client.get(
+        reverse('confession_updates'),
+        {
+            'after': visible_confession.pk,
+            'visible_id': [deleted_id, visible_confession.pk],
+        },
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(
+        response,
+        f'id="confession-{deleted_id}" hx-swap-oob="delete"',
+    )
+    self.assertNotContains(response, 'This confession remains visible.')
+
+  def test_updates_remove_confessions_that_are_no_longer_approved(self):
+    confession = Confession.objects.create(
+        author=self.user,
+        content='This confession is no longer approved.',
+    )
+    confession.is_approved = False
+    confession.save(update_fields=('is_approved',))
+
+    response = self.client.get(
+        reverse('confession_updates'),
+        {
+            'after': confession.pk,
+            'visible_id': confession.pk,
+        },
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(
+        response,
+        f'id="confession-{confession.pk}" hx-swap-oob="delete"',
+    )
 
   def test_activity_updates_return_approved_confession_and_reaction_counts(self):
     confession = Confession.objects.create(
@@ -689,10 +839,14 @@ class HomeAndProfileTests(TestCase):
     )
     self.assertContains(response, 'confessions/images/favicon.svg?v=2')
     self.assertContains(response, 'spill.')
+    self.assertContains(response, 'class="site-footer"')
+    self.assertContains(response, 'Footer navigation')
+    self.assertContains(response, 'footer.css?v=1')
     self.assertContains(response, 'share your thoughts, feelings, and experiences')
+    self.assertNotContains(response, 'id="community-activity"')
+    self.assertNotContains(response, 'Community activity')
     self.assertNotContains(response, confession.content)
     self.assertNotContains(response, 'Latest whispers')
-    self.assertNotContains(response, 'Community activity')
     self.assertNotContains(response, 'confession-content')
     self.assertContains(response, reverse('confession'))
     self.assertContains(response, reverse('profile'))
