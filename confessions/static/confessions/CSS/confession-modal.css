@@ -164,6 +164,24 @@
   outline: 3px solid rgba(57, 120, 212, 0.18);
 }
 
+.confession-character-count {
+  display: block;
+  margin-top: 6px;
+  color: #657686;
+  font-size: 0.78rem;
+  text-align: right;
+  transition: color 160ms ease;
+}
+
+.confession-character-count.is-near-limit {
+  color: #a16207;
+}
+
+.confession-character-count.is-at-limit {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
 .confession-modal__form .compose-footer {
   align-items: flex-end;
 }
@@ -267,6 +285,23 @@ html[data-theme="dark"] .confession-modal__form textarea {
   border-color: #46515b;
   background: #191e23;
   color: #edf1f4;
+}
+
+html[data-theme="dark"] .confession-character-count {
+  color: #a7b1bb;
+}
+
+html[data-theme="dark"] .confession-character-count.is-near-limit {
+  color: #fbbf24;
+}
+
+html[data-theme="dark"] .confession-character-count.is-at-limit {
+  color: #fca5a5;
+}
+
+html[data-theme="dark"] .confession-modal__form textarea::placeholder {
+  color: #ffffff;
+  opacity: 1;
 }
 
 html[data-theme="dark"] .confession-success {

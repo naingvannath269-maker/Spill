@@ -174,15 +174,40 @@ def confession_view(request):
   )
 
 
+@login_required
+@require_POST
+def delete_confession(request, confession_id):
+  confession = get_object_or_404(
+      Confession,
+      pk=confession_id,
+      author=request.user,
+  )
+  confession.delete()
+  if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+    return HttpResponse(status=204)
+  return redirect('confession')
+
+
 @require_GET
 def confession_updates(request):
   try:
     after_id = int(request.GET.get('after', '0'))
+    visible_ids = {
+        int(value)
+        for value in request.GET.getlist('visible_id')
+    }
   except ValueError:
-    return HttpResponseBadRequest('Invalid confession cursor.')
-  if after_id < 0:
+    return HttpResponseBadRequest('Invalid confession cursor or confession id.')
+  if after_id < 0 or any(confession_id < 0 for confession_id in visible_ids):
     return HttpResponseBadRequest('Invalid confession cursor.')
 
+  currently_visible_ids = set(
+      Confession.objects.filter(
+          is_approved=True,
+          pk__in=visible_ids,
+      ).values_list('pk', flat=True)
+  )
+  deleted_ids = visible_ids - currently_visible_ids
   confessions = list(
       _assign_confession_tones(
           _annotate_reactions(
@@ -194,7 +219,7 @@ def confession_updates(request):
           )
       )
   )
-  if not confessions:
+  if not confessions and not deleted_ids:
     return HttpResponse(status=204)
 
   return render(
@@ -202,7 +227,10 @@ def confession_updates(request):
       'confessions/includes/confession_updates.html',
       {
           'confessions': confessions,
-          'latest_confession_id': confessions[-1].pk,
+          'latest_confession_id': (
+              confessions[-1].pk if confessions else after_id
+          ),
+          'deleted_confession_ids': deleted_ids,
       },
   )
 
