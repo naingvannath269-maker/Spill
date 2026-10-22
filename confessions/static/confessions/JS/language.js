@@ -24,6 +24,10 @@ const translations = {
     language_switch_to_en: "English",
     language_aria_switch_to_km: "Switch language to Khmer",
     language_aria_switch_to_en: "Switch language to English",
+    footer_tagline: "Let it out, leave your name out.",
+    footer_navigation: "Footer navigation",
+    footer_rights:
+      "Angkor University | Naing Vannath, In Narry, Tan Rithyvireak, Morm Sophearoth.",
     // Wall and Welcome page
     wall_kicker: "A little honesty goes a long way",
     welcome_title: "Welcome to Spill",
@@ -60,8 +64,10 @@ const translations = {
     btn_unlike: "Unlike",
     btn_comment_reply: "Comment and Reply",
     btn_delete_confession: "Delete",
-    delete_confession_confirm: "Are you sure you want to delete this confession?",
-    delete_confession_error: "Could not delete this confession. Please try again.",
+    delete_confession_confirm:
+      "Are you sure you want to delete this confession?",
+    delete_confession_error:
+      "Could not delete this confession. Please try again.",
     comments_modal_kicker: "Conversation",
     comments_modal_title: "Comments and replies",
     comments_modal_close: "Close comments",
@@ -140,6 +146,10 @@ const translations = {
     language_switch_to_en: "English",
     language_aria_switch_to_km: "ប្តូរភាសាទៅជាភាសាខ្មែរ",
     language_aria_switch_to_en: "ប្តូរភាសាទៅជាភាសាអង់គ្លេស",
+    footer_tagline: "បញ្ចេញអារម្មណ៍ ដោយមិនបង្ហាញឈ្មោះ។",
+    footer_navigation: "ការរុករកផ្នែកខាងក្រោម",
+    footer_rights:
+      "សាកលវិទ្យាល័យអង្គរ | ណាំង វ៉ាន់ណាត់, អុិន ណារី, តាន់ រឹទ្ធីវីរៈ, ម៉ម សុភារ័ត្ន។",
     // Wall / Welcome Page
     wall_kicker: "ភាពស្មោះត្រង់បន្តិចបន្តួច ផ្តល់តម្លៃយ៉ាងធំធេង",
     welcome_title: "សូមស្វាគមន៍មកកាន់ Spill",
@@ -154,8 +164,7 @@ const translations = {
     modal_title: "សរសេរសារសារភាពរបស់អ្នក",
     label_your_confession: "សារសារភាពរបស់អ្នក",
     label_character_count: "ចំនួនតួអក្សរ",
-    error_inappropriate_language:
-      "សូមលុបពាក្យមិនសមរម្យចេញ មុនពេលបង្ហោះ។",
+    error_inappropriate_language: "សូមលុបពាក្យមិនសមរម្យចេញ មុនពេលបង្ហោះ។",
     compose_footer_hint: "អតិបរមា ១០០០ តួអក្សរ។ សូមរក្សាពាក្យសម្តីសមរម្យ។",
     btn_post_anonymously: "បង្ហោះជាអនាមិក",
     btn_floating_confess: "សារភាព",
