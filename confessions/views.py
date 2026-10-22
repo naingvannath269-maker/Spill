@@ -160,7 +160,7 @@ def wall_view(request):
   if request.method == 'POST':
     return _create_confession(request)
 
-  return render(request, 'confessions/wall.html')
+  return render(request, 'confessions/home.html')
 
 
 def confession_view(request):
