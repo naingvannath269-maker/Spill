@@ -3,7 +3,7 @@ document.addEventListener("submit", async (event) => {
 
   if (
     !(form instanceof HTMLFormElement) ||
-    !form.matches(".bubble-actions form")
+    !form.matches(".bubble-actions .reaction-form")
   ) {
     return;
   }

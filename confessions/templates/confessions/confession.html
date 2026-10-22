@@ -1,6 +1,6 @@
 {% extends 'confessions/base.html' %} {% load static %}
 {% block page_css %}
-<link rel="stylesheet" href="{% static 'confessions/CSS/confession-modal.css' %}?v=3" />
+<link rel="stylesheet" href="{% static 'confessions/CSS/confession-modal.css' %}?v=5" />
 {% endblock %}
 {% block content %}
 
@@ -21,11 +21,17 @@
         {% endfor %}
         <label for="{{ form.content.id_for_label }}" data-i18n="label_your_confession">Your confession</label>
         {{ form.content }}
+        <output
+          class="confession-character-count"
+          for="confession-content"
+          aria-label="Character count"
+          data-i18n-aria-label="label_character_count"
+        >0 / 1000</output>
         {% for error in form.content_errors_with_codes %}
         <p class="form-error" role="alert"{% if error.code == 'inappropriate_language' %} data-i18n="error_inappropriate_language"{% endif %}>{{ error.message }}</p>
         {% endfor %}
         <div class="compose-footer">
-          <span data-i18n="compose_footer_hint">Up to 500 characters. Please keep it kind.</span>
+          <span data-i18n="compose_footer_hint">Up to 1000 characters. Please keep it kind.</span>
           <button class="page-primary-link" type="submit">
             <span data-i18n="btn_post_anonymously">Post anonymously</span> <span aria-hidden="true">↗</span>
           </button>
@@ -36,29 +42,6 @@
   {% endif %}
 
   <section class="confession-wall-content" aria-labelledby="latest-title">
-    <section class="activity-panel" aria-labelledby="activity-title">
-      <div>
-        <p class="wall-kicker" data-i18n="activity_kicker">Together, one whisper at a time</p>
-        <h2 id="activity-title" data-i18n="activity_title">Community activity</h2>
-      </div>
-      <dl
-        class="activity-stats"
-        id="community-activity"
-        hx-get="{% url 'activity_updates' %}"
-        hx-trigger="every 3s, refresh"
-        hx-swap="innerHTML"
-      >
-        <div>
-          <dt data-i18n="stat_whispers_shared">Whispers shared</dt>
-          <dd>{{ confession_count }}</dd>
-        </div>
-        <div>
-          <dt data-i18n="stat_community_reactions">Community reactions</dt>
-          <dd>{{ reaction_count }}</dd>
-        </div>
-      </dl>
-    </section>
-
     <div class="feed-heading">
       <h2 id="latest-title" data-i18n="heading_latest_whispers">Latest whispers</h2>
       <span><span id="confession-total">{{ confession_count }}</span> <span data-i18n="text_shared_count">shared</span></span>
@@ -66,11 +49,13 @@
     <div
       class="confessions-feed"
       id="confessions-feed"
+      data-empty-link-url="{% if user.is_authenticated %}#{% else %}{% url 'login' %}{% endif %}"
+      data-empty-link-i18n="{% if user.is_authenticated %}link_write_first{% else %}link_login_write_first{% endif %}"
       aria-label="Latest confessions"
       data-i18n-aria-label="aria_latest_confessions"
       hx-get="{% url 'confession_updates' %}"
       hx-trigger="every 3s"
-      hx-include="#latest-confession-id"
+      hx-include="#latest-confession-id, #confessions-feed [data-visible-confession]"
       hx-swap="afterbegin"
     >
       <input type="hidden" id="latest-confession-id" name="after" value="{{ latest_confession_id }}" />
@@ -99,9 +84,9 @@
     ></div>
   </section>
 </section>
-<script src="{% static 'confessions/JS/wall.js' %}" defer></script>
+<script src="{% static 'confessions/JS/wall.js' %}?v=2" defer></script>
 {% if user.is_authenticated %}
-<script src="{% static 'confessions/JS/confession-modal.js' %}" defer></script>
+<script src="{% static 'confessions/JS/confession-modal.js' %}?v=2" defer></script>
 {% endif %}
 {% endblock %}
 

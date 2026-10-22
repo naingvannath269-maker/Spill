@@ -229,26 +229,208 @@ const commentAvatarColors = [
   "#a21caf",
   "#9f1239",
   "#854d0e",
+  "#730d0d",
+  "#731c0d",
+  "#732b0d",
+  "#733b0d",
+  "#734a0d",
+  "#73590d",
+  "#73690d",
+  "#6e730d",
+  "#5e730d",
+  "#4f730d",
+  "#40730d",
+  "#30730d",
+  "#21730d",
+  "#12730d",
+  "#0d7317",
+  "#0d7326",
+  "#0d7336",
+  "#0d7345",
+  "#0d7354",
+  "#0d7363",
+  "#0d7373",
+  "#0d6373",
+  "#0d5473",
+  "#0d4573",
+  "#0d3673",
+  "#0d2673",
+  "#0d1773",
+  "#120d73",
+  "#210d73",
+  "#300d73",
+  "#400d73",
+  "#4f0d73",
+  "#5e0d73",
+  "#6e0d73",
+  "#730d69",
+  "#730d59",
+  "#730d4a",
+  "#730d3b",
+  "#730d2b",
+  "#730d1c",
 ];
 
 function applyCommentAvatarColors(container = document) {
   const avatars = [
     ...container.querySelectorAll(".fb-comment-avatar[data-username]"),
   ];
-  avatars.forEach((avatar) => {
-    const username = avatar.dataset.username.toLowerCase();
+  const usernames = [...new Set(avatars.map((avatar) => avatar.dataset.username))];
+  const colorsByUsername = new Map();
+  const usedColors = new Set();
+
+  usernames.sort().forEach((username) => {
     const preferredIndex = Array.from(username).reduce(
       (value, character) => (value * 31 + character.codePointAt(0)) >>> 0,
       0,
     ) % commentAvatarColors.length;
+    let colorIndex = preferredIndex;
+
+    for (let offset = 0; offset < commentAvatarColors.length; offset += 1) {
+      const candidateIndex =
+        (preferredIndex + offset) % commentAvatarColors.length;
+      if (!usedColors.has(commentAvatarColors[candidateIndex])) {
+        colorIndex = candidateIndex;
+        break;
+      }
+    }
+
+    const color = commentAvatarColors[colorIndex];
+    usedColors.add(color);
+    colorsByUsername.set(username, color);
+  });
+
+  avatars.forEach((avatar) => {
     avatar.style.setProperty(
       "--avatar-background",
-      commentAvatarColors[preferredIndex],
+      colorsByUsername.get(avatar.dataset.username),
     );
   });
 }
 
 applyCommentAvatarColors();
+
+function ensureConfessionFeedEmptyState(feed) {
+  if (
+    !feed ||
+    feed.querySelector(".confession-bubble") ||
+    feed.querySelector(".empty-state")
+  ) {
+    return;
+  }
+
+  const wasInProfile = Boolean(feed.closest(".profile-page"));
+  const emptyState = document.createElement("div");
+  emptyState.className = "empty-state";
+  const icon = document.createElement("span");
+  icon.setAttribute("aria-hidden", "true");
+  icon.textContent = "✳";
+  emptyState.append(icon);
+
+  const addTranslatedText = (tagName, key) => {
+    const element = document.createElement(tagName);
+    element.dataset.i18n = key;
+    emptyState.append(element);
+  };
+
+  if (wasInProfile) {
+    addTranslatedText("h2", "profile_empty_title");
+    addTranslatedText("p", "profile_empty_desc");
+  } else {
+    addTranslatedText("h2", "empty_title");
+    addTranslatedText("p", "empty_desc");
+    emptyState.id = "confessions-empty-state";
+  }
+  const link = document.createElement("a");
+  link.className = "page-text-link";
+  link.href = feed.dataset.emptyLinkUrl;
+  link.dataset.i18n = feed.dataset.emptyLinkI18n;
+  if (!wasInProfile && document.querySelector(".floating-confess")) {
+    link.dataset.openConfession = "";
+  }
+  emptyState.append(link);
+  feed.append(emptyState);
+  changeLanguage(document.documentElement.lang, false);
+}
+
+document.addEventListener("htmx:afterSettle", (event) => {
+  const feed = document.getElementById("confessions-feed");
+  if (feed && event.detail.target === feed) {
+    ensureConfessionFeedEmptyState(feed);
+  }
+});
+
+document.addEventListener("submit", async (event) => {
+  const form = event.target;
+  if (
+    !(form instanceof HTMLFormElement) ||
+    !form.matches(".delete-confession-form")
+  ) {
+    return;
+  }
+
+  event.preventDefault();
+  const button = form.querySelector(".delete-confession-button");
+  const status = form.querySelector(".delete-confession-status");
+  const card = form.closest(".confession-bubble");
+  if (!button || !status || !card) {
+    console.error("Unable to delete confession: required elements are missing.");
+    return;
+  }
+
+  const confirmationMessage =
+    translations[document.documentElement.lang]?.delete_confession_confirm ??
+    "Are you sure you want to delete this confession?";
+  if (!window.confirm(confirmationMessage)) {
+    return;
+  }
+
+  status.textContent = "";
+  button.disabled = true;
+  try {
+    const response = await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        Accept: "text/plain",
+      },
+      credentials: "same-origin",
+    });
+
+    if (response.redirected) {
+      window.location.assign(response.url);
+      return;
+    }
+    if (response.status !== 204) {
+      throw new Error(`Confession deletion failed with status ${response.status}.`);
+    }
+
+    const feed = card.closest(".confessions-feed");
+    const wasInProfile = Boolean(card.closest(".profile-page"));
+    card.remove();
+
+    if (wasInProfile) {
+      document.querySelectorAll("[data-profile-confession-count]").forEach((count) => {
+        count.textContent = String(Math.max(0, Number(count.textContent) - 1));
+      });
+    } else {
+      const total = document.getElementById("confession-total");
+      if (total) {
+        total.textContent = String(Math.max(0, Number(total.textContent) - 1));
+      }
+      window.htmx?.trigger("#community-activity", "refresh");
+    }
+
+    ensureConfessionFeedEmptyState(feed);
+  } catch (error) {
+    console.error("Unable to delete confession.", error);
+    status.textContent =
+      translations[document.documentElement.lang]?.delete_confession_error ??
+      "Could not delete this confession. Please try again.";
+    button.disabled = false;
+  }
+});
 
 document.addEventListener("submit", async (event) => {
   const form = event.target;

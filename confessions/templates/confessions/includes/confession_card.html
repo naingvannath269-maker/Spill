@@ -1,4 +1,5 @@
 <article
+  id="confession-{{ confession.pk }}"
   class="confession-bubble {% cycle 'side-right' 'side-left' %} {{ confession.tone_class }}"
 >
   <header class="bubble-header">
@@ -38,6 +39,12 @@
       value="{{ confession.pk }}"
       data-reaction-confession
     />
+    <input
+      type="hidden"
+      name="visible_id"
+      value="{{ confession.pk }}"
+      data-visible-confession
+    />
     {% include 'confessions/includes/reaction_form.html' with confession=confession %}
 
     <!-- ប៊ូតុង Comment and Reply ដែលបានកែសម្រួលឱ្យហៅ JavaScript -->
@@ -50,6 +57,23 @@
     >
       Comment and Reply
     </button>
+    {% if user.is_authenticated and confession.author_id == user.id %}
+    <form
+      method="post"
+      action="{% url 'delete_confession' confession.pk %}"
+      class="delete-confession-form"
+    >
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="delete-confession-button"
+        data-i18n="btn_delete_confession"
+      >
+        Delete
+      </button>
+      <span class="delete-confession-status visually-hidden" role="status"></span>
+    </form>
+    {% endif %}
   </footer>
 
   {% include 'confessions/includes/comment.html' with confession=confession %}

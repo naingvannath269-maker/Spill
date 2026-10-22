@@ -29,7 +29,7 @@
       </div>
       <div>
         <dt data-i18n="label_whispers_shared_profile">Whispers shared</dt>
-        <dd>{{ confession_count }}</dd>
+        <dd><span data-profile-confession-count>{{ confession_count }}</span></dd>
       </div>
     </dl>
     <p class="profile-privacy" data-i18n="profile_privacy_note">
@@ -40,9 +40,13 @@
   <section aria-labelledby="history-title">
     <div class="feed-heading">
       <h2 id="history-title" data-i18n="profile_history_title">Your confession history</h2>
-      <span>{{ confession_count }} <span data-i18n="text_shared_count">shared</span></span>
+      <span><span data-profile-confession-count>{{ confession_count }}</span> <span data-i18n="text_shared_count">shared</span></span>
     </div>
-    <div class="confessions-feed">
+    <div
+      class="confessions-feed"
+      data-empty-link-url="{% url 'confession' %}"
+      data-empty-link-i18n="profile_first_whisper"
+    >
       {% for confession in confessions %}
         {% include 'confessions/includes/confession_card.html' with confession=confession %}
       {% empty %}

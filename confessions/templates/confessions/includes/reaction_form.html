@@ -2,6 +2,7 @@
   id="reaction-form-{{ confession.pk }}"
   action="{% url 'upvote' confession.pk %}"
   method="POST"
+  class="reaction-form"
   {% if oob %}hx-swap-oob="outerHTML"{% endif %}
 >
   {% csrf_token %}
