@@ -1,6 +1,9 @@
 {% for confession in confessions %}
   {% include 'confessions/includes/confession_card.html' with confession=confession %}
 {% endfor %}
+{% for confession_id in deleted_confession_ids %}
+<div id="confession-{{ confession_id }}" hx-swap-oob="delete"></div>
+{% endfor %}
 <input
   type="hidden"
   id="latest-confession-id"

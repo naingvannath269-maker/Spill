@@ -8,7 +8,7 @@ from django.db import connection
 from django.test.utils import CaptureQueriesContext
 
 from accounts.models import CustomUser
-from .models import Confession, Reaction
+from .models import Comment, Confession, Reaction
 
 
 class ConfessionSubmissionTests(TestCase):
@@ -32,6 +32,7 @@ class ConfessionSubmissionTests(TestCase):
         response,
         'Please remove inappropriate language before posting.',
     )
+    self.assertContains(response, 'data-i18n="error_inappropriate_language"')
     self.assertContains(response, 'This is a BADWORD confession.')
     self.assertContains(response, 'id="confession-content"')
 
@@ -58,6 +59,49 @@ class ConfessionSubmissionTests(TestCase):
     self.assertEqual(response.status_code, 200)
     self.assertEqual(Confession.objects.count(), 0)
 
+  def test_additional_english_profanity_words_and_phrases_are_rejected(self):
+    for content in (
+        'That was a jackass move.',
+        'Please fuck off.',
+        'You are a piece of shit.',
+    ):
+      with self.subTest(content=content):
+        response = self.client.post(
+            reverse('confession'),
+            {'content': content},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Confession.objects.count(), 0)
+
+  @override_settings(INAPPROPRIATE_WORDS=('អាឆ្កួត',))
+  def test_khmer_blocked_word_is_rejected_next_to_other_khmer_text(self):
+    response = self.client.post(
+        reverse('confession'),
+        {'content': 'គាត់អាឆ្កួតណាស់'},
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(Confession.objects.count(), 0)
+
+  def test_additional_khmer_profanity_terms_are_rejected(self):
+    for content in (
+        'អាល្ងង់',
+        'មីល្ងង់',
+        'អាសំផឹង',
+        'មីសំផឹង',
+        'អាមនុស្សថោក',
+        'មីថោកទាប',
+    ):
+      with self.subTest(content=content):
+        response = self.client.post(
+            reverse('confession'),
+            {'content': content},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Confession.objects.count(), 0)
+
   def test_confession_page_saves_using_existing_form_and_author(self):
     response = self.client.post(
         reverse('confession'),
@@ -71,6 +115,24 @@ class ConfessionSubmissionTests(TestCase):
     self.assertEqual(confession.author, self.user)
     self.assertEqual(confession.content, 'I am glad I shared this.')
     self.assertContains(response, confession.content)
+
+  def test_confession_content_accepts_1000_characters_but_rejects_1001(self):
+    response = self.client.post(
+        reverse('confession'),
+        {'content': 'a' * 1000},
+    )
+
+    self.assertRedirects(response, reverse('confession'))
+    self.assertEqual(Confession.objects.get().content, 'a' * 1000)
+
+    response = self.client.post(
+        reverse('confession'),
+        {'content': 'a' * 1001},
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(Confession.objects.count(), 1)
+    self.assertContains(response, 'maxlength="1000"')
 
   @override_settings(INAPPROPRIATE_WORDS=('badword',))
   def test_invalid_confession_reopens_modal_and_preserves_submitted_text(self):
@@ -99,6 +161,7 @@ class ConfessionSubmissionTests(TestCase):
     self.assertEqual(response.content.decode().count('id="confession-content"'), 1)
     self.assertContains(response, 'confessions/JS/confession-modal.js')
     self.assertContains(response, 'confessions/CSS/confession-modal.css')
+    self.assertContains(response, 'class="confession-character-count"')
 
   def test_confession_card_colors_are_individual_and_stable_on_all_card_pages(self):
     for index in range(13):
@@ -177,6 +240,83 @@ class ConfessionSubmissionTests(TestCase):
     self.assertContains(response, 'id="confession-content"')
 
 
+class ConfessionDeletionTests(TestCase):
+  def setUp(self):
+    self.author = CustomUser.objects.create_user(
+        email='confession-author@example.com',
+        password='test-password',
+    )
+    self.other_user = CustomUser.objects.create_user(
+        email='other-user@example.com',
+        password='test-password',
+    )
+    self.confession = Confession.objects.create(
+        author=self.author,
+        content='A confession that can be deleted by its author.',
+    )
+
+  def test_delete_button_is_only_shown_to_the_author(self):
+    self.client.force_login(self.author)
+    response = self.client.get(reverse('confession'))
+    self.assertContains(response, 'class="delete-confession-button"')
+    self.assertContains(
+        response,
+        f'action="{reverse("delete_confession", args=(self.confession.pk,))}"',
+    )
+
+    self.client.force_login(self.other_user)
+    response = self.client.get(reverse('confession'))
+    self.assertNotContains(response, 'class="delete-confession-button"')
+
+    self.client.logout()
+    response = self.client.get(reverse('confession'))
+    self.assertNotContains(response, 'class="delete-confession-button"')
+
+  def test_author_can_delete_their_confession(self):
+    self.client.force_login(self.author)
+
+    response = self.client.post(
+        reverse('delete_confession', args=(self.confession.pk,)),
+    )
+
+    self.assertRedirects(response, reverse('confession'))
+    self.assertFalse(Confession.objects.filter(pk=self.confession.pk).exists())
+
+  def test_author_can_delete_confession_with_ajax_without_page_redirect(self):
+    self.client.force_login(self.author)
+
+    response = self.client.post(
+        reverse('delete_confession', args=(self.confession.pk,)),
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+    )
+
+    self.assertEqual(response.status_code, 204)
+    self.assertFalse(response.has_header('Location'))
+    self.assertFalse(Confession.objects.filter(pk=self.confession.pk).exists())
+
+  def test_another_user_cannot_delete_the_confession(self):
+    self.client.force_login(self.other_user)
+
+    response = self.client.post(
+        reverse('delete_confession', args=(self.confession.pk,)),
+    )
+
+    self.assertEqual(response.status_code, 404)
+    self.assertTrue(Confession.objects.filter(pk=self.confession.pk).exists())
+
+  def test_delete_requires_authentication_and_post(self):
+    delete_url = reverse('delete_confession', args=(self.confession.pk,))
+
+    response = self.client.post(delete_url)
+    self.assertEqual(response.status_code, 302)
+    self.assertTrue(Confession.objects.filter(pk=self.confession.pk).exists())
+
+    self.client.force_login(self.author)
+    response = self.client.get(delete_url)
+    self.assertEqual(response.status_code, 405)
+    self.assertTrue(Confession.objects.filter(pk=self.confession.pk).exists())
+
+
 class ConfessionUpdatesTests(TestCase):
   def setUp(self):
     self.user = CustomUser.objects.create_user(
@@ -189,7 +329,18 @@ class ConfessionUpdatesTests(TestCase):
 
     self.assertContains(response, 'hx-trigger="every 3s"')
     self.assertContains(response, 'hx-swap="afterbegin"')
+    self.assertContains(
+        response,
+        'hx-include="#latest-confession-id, #confessions-feed [data-visible-confession]"',
+    )
+    self.assertContains(response, 'name="visible_id"')
     self.assertContains(response, 'https://unpkg.com/htmx.org@1.9.12')
+    self.assertContains(
+        response,
+        f'hx-get="{reverse("activity_updates")}"',
+    )
+    self.assertContains(response, 'id="community-activity"')
+    self.assertContains(response, 'hx-trigger="every 3s, refresh"')
 
   def test_updates_return_only_new_approved_confessions_and_advance_cursor(self):
     previous = Confession.objects.create(
@@ -233,6 +384,284 @@ class ConfessionUpdatesTests(TestCase):
     )
 
     self.assertEqual(response.status_code, 204)
+
+  def test_updates_remove_confessions_deleted_since_the_last_poll(self):
+    deleted_confession = Confession.objects.create(
+        author=self.user,
+        content='This confession was deleted while the feed was open.',
+    )
+    visible_confession = Confession.objects.create(
+        author=self.user,
+        content='This confession remains visible.',
+    )
+    deleted_id = deleted_confession.pk
+    deleted_confession.delete()
+
+    response = self.client.get(
+        reverse('confession_updates'),
+        {
+            'after': visible_confession.pk,
+            'visible_id': [deleted_id, visible_confession.pk],
+        },
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(
+        response,
+        f'id="confession-{deleted_id}" hx-swap-oob="delete"',
+    )
+    self.assertNotContains(response, 'This confession remains visible.')
+
+  def test_updates_remove_confessions_that_are_no_longer_approved(self):
+    confession = Confession.objects.create(
+        author=self.user,
+        content='This confession is no longer approved.',
+    )
+    confession.is_approved = False
+    confession.save(update_fields=('is_approved',))
+
+    response = self.client.get(
+        reverse('confession_updates'),
+        {
+            'after': confession.pk,
+            'visible_id': confession.pk,
+        },
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(
+        response,
+        f'id="confession-{confession.pk}" hx-swap-oob="delete"',
+    )
+
+  def test_activity_updates_return_approved_confession_and_reaction_counts(self):
+    confession = Confession.objects.create(
+        author=self.user,
+        content='An approved confession.',
+    )
+    Reaction.objects.create(user=self.user, confession=confession)
+    Confession.objects.create(
+        author=self.user,
+        content='A confession awaiting approval.',
+        is_approved=False,
+    )
+
+    response = self.client.get(reverse('activity_updates'))
+
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(response, '<dd>1</dd>', count=2)
+    self.assertContains(response, 'id="confession-total"')
+
+  def test_reaction_updates_return_oob_counts_for_requested_confessions(self):
+    first = Confession.objects.create(
+        author=self.user,
+        content='The first visible confession.',
+    )
+    second = Confession.objects.create(
+        author=self.user,
+        content='The second visible confession.',
+    )
+    hidden = Confession.objects.create(
+        author=self.user,
+        content='An unapproved confession.',
+        is_approved=False,
+    )
+    Reaction.objects.create(user=self.user, confession=first, is_like=True)
+    Reaction.objects.create(user=self.user, confession=second, is_like=False)
+
+    response = self.client.get(
+        reverse('reaction_updates'),
+        {'confession_id': [first.pk, second.pk, hidden.pk]},
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(response, 'id="reaction-form-{}"'.format(first.pk))
+    self.assertContains(response, 'id="reaction-form-{}"'.format(second.pk))
+    self.assertNotContains(response, 'reaction-form-{}'.format(hidden.pk))
+    self.assertContains(response, 'hx-swap-oob="outerHTML"', count=2)
+    self.assertContains(response, '<span class="reaction-count like-count">1</span>')
+    self.assertContains(response, '<span class="reaction-count unlike-count">1</span>')
+
+  def test_reaction_updates_reject_invalid_confession_id(self):
+    response = self.client.get(
+        reverse('reaction_updates'),
+        {'confession_id': 'invalid'},
+    )
+
+    self.assertEqual(response.status_code, 400)
+
+class CommentTests(TestCase):
+  def setUp(self):
+    self.user = CustomUser.objects.create_user(
+        email='commenter@example.com',
+        password='test-password',
+    )
+    self.confession = Confession.objects.create(
+        author=self.user,
+        content='A confession with a comment thread.',
+    )
+
+  def test_posted_comment_is_saved_and_shown_in_the_thread(self):
+    self.client.force_login(self.user)
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': 'This comment should appear.'},
+    )
+
+    comment = Comment.objects.get()
+    self.assertEqual(response.status_code, 302)
+    self.assertEqual(
+        response['Location'],
+        f"{reverse('confession')}#comments-modal-{self.confession.pk}",
+    )
+    self.assertEqual(comment.author, self.user)
+    self.assertEqual(comment.confession, self.confession)
+    self.assertContains(
+        self.client.get(reverse('confession')),
+        'This comment should appear.',
+    )
+
+  def test_ajax_comment_is_saved_without_redirecting_from_the_thread(self):
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': 'Keep the thread open.'},
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertFalse(response.has_header('Location'))
+    self.assertContains(response, 'Keep the thread open.')
+    self.assertEqual(Comment.objects.get().content, 'Keep the thread open.')
+
+  def test_comment_list_endpoint_returns_only_the_selected_confession_thread(self):
+    other_confession = Confession.objects.create(
+        author=self.user,
+        content='Another confession.',
+    )
+    Comment.objects.create(
+        author=self.user,
+        confession=self.confession,
+        content='Selected thread comment.',
+    )
+    Comment.objects.create(
+        author=self.user,
+        confession=other_confession,
+        content='Different confession comment.',
+    )
+
+    response = self.client.get(
+        reverse('comment_list', args=(self.confession.pk,)),
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(response, 'Selected thread comment.')
+    self.assertNotContains(response, 'Different confession comment.')
+
+  def test_comment_list_endpoint_does_not_expose_unapproved_confessions(self):
+    self.confession.is_approved = False
+    self.confession.save(update_fields=('is_approved',))
+
+    response = self.client.get(
+        reverse('comment_list', args=(self.confession.pk,)),
+    )
+
+    self.assertEqual(response.status_code, 404)
+
+  def test_reply_is_saved_and_shown_under_its_parent_comment(self):
+    parent = Comment.objects.create(
+        author=self.user,
+        confession=self.confession,
+        content='Original comment.',
+    )
+    self.client.force_login(self.user)
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': 'A reply in the thread.', 'parent_id': parent.pk},
+    )
+
+    reply = Comment.objects.get(parent=parent)
+    self.assertEqual(response.status_code, 302)
+    self.assertEqual(
+        response['Location'],
+        f"{reverse('confession')}#comments-modal-{self.confession.pk}",
+    )
+    self.assertEqual(reply.author, self.user)
+    self.assertContains(
+        self.client.get(reverse('confession')),
+        'A reply in the thread.',
+    )
+
+  def test_ajax_reply_is_saved_without_redirecting_from_the_thread(self):
+    parent = Comment.objects.create(
+        author=self.user,
+        confession=self.confession,
+        content='Parent comment.',
+    )
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': 'Keep the reply thread open.', 'parent_id': parent.pk},
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertFalse(response.has_header('Location'))
+    self.assertContains(response, 'Keep the reply thread open.')
+    self.assertEqual(
+        Comment.objects.get(parent=parent).content,
+        'Keep the reply thread open.',
+    )
+
+  def test_anonymous_comment_can_still_be_posted(self):
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': 'An anonymous comment.'},
+    )
+
+    self.assertEqual(response.status_code, 302)
+    self.assertIsNone(Comment.objects.get().author)
+
+  def test_blank_comment_is_rejected(self):
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': '   '},
+    )
+
+    self.assertEqual(response.status_code, 400)
+    self.assertFalse(Comment.objects.exists())
+
+  @override_settings(INAPPROPRIATE_WORDS=('fuck off',))
+  def test_comment_with_blocked_english_phrase_is_rejected(self):
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': 'Please fuck off.'},
+    )
+
+    self.assertEqual(response.status_code, 400)
+    self.assertContains(
+        response,
+        'Please remove inappropriate language before posting.',
+        status_code=400,
+    )
+    self.assertEqual(
+        response['X-Comment-Error'],
+        'inappropriate_language',
+    )
+    self.assertFalse(Comment.objects.exists())
+
+  @override_settings(INAPPROPRIATE_WORDS=('អាឆ្កួត',))
+  def test_reply_with_blocked_khmer_word_is_rejected(self):
+    parent = Comment.objects.create(
+        author=self.user,
+        confession=self.confession,
+        content='A polite parent comment.',
+    )
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': 'គាត់អាឆ្កួតណាស់', 'parent_id': parent.pk},
+    )
+
+    self.assertEqual(response.status_code, 400)
+    self.assertEqual(Comment.objects.count(), 1)
 
   def test_updates_reject_an_invalid_cursor(self):
     response = self.client.get(
@@ -355,9 +784,18 @@ class ReactionTests(TestCase):
         response,
         '<span class="reaction-count unlike-count">0</span>',
     )
+    self.assertContains(response, 'class="comment-button"')
     self.assertContains(
         response,
-        '<button type="button" class="comment-button">Comment and Reply</button>',
+        f'data-open-comments="comments-modal-{self.confession.pk}"',
+    )
+    self.assertContains(
+        response,
+        f'id="comments-modal-{self.confession.pk}"',
+    )
+    self.assertContains(
+        response,
+        f'data-focus-input="main-input-{self.confession.pk}"',
     )
 
 
@@ -395,11 +833,20 @@ class HomeAndProfileTests(TestCase):
     self.assertContains(response, 'Let it out, leave your name out.')
     self.assertContains(response, '<title>Spill — Let it out, leave your name out.</title>')
     self.assertContains(response, 'og:site_name" content="Spill')
+    self.assertContains(
+        response,
+        'rel="icon" type="image/svg+xml"',
+    )
+    self.assertContains(response, 'confessions/images/favicon.svg?v=2')
     self.assertContains(response, 'spill.')
+    self.assertContains(response, 'class="site-footer"')
+    self.assertContains(response, 'Footer navigation')
+    self.assertContains(response, 'footer.css?v=1')
     self.assertContains(response, 'share your thoughts, feelings, and experiences')
+    self.assertNotContains(response, 'id="community-activity"')
+    self.assertNotContains(response, 'Community activity')
     self.assertNotContains(response, confession.content)
     self.assertNotContains(response, 'Latest whispers')
-    self.assertNotContains(response, 'Community activity')
     self.assertNotContains(response, 'confession-content')
     self.assertContains(response, reverse('confession'))
     self.assertContains(response, reverse('profile'))
@@ -409,6 +856,18 @@ class HomeAndProfileTests(TestCase):
         any(Confession._meta.db_table.lower() in query['sql'].lower() for query in queries),
         'Home page should not query confession records.',
     )
+
+  def test_home_greets_authenticated_user_by_username(self):
+    self.client.force_login(self.user)
+
+    response = self.client.get(reverse('wall'))
+
+    self.assertContains(response, 'data-i18n="welcome_title_prefix"')
+    self.assertContains(
+        response,
+        f'<span class="home-welcome__username">{self.user.username}</span>',
+    )
+    self.assertContains(response, 'data-i18n="welcome_title_suffix"')
 
   def test_profile_only_shows_signed_in_users_confessions_and_private_details(self):
     own_confession = Confession.objects.create(

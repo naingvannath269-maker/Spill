@@ -24,9 +24,15 @@ const translations = {
     language_switch_to_en: "English",
     language_aria_switch_to_km: "Switch language to Khmer",
     language_aria_switch_to_en: "Switch language to English",
+    footer_tagline: "Let it out, leave your name out.",
+    footer_navigation: "Footer navigation",
+    footer_rights:
+      "Angkor University | Naing Vannath, In Nary, Tan Rithyvireak, Morm Sophearoth.",
     // Wall and Welcome page
     wall_kicker: "A little honesty goes a long way",//គួរតែលុចចោល
     welcome_title: "Welcome to Spill",
+    welcome_title_prefix: "Welcome ",
+    welcome_title_suffix: " to Spill",
     welcome_intro:
       "A kind, anonymous place to share your thoughts, feelings, and experiences without attaching your name.",
     welcome_how:
@@ -37,7 +43,10 @@ const translations = {
     modal_kicker: "This space is yours",
     modal_title: "Write Your Confession",
     label_your_confession: "Your confession",
-    compose_footer_hint: "Up to 500 characters. Please keep it kind.",
+    label_character_count: "Character count",
+    error_inappropriate_language:
+      "Please remove inappropriate language before posting.",
+    compose_footer_hint: "Up to 1000 characters. Please keep it kind.",
     btn_post_anonymously: "Post anonymously",
     btn_floating_confess: "Confess",
     activity_kicker: "Together, one whisper at a time",//គួរតែលុចចោល
@@ -55,7 +64,21 @@ const translations = {
     show_less: "Show less",
     btn_like: "Like",
     btn_unlike: "Unlike",
-    btn_comment_reply: "Comment and Reply",//Comment
+    btn_comment_reply: "Comment and Reply",
+    btn_delete_confession: "Delete",
+    delete_confession_confirm:
+      "Are you sure you want to delete this confession?",
+    delete_confession_error:
+      "Could not delete this confession. Please try again.",
+    comments_modal_kicker: "Conversation",
+    comments_modal_title: "Comments and replies",
+    comments_modal_close: "Close comments",
+    placeholder_comment: "Write a comment...",
+    placeholder_reply: "Write a reply...",
+    btn_reply: "Reply",
+    btn_post_comment: "Post",
+    comments_empty: "No comments yet. Be the first!",
+    comments_load_error: "Could not refresh comments. Please try again.",
     placeholder_confession: "Type your confession here... (keep it kind)",
     // Profile Page
     profile_kicker: "Your private space",
@@ -125,9 +148,15 @@ const translations = {
     language_switch_to_en: "English",
     language_aria_switch_to_km: "ប្តូរភាសាទៅជាភាសាខ្មែរ",
     language_aria_switch_to_en: "ប្តូរភាសាទៅជាភាសាអង់គ្លេស",
+    footer_tagline: "បញ្ចេញអារម្មណ៍ ដោយមិនបង្ហាញឈ្មោះ។",
+    footer_navigation: "ការរុករកផ្នែកខាងក្រោម",
+    footer_rights:
+      "សាកលវិទ្យាល័យអង្គរ | ណាំង វ៉ាន់ណាត់, អុិន ណារី, តាន់ រឹទ្ធីវីរៈ, ម៉ម សុភារ័ត្ន។",
     // Wall / Welcome Page
     wall_kicker: "ភាពស្មោះត្រង់បន្តិចបន្តួច ផ្តល់តម្លៃយ៉ាងធំធេង",//គួរតែលុចចោល
     welcome_title: "សូមស្វាគមន៍មកកាន់ Spill",
+    welcome_title_prefix: "សូមស្វាគមន៍ ",
+    welcome_title_suffix: " មកកាន់ Spill",
     welcome_intro:
       "ទីកន្លែងអនាមិក និងកក់ក្តៅ ដើម្បីចែករំលែកអារម្មណ៍ គំនិត និងបទពិសោធន៍របស់អ្នកដោយមិនបង្ហាញឈ្មោះ។",//ទីកន្លែងអនាមិក អាថ៌កំបាំង ដើម្បីចែករំលែកអារម្មណ៍ គំនិត និងបទពិសោធន៍របស់អ្នកដោយមិនបង្ហាញឈ្មោះ។
     welcome_how:
@@ -138,7 +167,9 @@ const translations = {
     modal_kicker: "ទីកន្លែងនេះជារបស់អ្នក",
     modal_title: "សរសេរសារសារភាពរបស់អ្នក",
     label_your_confession: "សារសារភាពរបស់អ្នក",
-    compose_footer_hint: "អតិបរមា ៥០០ តួអក្សរ។ សូមរក្សាពាក្យសម្តីសមរម្យ។",
+    label_character_count: "ចំនួនតួអក្សរ",
+    error_inappropriate_language: "សូមលុបពាក្យមិនសមរម្យចេញ មុនពេលបង្ហោះ។",
+    compose_footer_hint: "អតិបរមា ១០០០ តួអក្សរ។ សូមរក្សាពាក្យសម្តីសមរម្យ។",
     btn_post_anonymously: "បង្ហោះជាអនាមិក",
     btn_floating_confess: "សារភាព",
     activity_kicker: "រួមគ្នា ម្តងមួយសារ",//គួរតែលុចចោល
@@ -156,7 +187,19 @@ const translations = {
     show_less: "បង្រួមវិញ",
     btn_like: "ចូលចិត្ត",
     btn_unlike: "មិនចូលចិត្ត",
-    btn_comment_reply: "មតិ និងឆ្លើយតប",//មតិ
+    btn_comment_reply: "មតិ និងឆ្លើយតប",
+    btn_delete_confession: "លុប",
+    delete_confession_confirm: "តើអ្នកប្រាកដថាចង់លុបសារសារភាពនេះឬ?",
+    delete_confession_error: "មិនអាចលុបសារសារភាពនេះបានទេ។ សូមព្យាយាមម្តងទៀត។",
+    comments_modal_kicker: "ការសន្ទនា",
+    comments_modal_title: "មតិ និងការឆ្លើយតប",
+    comments_modal_close: "បិទមតិ",
+    placeholder_comment: "សរសេរមតិ...",
+    placeholder_reply: "សរសេរចម្លើយ...",
+    btn_reply: "ឆ្លើយតប",
+    btn_post_comment: "បង្ហោះ",
+    comments_empty: "មិនទាន់មានមតិទេ។ ក្លាយជាអ្នកដំបូង!",
+    comments_load_error: "មិនអាចធ្វើបច្ចុប្បន្នភាពមតិបានទេ។ សូមព្យាយាមម្ដងទៀត។",
     placeholder_confession:
       "សរសេរសារសារភាពរបស់អ្នកនៅទីនេះ... (សូមរក្សាពាក្យសម្តីសមរម្យ)",
     // Profile Page

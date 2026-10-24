@@ -1,4 +1,3 @@
-import random
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
@@ -16,13 +15,7 @@ class CustomUserManager(BaseUserManager):
 
     # Auto generate username if not provided
     if not extra_fields.get('username'):
-      email_prefix = email.split('@')[0]
-      random_digits = random.randint(1000, 9999)
-      base_username = f'{email_prefix}_{random_digits}'
-      while CustomUser.objects.filter(username=base_username).exists():
-        random_digits = random.randint(1000, 9999)
-        base_username = f'{email_prefix}_{random_digits}'
-      extra_fields['username'] = base_username
+      extra_fields['username'] = generate_anonymous_username()
 
     user = self.model(email=email, **extra_fields)
     user.set_password(password)
@@ -52,4 +45,12 @@ class CustomUser(AbstractUser):
   REQUIRED_FIELDS = []  # No extra fields required for createsuperuser besides email & password
 
   def __str__(self):
-    return self.email
+    return self.username
+
+
+def generate_anonymous_username():
+  suffix = 1
+  while CustomUser.objects.filter(username=f'anonymous_{suffix}').exists():
+    suffix += 1
+
+  return f'anonymous_{suffix}'

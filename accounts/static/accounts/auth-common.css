@@ -8,10 +8,6 @@
   animation: auth-arrive 420ms ease-out both;
 }
 
-.auth-layout--login {
-  grid-template-columns: 0.78fr 1.22fr;
-}
-
 .auth-story {
   position: relative;
   display: flex;
@@ -183,25 +179,6 @@
   font: inherit;
   font-size: 0.88rem;
   box-shadow: none;
-}
-
-.auth-layout--login .auth-field .form-control {
-  min-height: 52px;
-}
-
-.auth-layout--login .auth-form,
-.auth-layout--login .auth-field {
-  width: 100%;
-  min-width: 0;
-}
-
-.auth-layout--login #id_username,
-.auth-layout--login #id_password {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  min-height: 52px;
-  box-sizing: border-box;
 }
 
 .auth-field .form-control:focus {
