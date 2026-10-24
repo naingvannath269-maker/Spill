@@ -27,10 +27,12 @@ const translations = {
     footer_tagline: "Let it out, leave your name out.",
     footer_navigation: "Footer navigation",
     footer_rights:
-      "Angkor University | Naing Vannath, In Narry, Tan Rithyvireak, Morm Sophearoth.",
+      "Angkor University | Naing Vannath, In Nary, Tan Rithyvireak, Morm Sophearoth.",
     // Wall and Welcome page
     wall_kicker: "A little honesty goes a long way",
     welcome_title: "Welcome to Spill",
+    welcome_title_prefix: "Welcome ",
+    welcome_title_suffix: " to Spill",
     welcome_intro:
       "A kind, anonymous place to share your thoughts, feelings, and experiences without attaching your name.",
     welcome_how:
@@ -153,6 +155,8 @@ const translations = {
     // Wall / Welcome Page
     wall_kicker: "ភាពស្មោះត្រង់បន្តិចបន្តួច ផ្តល់តម្លៃយ៉ាងធំធេង",
     welcome_title: "សូមស្វាគមន៍មកកាន់ Spill",
+    welcome_title_prefix: "សូមស្វាគមន៍ ",
+    welcome_title_suffix: " មកកាន់ Spill",
     welcome_intro:
       "ទីកន្លែងអនាមិក និងកក់ក្តៅ ដើម្បីចែករំលែកអារម្មណ៍ គំនិត និងបទពិសោធន៍របស់អ្នកដោយមិនបង្ហាញឈ្មោះ។",
     welcome_how:
