@@ -92,6 +92,10 @@ main.whisper-main {
   line-height: 1.12;
 }
 
+.home-welcome__username {
+  color: #3978d4;
+}
+
 .home-welcome__intro {
   max-width: 660px;
   margin: 20px 0 0;
@@ -345,6 +349,10 @@ html[data-theme="dark"] .confession-compose {
 
 html[data-theme="dark"] .home-welcome h1 {
   color: #ffef00;
+}
+
+html[data-theme="dark"] .home-welcome__username {
+  color: #78b7ff;
 }
 
 html[data-theme="dark"] .home-welcome__intro {

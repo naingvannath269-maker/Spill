@@ -857,6 +857,18 @@ class HomeAndProfileTests(TestCase):
         'Home page should not query confession records.',
     )
 
+  def test_home_greets_authenticated_user_by_username(self):
+    self.client.force_login(self.user)
+
+    response = self.client.get(reverse('wall'))
+
+    self.assertContains(response, 'data-i18n="welcome_title_prefix"')
+    self.assertContains(
+        response,
+        f'<span class="home-welcome__username">{self.user.username}</span>',
+    )
+    self.assertContains(response, 'data-i18n="welcome_title_suffix"')
+
   def test_profile_only_shows_signed_in_users_confessions_and_private_details(self):
     own_confession = Confession.objects.create(
         author=self.user,
