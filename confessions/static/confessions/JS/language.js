@@ -21,8 +21,8 @@ const translations = {
     aria_latest_confessions: "Latest confessions",
     theme_switch_to_dark: "Switch to dark mode",
     theme_switch_to_light: "Switch to light mode",
-    language_switch_to_km: "ខ្មែរ",
-    language_switch_to_en: "English",
+    language_switch_to_km: "KM",
+    language_switch_to_en: "EN",
     language_aria_switch_to_km: "Switch language to Khmer",
     language_aria_switch_to_en: "Switch language to English",
     footer_tagline: "Let it out, leave your name out.",
@@ -43,7 +43,7 @@ const translations = {
     about_kicker: "A little about Spill",
     about_title: "Anonymous Confession Platform - Spill",
     about_intro:
-      "Spill is a kind, anonymous space to share what is on your mind, without attaching your name.",
+      "Spill is creating by using Python with Djago Framework and PostgreSQL",
     about_mission_title: "Our purpose",
     about_mission:
       "We created Spill to make it easier to express thoughts and experiences, read what others choose to share, and respond with care.",
@@ -182,8 +182,8 @@ const translations = {
     aria_latest_confessions: "សារសារភាពចុងក្រោយ",
     theme_switch_to_dark: "ប្តូរទៅរបៀបងងឹត",
     theme_switch_to_light: "ប្តូរទៅរបៀបភ្លឺ",
-    language_switch_to_km: "ខ្មែរ",
-    language_switch_to_en: "English",
+    language_switch_to_km: "KM",
+    language_switch_to_en: "EN",
     language_aria_switch_to_km: "ប្តូរភាសាទៅជាភាសាខ្មែរ",
     language_aria_switch_to_en: "ប្តូរភាសាទៅជាភាសាអង់គ្លេស",
     footer_tagline: "បញ្ចេញអារម្មណ៍ ដោយមិនបង្ហាញឈ្មោះ។",
@@ -204,7 +204,7 @@ const translations = {
     about_kicker: "ស្វែងយល់បន្តិចអំពី Spill",
     about_title: "វេទិការសារភាពបែបអនាមិក - Spill",
     about_intro:
-      "Spill ជាទីកន្លែងអនាមិក និងកក់ក្តៅ សម្រាប់ចែករំលែកអ្វីដែលអ្នកកំពុងគិត ដោយមិនបង្ហាញឈ្មោះ។",
+      "Spill បង្កើតឡើងដោយប្រើប្រាស់ភាសា Python ជាមួយនិង Django Framework និង PostgeSQL",
     about_mission_title: "គោលបំណងរបស់យើង",
     about_mission:
       "យើងបង្កើត Spill ដើម្បីឱ្យការបញ្ចេញគំនិត និងបទពិសោធន៍ ការអានអ្វីដែលអ្នកដទៃចែករំលែក និងការឆ្លើយតបដោយការយកចិត្តទុកដាក់ កាន់តែងាយស្រួល។",
@@ -221,7 +221,7 @@ const translations = {
     about_team_jump: "រចនាសម្ព័ន្ធក្រុមរបស់យើង",
     about_back_top: "ត្រឡប់ទៅខាងលើ",
     about_team_intro:
-      "អភិវឌ្ឍន៍ដោយនិស្សិតសាកលវិទ្យាល័យអង្គ | ឆ្នាំទី៣ | ឆមាស១ | មុខវិជ្ជា Python Programming II។",
+      "អភិវឌ្ឍន៍ដោយនិស្សិតសាកលវិទ្យាល័យអង្គរ | ឆ្នាំទី៣ | ឆមាស១ | មុខវិជ្ជា Python Programming II។",
     about_member_professor: "ខឿត សុផា - សាស្ត្រាចារ្យ",
     about_member_leader: "ណាំង វ៉ាន់ណាត់ - ប្រធានក្រុម, Backend",
     about_member_in_nary: "អុិន ណារី - Frontend",
