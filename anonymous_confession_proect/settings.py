@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-
+import dj_database_url
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -83,14 +83,11 @@ WSGI_APPLICATION = 'anonymous_confession_proect.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'confessiondb'),
-        'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '5432'),
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True,
+    )
 }
 
 
@@ -251,6 +248,7 @@ JAZZMIN_SETTINGS = {
     "copyright": "Your Team Name",
     "login_logo": None,
     "login_logo_dark": None,
+    "custom_css": "accounts/admin-login.css",
 
     # Logo (Make sure your logo is at: static/img/logo.png)
     "site_logo": "confessions/images/logo.png", 
