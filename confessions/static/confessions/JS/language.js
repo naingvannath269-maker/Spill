@@ -25,7 +25,7 @@ const translations = {
     language_aria_switch_to_km: "Switch language to Khmer",
     language_aria_switch_to_en: "Switch language to English",
     // Wall and Welcome page
-    wall_kicker: "A little honesty goes a long way",
+    wall_kicker: "A little honesty goes a long way",//គួរតែលុចចោល
     welcome_title: "Welcome to Spill",
     welcome_intro:
       "A kind, anonymous place to share your thoughts, feelings, and experiences without attaching your name.",
@@ -40,8 +40,8 @@ const translations = {
     compose_footer_hint: "Up to 500 characters. Please keep it kind.",
     btn_post_anonymously: "Post anonymously",
     btn_floating_confess: "Confess",
-    activity_kicker: "Together, one whisper at a time",
-    activity_title: "Community activity",
+    activity_kicker: "Together, one whisper at a time",//គួរតែលុចចោល
+    activity_title: "Community activity",//គួរតែលុចចោល
     stat_whispers_shared: "Whispers shared",
     stat_community_reactions: "Community reactions",
     heading_latest_whispers: "Latest whispers",
@@ -55,7 +55,7 @@ const translations = {
     show_less: "Show less",
     btn_like: "Like",
     btn_unlike: "Unlike",
-    btn_comment_reply: "Comment and Reply",
+    btn_comment_reply: "Comment and Reply",//Comment
     placeholder_confession: "Type your confession here... (keep it kind)",
     // Profile Page
     profile_kicker: "Your private space",
@@ -103,36 +103,36 @@ const translations = {
   km: {
     // Navigation
     nav_home: "ទំព័រដើម",
-    nav_confession: "សារភាព",
+    nav_confession: "សារភាព",//ការស្រាវជ្រាវ
     nav_profile: "គណនី",
-    nav_dark_mode: "ងងឹត",
-    nav_light_mode: "ពន្លឺ",
-    nav_login: "ចូលប្រើ",
-    nav_logout: "ចាកចេញ",
-    nav_register: "ចុះឈ្មោះ",
-    nav_main_navigation: "ម៉ឺនុយរុករកមេ",
+    nav_dark_mode: "ងងឹត",//ផ្ទៃងងឹត
+    nav_light_mode: "ពន្លឺ",//ផ្ទៃភ្លឺ
+    nav_login: "ចូលប្រើ",//ចូលគណនី
+    nav_logout: "ចាកចេញ",//ចាកចេញពីគណនី
+    nav_register: "ចុះឈ្មោះ",//បង្កើតគណនី
+    nav_main_navigation: "ម៉ឺនុយរុករកមេ",//ម៉ឺនុយរុករក
     nav_open_menu: "បើកម៉ឺនុយរុករក",
     nav_close_menu: "បិទម៉ឺនុយរុករក",
-    document_title: "Spill — បញ្ចេញអារម្មណ៍ ដោយមិនបង្ហាញឈ្មោះ។",
+    document_title: "Spill — បញ្ចេញអារម្មណ៍ ដោយមិនបង្ហាញឈ្មោះ។",//ចែករំលែកអារម្មណ៍ដោយមិនបង្ហាញឈ្មោះ
     aria_like_confession: "ចូលចិត្តសារសារភាព",
     aria_unlike_confession: "មិនចូលចិត្តសារសារភាព",
     aria_close_confession: "បិទទម្រង់សារសារភាព",
     aria_edit_profile: "កែសម្រួលគណនី",
     aria_latest_confessions: "សារសារភាពចុងក្រោយ",
-    theme_switch_to_dark: "ប្តូរទៅរបៀបងងឹត",
-    theme_switch_to_light: "ប្តូរទៅរបៀបភ្លឺ",
-    language_switch_to_km: "ខ្មែរ",
+    theme_switch_to_dark: "ប្តូរទៅរបៀបងងឹត",//ប្ដូរទៅផ្ទៃងងឹត
+    theme_switch_to_light: "ប្តូរទៅរបៀបភ្លឺ",//ប្ដូរទៅផ្ទៃភ្លឺ
+    language_switch_to_km: "ខ្មែរ",//ភាសាខ្មែរ
     language_switch_to_en: "English",
     language_aria_switch_to_km: "ប្តូរភាសាទៅជាភាសាខ្មែរ",
     language_aria_switch_to_en: "ប្តូរភាសាទៅជាភាសាអង់គ្លេស",
     // Wall / Welcome Page
-    wall_kicker: "ភាពស្មោះត្រង់បន្តិចបន្តួច ផ្តល់តម្លៃយ៉ាងធំធេង",
+    wall_kicker: "ភាពស្មោះត្រង់បន្តិចបន្តួច ផ្តល់តម្លៃយ៉ាងធំធេង",//គួរតែលុចចោល
     welcome_title: "សូមស្វាគមន៍មកកាន់ Spill",
     welcome_intro:
-      "ទីកន្លែងអនាមិក និងកក់ក្តៅ ដើម្បីចែករំលែកអារម្មណ៍ គំនិត និងបទពិសោធន៍របស់អ្នកដោយមិនបង្ហាញឈ្មោះ។",
+      "ទីកន្លែងអនាមិក និងកក់ក្តៅ ដើម្បីចែករំលែកអារម្មណ៍ គំនិត និងបទពិសោធន៍របស់អ្នកដោយមិនបង្ហាញឈ្មោះ។",//ទីកន្លែងអនាមិក អាថ៌កំបាំង ដើម្បីចែករំលែកអារម្មណ៍ គំនិត និងបទពិសោធន៍របស់អ្នកដោយមិនបង្ហាញឈ្មោះ។
     welcome_how:
-      "សរសេរអ្វីដែលមានក្នុងចិត្ត ចែករំលែកជាមួយសហគមន៍ និងអាន ឬប្រតិកម្មចំពោះគំនិតរបស់អ្នកដទៃ។",
-    btn_explore: "រុករកសារសារភាព",
+      "សរសេរអ្វីដែលមានក្នុងចិត្ត ចែករំលែកជាមួយសហគមន៍ និងអាន ឬប្រតិកម្មចំពោះគំនិតរបស់អ្នកដទៃ។",//សរសេរអ្វីដែលមានក្នុងចិត្ត ចែករំលែកជាមួយគ្នា និងអាន ឬប្រតិកម្មចំពោះគំនិតរបស់អ្នកដទៃ។"
+    btn_explore: "រុករកសារសារភាព",//ស្វែងរកសារសារភាព
     btn_share_thoughts: "ចែករំលែកអារម្មណ៍របស់អ្នក",
     // Confession Page & Modal
     modal_kicker: "ទីកន្លែងនេះជារបស់អ្នក",
@@ -141,11 +141,11 @@ const translations = {
     compose_footer_hint: "អតិបរមា ៥០០ តួអក្សរ។ សូមរក្សាពាក្យសម្តីសមរម្យ។",
     btn_post_anonymously: "បង្ហោះជាអនាមិក",
     btn_floating_confess: "សារភាព",
-    activity_kicker: "រួមគ្នា ម្តងមួយសារ",
-    activity_title: "សកម្មភាពសហគមន៍",
+    activity_kicker: "រួមគ្នា ម្តងមួយសារ",//គួរតែលុចចោល
+    activity_title: "សកម្មភាពសហគមន៍",//គួរតែលុចចោល
     stat_whispers_shared: "សារដែលបានចែករំលែក",
-    stat_community_reactions: "ប្រតិកម្មសហគមន៍",
-    heading_latest_whispers: "សារសារភាពចុងក្រោយ",
+    stat_community_reactions: "ប្រតិកម្មសហគមន៍",//ចំណាប់អារម្មណ៍អ្នកប្រើប្រាស់
+    heading_latest_whispers: "សារសារភាពចុងក្រោយ",//សារសារភាពថ្មីៗ
     text_shared_count: "បានចែករំលែក",
     empty_title: "ផ្ទាំងសារស្ងប់ស្ងាត់ណាស់",
     empty_desc: "មិនទាន់មានសារនៅឡើយទេ។ ក្លាយជាអ្នកដំបូងគេក្នុងការចែករំលែក។",
@@ -156,7 +156,7 @@ const translations = {
     show_less: "បង្រួមវិញ",
     btn_like: "ចូលចិត្ត",
     btn_unlike: "មិនចូលចិត្ត",
-    btn_comment_reply: "មតិ និងឆ្លើយតប",
+    btn_comment_reply: "មតិ និងឆ្លើយតប",//មតិ
     placeholder_confession:
       "សរសេរសារសារភាពរបស់អ្នកនៅទីនេះ... (សូមរក្សាពាក្យសម្តីសមរម្យ)",
     // Profile Page
