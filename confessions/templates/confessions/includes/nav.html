@@ -40,6 +40,10 @@
           <a href="{% url 'profile' %}" data-i18n="nav_profile"
             {% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'update_profile' %} aria-current="page"{% endif %}>Profile</a>
         </li>
+        <li>
+          <a href="{% url 'about_us' %}#about-team" data-i18n="nav_about_us"
+            {% if request.resolver_match.url_name == 'about_us' %} aria-current="page"{% endif %}>About Us</a>
+        </li>
       </ul>
       <ul class="site-nav__actions" aria-label="Account">
         <li>
