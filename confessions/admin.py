@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.utils.html import format_html
 from .models import Comment, Confession
 
-
 @admin.register(Confession)
 class ConfessionAdmin(admin.ModelAdmin):
     list_display = ('id_link', 'clickable_content', 'created_at')
@@ -29,16 +28,16 @@ class ConfessionAdmin(admin.ModelAdmin):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('author_username', 'comment_snippet', 'confession_link', 'created_at')
-    search_fields = ('user__username', 'text', 'confession__content')
+    search_fields = ('author__username', 'text', 'confession__content')
     list_filter = ('created_at',)
 
     @admin.display(description='User')
     def author_username(self, obj):
-        return obj.user.username if obj.user else 'Anonymous'
+        return obj.author.username if obj.author else 'Anonymous'
 
     @admin.display(description='Comment')
     def comment_snippet(self, obj):
-        text = str(obj.text)
+        text = str(obj.content)
         return f'{text[:50]}...' if len(text) > 50 else text
 
     @admin.display(description='Confession')
