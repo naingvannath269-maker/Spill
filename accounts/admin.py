@@ -92,4 +92,3 @@ class LogEntryAdmin(admin.ModelAdmin):
         msg = obj.change_message
         return (msg[:80] + '…') if len(msg) > 80 else msg
     change_message_short.short_description = 'Changes' 
-admin.site.register(CustomUser)
