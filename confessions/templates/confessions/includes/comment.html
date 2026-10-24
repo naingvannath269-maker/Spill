@@ -1,0 +1,65 @@
+<div
+  id="comments-modal-{{ confession.id }}"
+  class="comments-modal-overlay"
+  data-comments-url="{% url 'comment_list' confession.pk %}"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+  aria-labelledby="comments-title-{{ confession.id }}"
+>
+  <section class="comments-modal-dialog">
+    <header class="comments-modal-header">
+      <div>
+        <p class="wall-kicker" data-i18n="comments_modal_kicker">
+          Conversation
+        </p>
+        <h2
+          id="comments-title-{{ confession.id }}"
+          data-i18n="comments_modal_title"
+        >
+          Comments and replies
+        </h2>
+      </div>
+      <button
+        type="button"
+        class="comments-modal-close"
+        data-close-comments
+        aria-label="Close comments"
+        data-i18n-aria-label="comments_modal_close"
+      >
+        &times;
+      </button>
+    </header>
+
+    <div class="comments-modal-content">
+      <div class="fb-comment-list" data-comment-list aria-live="polite">
+        {% include 'confessions/includes/comment_list.html' with confession=confession %}
+      </div>
+      <p class="comments-modal-status" data-comment-status role="status"></p>
+    </div>
+
+    <form
+      method="POST"
+      action="{% url 'add_comment' confession.pk %}"
+      class="fb-comment-form comments-modal-compose"
+    >
+      {% csrf_token %}
+      <input
+        type="text"
+        id="main-input-{{ confession.id }}"
+        name="content"
+        class="form-control fb-input-pill"
+        placeholder="Write a comment..."
+        data-i18n-placeholder="placeholder_comment"
+        required
+      />
+      <button
+        type="submit"
+        class="page-primary-link"
+        data-i18n="btn_post_comment"
+      >
+        Post
+      </button>
+    </form>
+  </section>
+</div>

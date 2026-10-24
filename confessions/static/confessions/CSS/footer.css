@@ -1,0 +1,33 @@
+.site-footer {
+  position: fixed;
+  z-index: 1030;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid rgba(163, 186, 200, 0.45);
+  background: rgba(255, 255, 255, 0.58);
+}
+
+body.whisper-body {
+  padding-bottom: 44px;
+}
+
+.site-footer__copyright {
+  color: #748792;
+  font-size: 0.65rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+html[data-theme="dark"] .site-footer {
+  border-top-color: #343d46;
+  background: rgba(25, 30, 35, 0.82);
+}
+
+html[data-theme="dark"] .site-footer__copyright {
+  color: #a7b1bb;
+}

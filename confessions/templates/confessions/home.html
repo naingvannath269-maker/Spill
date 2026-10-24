@@ -1,0 +1,27 @@
+{% extends 'confessions/base.html' %} {% load static %} {% block content %}
+<div class="whisper-page">
+  <section class="home-welcome" aria-labelledby="welcome-title">
+    <p class="wall-kicker" data-i18n="wall_kicker">A little honesty goes a long way</p>
+    {% if user.is_authenticated %}
+    <h1 id="welcome-title">
+      <span data-i18n="welcome_title_prefix">Welcome </span><span class="home-welcome__username">{{ user.username }}</span><span data-i18n="welcome_title_suffix"> to Spill</span>
+    </h1>
+    {% else %}
+    <h1 id="welcome-title" data-i18n="welcome_title">Welcome to Spill</h1>
+    {% endif %}
+    <p class="home-welcome__intro" data-i18n="welcome_intro">
+      A kind, anonymous place to share your thoughts, feelings, and experiences
+      without attaching your name.
+    </p>
+    <p class="home-welcome__how" data-i18n="welcome_how">
+      Write what is on your mind, share it with the community, and read or react
+      to the thoughts others have chosen to share.
+    </p>
+    <div class="home-welcome__actions">
+      <a class="page-primary-link" href="{% if user.is_authenticated %}{% url 'confession' %}{% else %}{% url 'login' %}{% endif %}">
+        <span data-i18n="btn_explore">Explore Confessions</span> <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+</div>
+{% endblock %}

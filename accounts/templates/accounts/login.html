@@ -1,26 +1,27 @@
 {% extends 'confessions/base.html' %} {% load static %} {% block page_css %}
-<link rel="stylesheet" href="{% static 'accounts/auth.css' %}" />
+<link rel="stylesheet" href="{% static 'accounts/auth-common.css' %}?v=1" />
+<link rel="stylesheet" href="{% static 'accounts/login.css' %}?v=1" />
 {% endblock %} {% block content %}
 <section class="auth-layout auth-layout--login" aria-labelledby="login-title">
   <aside class="auth-story">
-    <span class="auth-eyebrow">A QUIETER CORNER OF THE INTERNET</span>
-    <h1>Some things feel lighter when shared.</h1>
-    <p>Make room for the thoughts you have been carrying around.</p>
+    <span class="auth-eyebrow" data-i18n="auth_eyebrow">LET IT OUT, LEAVE YOUR NAME OUT.</span>
+    <h1 data-i18n="auth_story_heading">Some things feel lighter when shared.</h1>
+    <p data-i18n="auth_story_intro">Make room for the thoughts you have been carrying around.</p>
     <div class="auth-note" aria-hidden="true">
-      <span class="auth-note-label">A NOTE TO SELF</span>
-      <span class="auth-note-message">You can be honest here.</span>
+      <span class="auth-note-label" data-i18n="auth_note_label">A NOTE TO SELF</span>
+      <span class="auth-note-message" data-i18n="auth_note_message">You can be honest here.</span>
       <span class="auth-note-mark">•••</span>
     </div>
     <span class="auth-story-foot"
-      >WHISPER <span>·</span> READ, WRITE, LET GO</span
+      >SPILL <span>·</span> <span data-i18n="auth_story_footer">READ, WRITE, LET GO</span></span
     >
   </aside>
 
   <div class="auth-panel">
     <div class="auth-heading">
-      <span class="auth-kicker">GOOD TO HAVE YOU BACK</span>
-      <h2 id="login-title">Welcome back</h2>
-      <p>Sign in and pick up where you left off.</p>
+      <span class="auth-kicker" data-i18n="login_kicker">GOOD TO HAVE YOU BACK</span>
+      <h2 id="login-title" data-i18n="login_title">Welcome back</h2>
+      <p data-i18n="login_intro">Sign in and pick up where you left off.</p>
     </div>
 
     <form method="post" class="auth-form">
@@ -32,20 +33,20 @@
       <p class="auth-error" role="alert">{{ error }}</p>
       {% endfor %} {% for field in form %}
       <div class="auth-field">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <label for="{{ field.id_for_label }}"{% if field.name == 'username' %} data-i18n="label_username"{% elif field.name == 'password' %} data-i18n="label_password"{% endif %}>{{ field.label }}</label>
         {{ field }} {% for error in field.errors %}
         <p class="auth-error" role="alert">{{ error }}</p>
         {% endfor %}
       </div>
       {% endfor %}
       <button type="submit" class="auth-submit">
-        Sign in <span aria-hidden="true">→</span>
+        <span data-i18n="btn_login">Sign in</span> <span aria-hidden="true">→</span>
       </button>
     </form>
 
     <p class="auth-switch">
-      New to Whisper?
-      <a href="{% url 'signup' %}">Create an account</a>
+      <span data-i18n="no_account_prompt">Don't have an account?</span>
+      <a href="{% url 'signup' %}" data-i18n="signup_here">Sign up here</a>
     </p>
   </div>
 </section>

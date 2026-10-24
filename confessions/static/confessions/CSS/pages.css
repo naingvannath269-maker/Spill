@@ -1,3 +1,17 @@
+main.whisper-main {
+  animation: whisper-page-enter 280ms ease-out;
+}
+
+@keyframes whisper-page-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .page-shell {
   width: min(760px, 100%);
   margin: 0 auto;
@@ -9,8 +23,7 @@
   text-align: center;
 }
 
-.page-heading h1,
-.profile-card h1 {
+.page-heading h1 {
   margin: 0;
   color: #880085;
   font-family: "Manrope", sans-serif;
@@ -33,6 +46,42 @@
   text-align: center;
 }
 
+.home-welcome > * {
+  animation: home-content-enter 560ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+.home-welcome > :nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.home-welcome > :nth-child(3) {
+  animation-delay: 140ms;
+}
+
+.home-welcome > :nth-child(4) {
+  animation-delay: 210ms;
+}
+
+.home-welcome > :nth-child(5) {
+  animation-delay: 280ms;
+}
+
+.home-welcome > :nth-child(7) {
+  animation-delay: 350ms;
+}
+
+@keyframes home-content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .home-welcome h1 {
   max-width: 780px;
   margin: 0;
@@ -41,6 +90,10 @@
   font-size: clamp(2.1rem, 7vw, 3.7rem);
   font-weight: 800;
   line-height: 1.12;
+}
+
+.home-welcome__username {
+  color: #3978d4;
 }
 
 .home-welcome__intro {
@@ -56,6 +109,12 @@
   margin: 12px 0 0;
   color: #657686;
   line-height: 1.7;
+}
+
+.home-welcome .activity-panel {
+  width: min(940px, 100%);
+  margin: 28px 0 0;
+  text-align: left;
 }
 
 .home-welcome__actions {
@@ -82,6 +141,10 @@
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
 }
 
 .page-secondary-link {
@@ -99,6 +162,18 @@
   text-decoration: none;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  main.whisper-main,
+  .home-welcome > * {
+    animation: none;
+  }
+
+  .page-primary-link,
+  .activity-stats div {
+    transition: none;
+  }
+}
+
 .page-secondary-link:hover,
 .page-secondary-link:focus-visible {
   border-color: #880085;
@@ -108,7 +183,9 @@
 
 .page-primary-link:hover,
 .page-primary-link:focus-visible {
+  transform: translateY(-2px);
   background: #650063;
+  box-shadow: 0 8px 18px rgba(136, 0, 133, 0.25);
   color: #fff;
 }
 
@@ -133,7 +210,6 @@
 }
 
 .activity-panel,
-.profile-card,
 .confession-compose {
   margin-bottom: 28px;
   padding: clamp(18px, 4vw, 26px);
@@ -156,27 +232,28 @@
   font-size: 1.15rem;
 }
 
-.activity-stats,
-.profile-details {
+.activity-stats {
   display: flex;
   flex-wrap: wrap;
   gap: 14px 28px;
   margin: 0;
 }
 
-.activity-stats div,
-.profile-details div {
+.activity-stats div {
   min-width: 105px;
+  transition: transform 180ms ease;
 }
 
-.activity-stats dt,
-.profile-details dt {
+.activity-stats div:hover {
+  transform: translateY(-2px);
+}
+
+.activity-stats dt {
   color: #657686;
   font-size: 0.78rem;
 }
 
-.activity-stats dd,
-.profile-details dd {
+.activity-stats dd {
   margin: 3px 0 0;
   color: #192b3a;
   font-size: 1.1rem;
@@ -218,8 +295,7 @@
   margin-top: 14px;
 }
 
-.compose-footer > span,
-.profile-privacy {
+.compose-footer > span {
   color: #657686;
   font-size: 0.86rem;
 }
@@ -228,24 +304,6 @@
   margin: 7px 0;
   color: #a12727;
   font-size: 0.9rem;
-}
-
-.profile-card h1 {
-  margin-bottom: 18px;
-}
-
-.profile-details {
-  padding: 18px 0;
-  border-top: 1px solid #e4edf2;
-  border-bottom: 1px solid #e4edf2;
-}
-
-.profile-details dd {
-  font-size: 0.98rem;
-}
-
-.profile-privacy {
-  margin: 16px 0 0;
 }
 
 .confession-login-prompt {
@@ -280,10 +338,10 @@
     padding-right: 4px;
     padding-left: 4px;
   }
+
 }
 
 html[data-theme="dark"] .activity-panel,
-html[data-theme="dark"] .profile-card,
 html[data-theme="dark"] .confession-compose {
   border-color: #39434d;
   background: rgba(31, 37, 43, 0.96);
@@ -291,6 +349,10 @@ html[data-theme="dark"] .confession-compose {
 
 html[data-theme="dark"] .home-welcome h1 {
   color: #ffef00;
+}
+
+html[data-theme="dark"] .home-welcome__username {
+  color: #78b7ff;
 }
 
 html[data-theme="dark"] .home-welcome__intro {
@@ -315,21 +377,14 @@ html[data-theme="dark"] .page-secondary-link:focus-visible {
 
 html[data-theme="dark"] .activity-panel h2,
 html[data-theme="dark"] .activity-stats dd,
-html[data-theme="dark"] .profile-details dd,
 html[data-theme="dark"] .confession-compose label {
   color: #edf1f4;
 }
 
 html[data-theme="dark"] .activity-stats dt,
-html[data-theme="dark"] .profile-details dt,
 html[data-theme="dark"] .compose-footer > span,
-html[data-theme="dark"] .profile-privacy,
 html[data-theme="dark"] .page-heading > p:last-child {
   color: #a7b1bb;
-}
-
-html[data-theme="dark"] .profile-details {
-  border-color: #39434d;
 }
 
 html[data-theme="dark"] .confession-compose textarea {

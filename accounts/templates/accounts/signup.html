@@ -1,26 +1,27 @@
 {% extends 'confessions/base.html' %} {% load static %} {% block page_css %}
-<link rel="stylesheet" href="{% static 'accounts/auth.css' %}" />
+<link rel="stylesheet" href="{% static 'accounts/auth-common.css' %}?v=1" />
+<link rel="stylesheet" href="{% static 'accounts/signup.css' %}?v=1" />
 {% endblock %} {% block content %}
-<section class="auth-layout" aria-labelledby="signup-title">
+<section class="auth-layout auth-layout--signup" aria-labelledby="signup-title">
   <aside class="auth-story">
-    <span class="auth-eyebrow">A QUIETER CORNER OF THE INTERNET</span>
-    <h1>Some things feel lighter when shared.</h1>
-    <p>Make room for the thoughts you have been carrying around.</p>
+    <span class="auth-eyebrow" data-i18n="auth_eyebrow">LET IT OUT, LEAVE YOUR NAME OUT.</span>
+    <h1 data-i18n="auth_story_heading">Some things feel lighter when shared.</h1>
+    <p data-i18n="auth_story_intro">Make room for the thoughts you have been carrying around.</p>
     <div class="auth-note" aria-hidden="true">
-      <span class="auth-note-label">A NOTE TO SELF</span>
-      <span class="auth-note-message">You can be honest here.</span>
+      <span class="auth-note-label" data-i18n="auth_note_label">A NOTE TO SELF</span>
+      <span class="auth-note-message" data-i18n="auth_note_message">You can be honest here.</span>
       <span class="auth-note-mark">•••</span>
     </div>
     <span class="auth-story-foot"
-      >WHISPER <span>·</span> READ, WRITE, LET GO</span
+      >SPILL <span>·</span> <span data-i18n="auth_story_footer">READ, WRITE, LET GO</span></span
     >
   </aside>
 
   <div class="auth-panel">
     <div class="auth-heading">
-      <span class="auth-kicker">YOUR SPACE STARTS HERE</span>
-      <h2 id="signup-title">Create your account</h2>
-      <p>Just the basics. You can share when you are ready.</p>
+      <span class="auth-kicker" data-i18n="signup_kicker">YOUR SPACE STARTS HERE</span>
+      <h2 id="signup-title" data-i18n="signup_title">Create your account</h2>
+      <p data-i18n="signup_intro">Just the basics. You can share when you are ready.</p>
     </div>
 
     <form method="post" class="auth-form">
@@ -28,7 +29,7 @@
       <p class="auth-error" role="alert">{{ error }}</p>
       {% endfor %} {% for field in form %}
       <div class="auth-field">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <label for="{{ field.id_for_label }}"{% if field.name == 'username' %} data-i18n="label_username"{% elif field.name == 'email' %} data-i18n="label_email"{% elif field.name == 'password1' %} data-i18n="label_password"{% elif field.name == 'password2' %} data-i18n="label_confirm_password"{% endif %}>{{ field.label }}</label>
         {{ field }} {% if field.help_text %}
         <div class="auth-help">{{ field.help_text }}</div>
         {% endif %} {% for error in field.errors %}
@@ -37,13 +38,13 @@
       </div>
       {% endfor %}
       <button type="submit" class="auth-submit">
-        Create account <span aria-hidden="true">→</span>
+        <span data-i18n="btn_signup">Create account</span> <span aria-hidden="true">→</span>
       </button>
     </form>
 
     <p class="auth-switch">
-      Already have an account?
-      <a href="{% url 'login' %}">Sign in</a>
+      <span data-i18n="have_account_prompt">Already have an account?</span>
+      <a href="{% url 'login' %}" data-i18n="login_here">Log in here</a>
     </p>
   </div>
 </section>

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .models import CustomUser
+from .models import CustomUser, generate_anonymous_username
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -24,13 +24,7 @@ class CustomUserCreationForm(UserCreationForm):
   def save(self, commit=True):
     user = super().save(commit=False)
     if not user.username:
-      base_username = user.email.split('@', 1)[0][:130] or 'user'
-      username = base_username
-      suffix = 1
-      while CustomUser.objects.filter(username=username).exists():
-        username = f'{base_username}_{suffix}'
-        suffix += 1
-      user.username = username
+      user.username = generate_anonymous_username()
     if commit:
       user.save()
     return user

@@ -3,7 +3,7 @@ document.addEventListener("submit", async (event) => {
 
   if (
     !(form instanceof HTMLFormElement) ||
-    !form.matches(".bubble-actions form")
+    !form.matches(".bubble-actions .reaction-form")
   ) {
     return;
   }
@@ -48,6 +48,7 @@ document.addEventListener("submit", async (event) => {
     form.querySelector(".unlike-button").classList.toggle("selected", result.unliked);
     form.querySelector(".like-button").setAttribute("aria-pressed", String(result.liked));
     form.querySelector(".unlike-button").setAttribute("aria-pressed", String(result.unliked));
+    window.htmx?.trigger("#community-activity", "refresh");
   } catch {
     const status = form.querySelector(".like-status");
     if (status) {

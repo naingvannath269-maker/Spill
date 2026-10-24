@@ -1,0 +1,36 @@
+<form
+  id="reaction-form-{{ confession.pk }}"
+  action="{% url 'upvote' confession.pk %}"
+  method="POST"
+  class="reaction-form"
+  {% if oob %}hx-swap-oob="outerHTML"{% endif %}
+>
+  {% csrf_token %}
+  <button
+    type="submit"
+    name="reaction"
+    value="like"
+    class="reaction-button like-button{% if confession.has_liked %} selected{% endif %}"
+    aria-label="Like confession"
+    data-i18n-aria-label="aria_like_confession"
+    aria-pressed="{{ confession.has_liked|yesno:'true,false' }}"
+  >
+    <span class="like-button-icon" aria-hidden="true">👍</span>
+    <span data-i18n="btn_like">Like</span>
+    <span class="reaction-count like-count">{{ confession.like_count }}</span>
+  </button>
+  <button
+    type="submit"
+    name="reaction"
+    value="unlike"
+    class="reaction-button unlike-button{% if confession.has_unliked %} selected{% endif %}"
+    aria-label="Unlike confession"
+    data-i18n-aria-label="aria_unlike_confession"
+    aria-pressed="{{ confession.has_unliked|yesno:'true,false' }}"
+  >
+    <span class="unlike-button-icon" aria-hidden="true">👎</span>
+    <span data-i18n="btn_unlike">Unlike</span>
+    <span class="reaction-count unlike-count">{{ confession.unlike_count }}</span>
+  </button>
+  <span class="like-status visually-hidden" role="status"></span>
+</form>

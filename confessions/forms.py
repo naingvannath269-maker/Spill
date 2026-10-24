@@ -10,6 +10,34 @@ from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
+
+def contains_inappropriate_language(content):
+  normalized_content = unicodedata.normalize('NFKC', content).casefold()
+
+  for blocked_word in settings.INAPPROPRIATE_WORDS:
+    normalized_word = unicodedata.normalize('NFKC', blocked_word).casefold()
+    if not normalized_word:
+      continue
+    word_pattern = r'[^\w\s]*'.join(
+        re.escape(character) for character in normalized_word
+    )
+    is_khmer_word = any(
+        unicodedata.name(character, '').startswith('KHMER ')
+        for character in normalized_word
+    )
+    if is_khmer_word:
+      matches = re.search(word_pattern, normalized_content)
+    else:
+      matches = re.search(
+          rf'(?<!\w){word_pattern}(?!\w)',
+          normalized_content,
+      )
+    if matches:
+      return True
+
+  return False
+
+
 class ConfessionForm(forms.ModelForm):
   class Meta:
     model = Confession
@@ -19,8 +47,9 @@ class ConfessionForm(forms.ModelForm):
             attrs={
                 'class': 'form-control',
                 'rows': 3,
-                'maxlength': 500,
+                'maxlength': 1000,
                 'placeholder': 'Type your confession here... (keep it kind)',
+                'data-i18n-placeholder': 'placeholder_confession',
                 'id': 'confession-content',
             }
         ),
@@ -28,21 +57,21 @@ class ConfessionForm(forms.ModelForm):
 
   def clean_content(self):
     content = self.cleaned_data['content']
-    normalized_content = unicodedata.normalize('NFKC', content).casefold()
-
-    for blocked_word in settings.INAPPROPRIATE_WORDS:
-      normalized_word = unicodedata.normalize('NFKC', blocked_word).casefold()
-      if not normalized_word:
-        continue
-      word_pattern = r'[^\w\s]*'.join(
-          re.escape(character) for character in normalized_word
+    if contains_inappropriate_language(content):
+      raise forms.ValidationError(
+          'Please remove inappropriate language before posting.',
+          code='inappropriate_language',
       )
-      if re.search(rf'(?<!\w){word_pattern}(?!\w)', normalized_content):
-        raise forms.ValidationError(
-            'Please remove inappropriate language before posting.'
-        )
 
     return content
+
+  @property
+  def content_errors_with_codes(self):
+    errors = self.errors.as_data().get('content', [])
+    return [
+        {'message': message, 'code': error.code}
+        for message, error in zip(self.errors.get('content', []), errors)
+    ]
 
 class CustomUserChangeForm(forms.ModelForm):
     current_password = forms.CharField(widget=forms.PasswordInput, required=False)

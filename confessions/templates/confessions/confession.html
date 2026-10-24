@@ -1,6 +1,6 @@
 {% extends 'confessions/base.html' %} {% load static %}
 {% block page_css %}
-<link rel="stylesheet" href="{% static 'confessions/CSS/confession-modal.css' %}" />
+<link rel="stylesheet" href="{% static 'confessions/CSS/confession-modal.css' %}?v=5" />
 {% endblock %}
 {% block content %}
 
@@ -9,78 +9,91 @@
     <div class="confession-modal__panel">
       <header class="confession-modal__header">
         <div>
-          <p class="wall-kicker">This space is yours</p>
-          <h2 id="modal-title">Write Your Confession</h2>
+          <p class="wall-kicker" data-i18n="modal_kicker">This space is yours</p>
+          <h2 id="modal-title" data-i18n="modal_title">Write Your Confession</h2>
         </div>
-        <button class="confession-modal__close" type="button" data-close-confession aria-label="Close confession form">×</button>
+        <button class="confession-modal__close" type="button" data-close-confession aria-label="Close confession form" data-i18n-aria-label="aria_close_confession">×</button>
       </header>
       <form method="post" action="{% url 'confession' %}" class="confession-modal__form">
         {% csrf_token %}
         {% for error in form.non_field_errors %}
         <p class="form-error" role="alert">{{ error }}</p>
         {% endfor %}
-        <label for="{{ form.content.id_for_label }}">Your confession</label>
+        <label for="{{ form.content.id_for_label }}" data-i18n="label_your_confession">Your confession</label>
         {{ form.content }}
-        {% for error in form.content.errors %}
-        <p class="form-error" role="alert">{{ error }}</p>
+        <output
+          class="confession-character-count"
+          for="confession-content"
+          aria-label="Character count"
+          data-i18n-aria-label="label_character_count"
+        >0 / 1000</output>
+        {% for error in form.content_errors_with_codes %}
+        <p class="form-error" role="alert"{% if error.code == 'inappropriate_language' %} data-i18n="error_inappropriate_language"{% endif %}>{{ error.message }}</p>
         {% endfor %}
         <div class="compose-footer">
-          <span>Up to 500 characters. Please keep it kind.</span>
+          <span data-i18n="compose_footer_hint">Up to 1000 characters. Please keep it kind.</span>
           <button class="page-primary-link" type="submit">
-            Post anonymously <span aria-hidden="true">↗</span>
+            <span data-i18n="btn_post_anonymously">Post anonymously</span> <span aria-hidden="true">↗</span>
           </button>
         </div>
       </form>
     </div>
   </dialog>
-
-  <button class="floating-confess" type="button" data-open-confession>
-    <span aria-hidden="true">＋</span> Confess
-  </button>
   {% endif %}
 
   <section class="confession-wall-content" aria-labelledby="latest-title">
-    <section class="activity-panel" aria-labelledby="activity-title">
-      <div>
-        <p class="wall-kicker">Together, one whisper at a time</p>
-        <h2 id="activity-title">Community activity</h2>
-      </div>
-      <dl class="activity-stats">
-        <div>
-          <dt>Whispers shared</dt>
-          <dd>{{ confession_count }}</dd>
-        </div>
-        <div>
-          <dt>Community reactions</dt>
-          <dd>{{ reaction_count }}</dd>
-        </div>
-      </dl>
-    </section>
-
     <div class="feed-heading">
-      <h2 id="latest-title">Latest whispers</h2>
-      <span>{{ confession_count }} shared</span>
+      <h2 id="latest-title" data-i18n="heading_latest_whispers">Latest whispers</h2>
+      <span><span id="confession-total">{{ confession_count }}</span> <span data-i18n="text_shared_count">shared</span></span>
     </div>
-    <div class="confessions-feed" aria-label="Latest confessions">
+    <div
+      class="confessions-feed"
+      id="confessions-feed"
+      data-empty-link-url="{% if user.is_authenticated %}#{% else %}{% url 'login' %}{% endif %}"
+      data-empty-link-i18n="{% if user.is_authenticated %}link_write_first{% else %}link_login_write_first{% endif %}"
+      aria-label="Latest confessions"
+      data-i18n-aria-label="aria_latest_confessions"
+      hx-get="{% url 'confession_updates' %}"
+      hx-trigger="every 3s"
+      hx-include="#latest-confession-id, #confessions-feed [data-visible-confession]"
+      hx-swap="afterbegin"
+    >
+      <input type="hidden" id="latest-confession-id" name="after" value="{{ latest_confession_id }}" />
       {% for confession in confessions %}
         {% include 'confessions/includes/confession_card.html' with confession=confession %}
       {% empty %}
-      <div class="empty-state">
+      <div class="empty-state" id="confessions-empty-state">
         <span aria-hidden="true">✳</span>
-        <h2>The wall is quiet</h2>
-        <p>There are no whispers yet. Be the first to share one.</p>
+        <h2 data-i18n="empty_title">The wall is quiet</h2>
+        <p data-i18n="empty_desc">There are no whispers yet. Be the first to share one.</p>
         {% if user.is_authenticated %}
-        <a class="page-text-link" href="#" data-open-confession>Write the first whisper</a>
+        <a class="page-text-link" href="#" data-open-confession data-i18n="link_write_first">Write the first whisper</a>
         {% else %}
-        <a class="page-text-link" href="{% url 'login' %}">Log in to write the first whisper</a>
+        <a class="page-text-link" href="{% url 'login' %}" data-i18n="link_login_write_first">Log in to write the first whisper</a>
         {% endif %}
       </div>
       {% endfor %}
     </div>
+    <div
+      id="reaction-updates"
+      hx-get="{% url 'reaction_updates' %}"
+      hx-trigger="every 3s"
+      hx-include="#confessions-feed [data-reaction-confession]"
+      hx-swap="none"
+      hidden
+    ></div>
   </section>
 </section>
-<script src="{% static 'confessions/JS/wall.js' %}" defer></script>
+<script src="{% static 'confessions/JS/wall.js' %}?v=2" defer></script>
 {% if user.is_authenticated %}
-<script src="{% static 'confessions/JS/confession-modal.js' %}" defer></script>
+<script src="{% static 'confessions/JS/confession-modal.js' %}?v=2" defer></script>
 {% endif %}
+{% endblock %}
+
+{% block floating_actions %}
+  {% if user.is_authenticated %}
+  <button class="floating-confess" type="button" data-open-confession>
+    <span aria-hidden="true">＋</span> <span data-i18n="btn_floating_confess">Confess</span>
+  </button>
+  {% endif %}
 {% endblock %}

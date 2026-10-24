@@ -164,8 +164,38 @@
   outline: 3px solid rgba(57, 120, 212, 0.18);
 }
 
+.confession-character-count {
+  display: block;
+  margin-top: 6px;
+  color: #657686;
+  font-size: 0.78rem;
+  text-align: right;
+  transition: color 160ms ease;
+}
+
+.confession-character-count.is-near-limit {
+  color: #a16207;
+}
+
+.confession-character-count.is-at-limit {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
 .confession-modal__form .compose-footer {
   align-items: flex-end;
+}
+
+.confession-modal__form .page-primary-link {
+  border: 1px solid #650063;
+  background: #880085;
+  color: #fff;
+}
+
+.confession-modal__form .page-primary-link:hover {
+  border-color: #4b0049;
+  background: #650063;
+  color: #fff;
 }
 
 .confession-success {
@@ -179,17 +209,17 @@
 }
 
 .floating-confess {
-  position: fixed;
+  position: fixed !important;
   z-index: 1040;
-  right: max(24px, calc((100vw - 1080px) / 2));
-  bottom: max(24px, env(safe-area-inset-bottom));
+  right: max(28px, env(safe-area-inset-right)) !important;
+  bottom: max(28px, env(safe-area-inset-bottom)) !important;
   display: inline-flex;
   min-height: 54px;
   align-items: center;
   justify-content: center;
   gap: 7px;
   padding: 0 20px;
-  border: 0;
+  border: 1px solid #650063;
   border-radius: 999px;
   background: #880085;
   box-shadow: 0 9px 26px rgba(86, 0, 84, 0.26);
@@ -255,6 +285,23 @@ html[data-theme="dark"] .confession-modal__form textarea {
   border-color: #46515b;
   background: #191e23;
   color: #edf1f4;
+}
+
+html[data-theme="dark"] .confession-character-count {
+  color: #a7b1bb;
+}
+
+html[data-theme="dark"] .confession-character-count.is-near-limit {
+  color: #fbbf24;
+}
+
+html[data-theme="dark"] .confession-character-count.is-at-limit {
+  color: #fca5a5;
+}
+
+html[data-theme="dark"] .confession-modal__form textarea::placeholder {
+  color: #ffffff;
+  opacity: 1;
 }
 
 html[data-theme="dark"] .confession-success {
