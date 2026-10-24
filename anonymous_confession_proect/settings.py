@@ -130,10 +130,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -253,6 +249,8 @@ JAZZMIN_SETTINGS = {
     "site_brand": "Confession App",
     "welcome_sign": "Welcome to the Admin Panel",
     "copyright": "Your Team Name",
+    "login_logo": None,
+    "login_logo_dark": None,
 
     # Logo (Make sure your logo is at: static/img/logo.png)
     "site_logo": "confessions/images/logo.png", 
@@ -299,5 +297,4 @@ JAZZMIN_UI_TWEAKS = {
         "danger": "btn-danger",
         "success": "btn-success",
     },
-    "custom_css": "admin/custom.css",
 }

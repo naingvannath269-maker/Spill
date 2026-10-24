@@ -869,6 +869,15 @@ class HomeAndProfileTests(TestCase):
     )
     self.assertContains(response, 'data-i18n="welcome_title_suffix"')
 
+  def test_about_us_page_is_public_and_has_navigation(self):
+    response = self.client.get(reverse('about_us'))
+
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(response, 'A place to let it out')
+    self.assertContains(response, 'The team behind Spill')
+    self.assertContains(response, 'Naing Vannath')
+    self.assertContains(response, reverse('about_us'))
+
   def test_profile_only_shows_signed_in_users_confessions_and_private_details(self):
     own_confession = Confession.objects.create(
         author=self.user,

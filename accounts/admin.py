@@ -8,10 +8,10 @@ from django.utils.html import format_html
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'is_staff', 'is_superuser', 'is_active')
-    search_fields = ('username', 'email')
+    list_display = ('username', 'is_staff', 'is_superuser', 'is_active')
+    search_fields = ('username',)
     ordering = ('username',)
-    readonly_fields = ('username', 'email', 'password', 'last_login', 'date_joined')
+    readonly_fields = ('username', 'password', 'last_login', 'date_joined')
 
     def has_add_permission(self, request):
         return False
@@ -32,7 +32,7 @@ class CustomUserAdmin(UserAdmin):
         return qs.filter(is_staff=False, is_superuser=False)
         
     fieldsets = (
-        (None, {'fields': ('username', 'email', 'password')}),
+        (None, {'fields': ('username', 'password')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )

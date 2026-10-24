@@ -163,6 +163,10 @@ def wall_view(request):
   return render(request, 'confessions/home.html')
 
 
+def about_us_view(request):
+  return render(request, 'confessions/about_us.html')
+
+
 def confession_view(request):
   if request.method == 'POST':
     return _create_confession(request)
