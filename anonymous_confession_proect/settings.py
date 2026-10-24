@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -129,6 +130,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -203,6 +208,7 @@ INAPPROPRIATE_WORDS = (
     'twat',
     'wanker',
     'whore',
+    'whores', 
     'whores',
     "ចុយ",
     "អាឡប់",
@@ -235,3 +241,63 @@ INAPPROPRIATE_WORDS = (
     "មីឆ្កែ",
     "អាចម៌",
 )
+
+# ==========================================
+# JAZZMIN ADMIN CUSTOMIZATION
+# ==========================================
+
+JAZZMIN_SETTINGS = {
+    # Titles
+    "site_title": "Confession Admin",
+    "site_header": "Confession Dashboard",
+    "site_brand": "Confession App",
+    "welcome_sign": "Welcome to the Admin Panel",
+    "copyright": "Your Team Name",
+
+    # Logo (Make sure your logo is at: static/img/logo.png)
+    "site_logo": "confessions/images/logo.png", 
+    
+    # UI Tweaks
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "search_model": ["auth.User", "confessions.Confession"], 
+    
+    # Top Menu Links (Optional)
+    "topmenu_links": [
+        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "View Site", "url": "/", "new_window": True},
+    ],
+}
+
+# Optional: Change the color theme to make it look modern
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-primary",
+    "accent": "accent-primary",
+    "navbar": "navbar-dark",
+    "no_navbar_border": True,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": True,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False, 
+    "theme": "flatly",# Try: "default", "darkly", "cyborg", "flatly", "journal", "lux", "minty"
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success",
+    },
+    "custom_css": "admin/custom.css",
+}
