@@ -178,10 +178,7 @@ INAPPROPRIATE_WORDS = (
     'slut',
     'sluts',
     'whore',
-    'whores',
-<<<<<<< Updated upstream
-)
-=======
+    'whores', 
     "ចុយ",
     "អាឡប់",
     "មីចុយម្រាយ",
@@ -273,4 +270,3 @@ JAZZMIN_UI_TWEAKS = {
     },
     "custom_css": "admin/custom.css",
 }
->>>>>>> Stashed changes
