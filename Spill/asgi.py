@@ -1,5 +1,5 @@
 """
-ASGI config for anonymous_confession_proect project.
+ASGI config for Spill project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'anonymous_confession_proect.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Spill.settings')
 
 application = get_asgi_application()

@@ -68,7 +68,7 @@
         <div class="about-person" role="treeitem" aria-level="1">
           <img
             class="about-person__photo"
-            src="{% static 'confessions/images/owner_asset/Khoeurt_Sopha.jpg' %}"
+            src="{% static 'confessions/images/owner_asset/Khoeurt_Sopha.png' %}"
             alt="Khoeurt Sopha"
           />
           <span class="about-person__name" data-i18n="about_member_professor">
@@ -141,8 +141,6 @@
   <span data-i18n="about_back_top" hidden>Back to top</span>
   <span class="about-team-jump__icon" aria-hidden="true">↓</span>
 </button>
-{% endblock %}
-
-{% block page_js %}
+{% endblock %} {% block page_js %}
 <script src="{% static 'confessions/JS/about_us.js' %}?v=3" defer></script>
 {% endblock %}

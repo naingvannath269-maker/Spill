@@ -1,5 +1,5 @@
 """
-WSGI config for anonymous_confession_proect project.
+WSGI config for Spill project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'anonymous_confession_proect.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Spill.settings')
 
 application = get_wsgi_application()
