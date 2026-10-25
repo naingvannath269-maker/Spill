@@ -1,0 +1,22 @@
+.auth-layout--login {
+  grid-template-columns: 0.78fr 1.22fr;
+}
+
+.auth-layout--login .auth-field .form-control {
+  min-height: 52px;
+}
+
+.auth-layout--login .auth-form,
+.auth-layout--login .auth-field {
+  width: 100%;
+  min-width: 0;
+}
+
+.auth-layout--login #id_username,
+.auth-layout--login #id_password {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: 52px;
+  box-sizing: border-box;
+}
