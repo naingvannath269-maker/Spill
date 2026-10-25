@@ -191,6 +191,12 @@ body.whisper-body {
   gap: 10px;
 }
 
+.feed-pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
 .confession-bubble {
   display: flex;
   width: 100%;

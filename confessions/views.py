@@ -1,5 +1,6 @@
 import hashlib
 
+from django.core.paginator import Paginator
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -28,6 +29,7 @@ _CONFESSION_TONES = (
     'seafoam',
     'rose',
 )
+_CONFESSIONS_PER_PAGE = 20
 
 
 def _assign_confession_tones(confessions):
@@ -125,18 +127,26 @@ def _create_confession(request):
 
 
 def _confession_page_context(request, form=None):
-  approved_confessions = Confession.objects.filter(is_approved=True)
+  approved_confessions = Confession.objects.filter(is_approved=True).order_by(
+      '-created_at',
+      '-pk',
+  )
+  page_obj = Paginator(
+      approved_confessions,
+      _CONFESSIONS_PER_PAGE,
+  ).get_page(request.GET.get('page'))
   activity = _community_activity_counts()
   confessions = list(
       _assign_confession_tones(
           _annotate_reactions(
-              approved_confessions.order_by('-created_at'),
+              page_obj.object_list,
               request.user,
           )
       )
   )
   context = {
       'confessions': confessions,
+      'page_obj': page_obj,
       'latest_confession_id': max(
           (confession.pk for confession in confessions),
           default=0,
