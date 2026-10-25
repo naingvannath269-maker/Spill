@@ -168,22 +168,13 @@ const translations = {
     nav_home: "ទំព័រដើម",
     nav_confession: "សារភាព",//ការស្រាវជ្រាវ
     nav_profile: "គណនី",
-<<<<<<< HEAD
+    nav_about_us: "អំពីយើង",
     nav_dark_mode: "ងងឹត",//ផ្ទៃងងឹត
     nav_light_mode: "ពន្លឺ",//ផ្ទៃភ្លឺ
     nav_login: "ចូលប្រើ",//ចូលគណនី
     nav_logout: "ចាកចេញ",//ចាកចេញពីគណនី
     nav_register: "ចុះឈ្មោះ",//បង្កើតគណនី
     nav_main_navigation: "ម៉ឺនុយរុករកមេ",//ម៉ឺនុយរុករក
-=======
-    nav_about_us: "អំពីយើង",
-    nav_dark_mode: "ងងឹត",
-    nav_light_mode: "ពន្លឺ",
-    nav_login: "ចូលប្រើ",
-    nav_logout: "ចាកចេញ",
-    nav_register: "ចុះឈ្មោះ",
-    nav_main_navigation: "ម៉ឺនុយរុករកមេ",
->>>>>>> 6e41e42484ffc2ea98f40439f77fb3f9a0370eb2
     nav_open_menu: "បើកម៉ឺនុយរុករក",
     nav_close_menu: "បិទម៉ឺនុយរុករក",
     document_title: "Spill — បញ្ចេញអារម្មណ៍ ដោយមិនបង្ហាញឈ្មោះ។",//ចែករំលែកអារម្មណ៍ដោយមិនបង្ហាញឈ្មោះ
@@ -192,18 +183,11 @@ const translations = {
     aria_close_confession: "បិទទម្រង់សារសារភាព",
     aria_edit_profile: "កែសម្រួលគណនី",
     aria_latest_confessions: "សារសារភាពចុងក្រោយ",
-<<<<<<< HEAD
+    aria_confession_pages: "ទំព័រសារសារភាព",
     theme_switch_to_dark: "ប្តូរទៅរបៀបងងឹត",//ប្ដូរទៅផ្ទៃងងឹត
     theme_switch_to_light: "ប្តូរទៅរបៀបភ្លឺ",//ប្ដូរទៅផ្ទៃភ្លឺ
     language_switch_to_km: "ខ្មែរ",//ភាសាខ្មែរ
     language_switch_to_en: "English",
-=======
-    aria_confession_pages: "ទំព័រសារសារភាព",
-    theme_switch_to_dark: "ប្តូរទៅរបៀបងងឹត",
-    theme_switch_to_light: "ប្តូរទៅរបៀបភ្លឺ",
-    language_switch_to_km: "KM",
-    language_switch_to_en: "EN",
->>>>>>> 6e41e42484ffc2ea98f40439f77fb3f9a0370eb2
     language_aria_switch_to_km: "ប្តូរភាសាទៅជាភាសាខ្មែរ",
     language_aria_switch_to_en: "ប្តូរភាសាទៅជាភាសាអង់គ្លេស",
     footer_tagline: "បញ្ចេញអារម្មណ៍ ដោយមិនបង្ហាញឈ្មោះ។",
@@ -256,18 +240,13 @@ const translations = {
     compose_footer_hint: "អតិបរមា ១០០០ តួអក្សរ។ សូមរក្សាពាក្យសម្តីសមរម្យ។",
     btn_post_anonymously: "បង្ហោះជាអនាមិក",
     btn_floating_confess: "សារភាព",
-    activity_kicker: "រួមគ្នា ម្តងមួយសារ",//គួរតែលុចចោល
-    activity_title: "សកម្មភាពសហគមន៍",//គួរតែលុចចោល
+    activity_kicker: "រួមគ្នា ម្តងមួយសារ",
+    activity_title: "សកម្មភាពសហគមន៍",
     stat_whispers_shared: "សារដែលបានចែករំលែក",
-<<<<<<< HEAD
-    stat_community_reactions: "ប្រតិកម្មសហគមន៍",//ចំណាប់អារម្មណ៍អ្នកប្រើប្រាស់
-    heading_latest_whispers: "សារសារភាពចុងក្រោយ",//សារសារភាពថ្មីៗ
-=======
     stat_community_reactions: "ប្រតិកម្មសហគមន៍",
     heading_latest_whispers: "សារសារភាពចុងក្រោយ",
     btn_newer_confessions: "សារសារភាពថ្មីជាង",
     btn_older_confessions: "សារសារភាពចាស់ជាង",
->>>>>>> 6e41e42484ffc2ea98f40439f77fb3f9a0370eb2
     text_shared_count: "បានចែករំលែក",
     empty_title: "ផ្ទាំងសារស្ងប់ស្ងាត់ណាស់",
     empty_desc: "មិនទាន់មានសារនៅឡើយទេ។ ក្លាយជាអ្នកដំបូងគេក្នុងការចែករំលែក។",
