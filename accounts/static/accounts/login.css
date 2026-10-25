@@ -20,3 +20,9 @@
   min-height: 52px;
   box-sizing: border-box;
 }
+
+@media (max-width: 760px) {
+  .auth-layout--login {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
