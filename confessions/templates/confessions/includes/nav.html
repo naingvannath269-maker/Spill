@@ -1,5 +1,9 @@
 {% load static %}
-<nav class="site-nav" aria-label="Main navigation" data-i18n-aria-label="nav_main_navigation">
+<nav
+  class="site-nav"
+  aria-label="Main navigation"
+  data-i18n-aria-label="nav_main_navigation"
+>
   <div class="site-nav__inner">
     <a class="site-nav__brand" href="{% url 'wall' %}">
       <img
@@ -27,22 +31,72 @@
     <div class="site-nav__menu" id="site-nav-menu">
       <ul class="site-nav__links" aria-label="Primary">
         <li>
-          <a href="{% url 'wall' %}" data-i18n="nav_home"
-            {% if request.resolver_match.url_name == 'wall' %} aria-current="page"{% endif %}>Home</a>
+          <a
+            href="{% url 'wall' %}"
+            data-i18n="nav_home"
+            {%
+            if
+            request.resolver_match.url_name=""
+            ="wall"
+            %}
+            aria-current="page"
+            {%
+            endif
+            %}
+            >Home</a
+          >
         </li>
         <li>
           {% url 'confession' as confession_url %}
-          <a href="{% if user.is_authenticated %}{{ confession_url }}{% else %}{% url 'login' %}?next={{ confession_url|urlencode }}{% endif %}"
+          <a
+            href="{% if user.is_authenticated %}{{ confession_url }}{% else %}{% url 'login' %}?next={{ confession_url|urlencode }}{% endif %}"
             data-i18n="nav_confession"
-            {% if request.resolver_match.url_name == 'confession' %} aria-current="page"{% endif %}>Confession</a>
+            {%
+            if
+            request.resolver_match.url_name=""
+            ="confession"
+            %}
+            aria-current="page"
+            {%
+            endif
+            %}
+            >Confession</a
+          >
         </li>
         <li>
-          <a href="{% url 'profile' %}" data-i18n="nav_profile"
-            {% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'update_profile' %} aria-current="page"{% endif %}>Profile</a>
+          <a
+            href="{% url 'profile' %}"
+            data-i18n="nav_profile"
+            {%
+            if
+            request.resolver_match.url_name=""
+            ="profile"
+            or
+            request.resolver_match.url_name=""
+            ="update_profile"
+            %}
+            aria-current="page"
+            {%
+            endif
+            %}
+            >Profile</a
+          >
         </li>
         <li>
-          <a href="{% url 'about_us' %}#about-team" data-i18n="nav_about_us"
-            {% if request.resolver_match.url_name == 'about_us' %} aria-current="page"{% endif %}>About Us</a>
+          <a
+            href="{% url 'about_us' %}#about-team"
+            data-i18n="nav_about_us"
+            {%
+            if
+            request.resolver_match.url_name=""
+            ="about_us"
+            %}
+            aria-current="page"
+            {%
+            endif
+            %}
+            >About Us</a
+          >
         </li>
       </ul>
       <ul class="site-nav__actions" aria-label="Account">
@@ -55,25 +109,64 @@
             aria-pressed="false"
           >
             <span class="theme-toggle-icon" aria-hidden="true">☾</span>
-            <span class="theme-toggle-label">Dark mode</span>
           </button>
         </li>
         <li>
-          <button class="site-nav__action site-nav__language-toggle" id="language-toggle" type="button">ខ្មែរ</button>
+          <button
+            class="site-nav__action site-nav__language-toggle"
+            id="language-toggle"
+            type="button"
+          >
+            ខ្មែរ
+          </button>
         </li>
         {% if user.is_authenticated %}
         <li>
           <form action="{% url 'logout' %}" method="post">
             {% csrf_token %}
-            <button class="site-nav__action" type="submit" data-i18n="nav_logout">Logout</button>
+            <button
+              class="site-nav__action"
+              type="submit"
+              data-i18n="nav_logout"
+            >
+              Logout
+            </button>
           </form>
         </li>
         {% else %}
         <li>
-          <a class="site-nav__action" href="{% url 'login' %}" data-i18n="nav_login"{% if request.resolver_match.url_name == 'login' %} aria-current="page"{% endif %}>Login</a>
+          <a
+            class="site-nav__action"
+            href="{% url 'login' %}"
+            data-i18n="nav_login"
+            {%
+            if
+            request.resolver_match.url_name=""
+            ="login"
+            %}
+            aria-current="page"
+            {%
+            endif
+            %}
+            >Login</a
+          >
         </li>
         <li>
-          <a class="site-nav__action" href="{% url 'signup' %}" data-i18n="nav_register"{% if request.resolver_match.url_name == 'signup' %} aria-current="page"{% endif %}>Register</a>
+          <a
+            class="site-nav__action"
+            href="{% url 'signup' %}"
+            data-i18n="nav_register"
+            {%
+            if
+            request.resolver_match.url_name=""
+            ="signup"
+            %}
+            aria-current="page"
+            {%
+            endif
+            %}
+            >Register</a
+          >
         </li>
         {% endif %}
       </ul>

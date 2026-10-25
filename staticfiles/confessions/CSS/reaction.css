@@ -1,0 +1,58 @@
+.reaction-button {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 1px solid rgba(50, 68, 83, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #344652;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.reaction-button:hover {
+  border-color: #3978d4;
+  background: #eef5ff;
+}
+
+.reaction-button.selected {
+  border-color: #3978d4;
+  background: #e3efff;
+  color: #245ba9;
+}
+
+.unlike-button.selected {
+  border-color: #d47770;
+  background: #fff0ed;
+  color: #a44640;
+}
+
+.reaction-button:focus-visible {
+  outline: 2px solid #3978d4;
+  outline-offset: 2px;
+}
+
+.reaction-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.like-button-icon,
+.unlike-button-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.reaction-count {
+  min-width: 1ch;
+  text-align: center;
+}
