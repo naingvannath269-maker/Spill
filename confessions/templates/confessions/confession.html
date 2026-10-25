@@ -54,7 +54,7 @@
       aria-label="Latest confessions"
       data-i18n-aria-label="aria_latest_confessions"
       hx-get="{% url 'confession_updates' %}"
-      hx-trigger="every 3s"
+      hx-trigger="every 15s"
       hx-include="#latest-confession-id, #confessions-feed [data-visible-confession]"
       hx-swap="afterbegin"
     >
@@ -74,10 +74,38 @@
       </div>
       {% endfor %}
     </div>
+    {% if page_obj.has_previous or page_obj.has_next %}
+    <nav
+      class="feed-pagination"
+      aria-label="Confession pages"
+      data-i18n-aria-label="aria_confession_pages"
+    >
+      {% if page_obj.has_previous %}
+      <a
+        class="page-text-link"
+        href="?page={{ page_obj.previous_page_number }}"
+        data-i18n="btn_newer_confessions"
+      >
+        Newer confessions
+      </a>
+      {% else %}
+      <span></span>
+      {% endif %}
+      {% if page_obj.has_next %}
+      <a
+        class="page-text-link"
+        href="?page={{ page_obj.next_page_number }}"
+        data-i18n="btn_older_confessions"
+      >
+        Older confessions
+      </a>
+      {% endif %}
+    </nav>
+    {% endif %}
     <div
       id="reaction-updates"
       hx-get="{% url 'reaction_updates' %}"
-      hx-trigger="every 3s"
+      hx-trigger="every 15s"
       hx-include="#confessions-feed [data-reaction-confession]"
       hx-swap="none"
       hidden

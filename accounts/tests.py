@@ -6,6 +6,26 @@ from .models import CustomUser
 
 
 class CustomUserUsernameGenerationTests(TestCase):
+  def test_signup_help_text_has_translation_keys(self):
+    form = CustomUserCreationForm()
+
+    self.assertIn(
+        'data-i18n="signup_username_optional"',
+        str(form.fields['username'].help_text),
+    )
+    for key in (
+        'signup_password_similarity',
+        'signup_password_min_length',
+        'signup_password_common',
+        'signup_password_numeric',
+    ):
+      with self.subTest(key=key):
+        self.assertIn(key, str(form.fields['password1'].help_text))
+    self.assertIn(
+        'data-i18n="signup_password_confirmation_hint"',
+        str(form.fields['password2'].help_text),
+    )
+
   def test_manager_generates_numeric_anonymous_username(self):
     user = CustomUser.objects.create_user(
         email='numeric@example.com',

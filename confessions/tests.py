@@ -324,23 +324,41 @@ class ConfessionUpdatesTests(TestCase):
         password='test-password',
     )
 
-  def test_confession_page_polls_with_htmx_every_three_seconds(self):
+  def test_confession_page_polls_with_htmx_every_fifteen_seconds(self):
+    Confession.objects.create(
+        author=self.user,
+        content='Visible while polling.',
+    )
     response = self.client.get(reverse('confession'))
 
-    self.assertContains(response, 'hx-trigger="every 3s"')
+    self.assertContains(response, 'hx-trigger="every 15s"', count=2)
     self.assertContains(response, 'hx-swap="afterbegin"')
     self.assertContains(
         response,
         'hx-include="#latest-confession-id, #confessions-feed [data-visible-confession]"',
     )
     self.assertContains(response, 'name="visible_id"')
-    self.assertContains(response, 'https://unpkg.com/htmx.org@1.9.12')
-    self.assertContains(
-        response,
-        f'hx-get="{reverse("activity_updates")}"',
+
+  def test_confession_page_paginates_older_posts(self):
+    Confession.objects.create(
+        author=self.user,
+        content='The oldest confession.',
     )
-    self.assertContains(response, 'id="community-activity"')
-    self.assertContains(response, 'hx-trigger="every 3s, refresh"')
+    for index in range(20):
+      Confession.objects.create(
+          author=self.user,
+          content=f'Newer confession {index}.',
+      )
+
+    first_page = self.client.get(reverse('confession'))
+    self.assertEqual(len(first_page.context['confessions']), 20)
+    self.assertNotContains(first_page, 'The oldest confession.')
+    self.assertContains(first_page, 'href="?page=2"')
+
+    second_page = self.client.get(reverse('confession'), {'page': 2})
+    self.assertEqual(len(second_page.context['confessions']), 1)
+    self.assertContains(second_page, 'The oldest confession.')
+    self.assertContains(second_page, 'href="?page=1"')
 
   def test_updates_return_only_new_approved_confessions_and_advance_cursor(self):
     previous = Confession.objects.create(
@@ -868,6 +886,15 @@ class HomeAndProfileTests(TestCase):
         f'<span class="home-welcome__username">{self.user.username}</span>',
     )
     self.assertContains(response, 'data-i18n="welcome_title_suffix"')
+
+  def test_about_us_page_is_public_and_has_navigation(self):
+    response = self.client.get(reverse('about_us'))
+
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(response, 'A place to let it out')
+    self.assertContains(response, 'The team behind Spill')
+    self.assertContains(response, 'Naing Vannath')
+    self.assertContains(response, reverse('about_us'))
 
   def test_profile_only_shows_signed_in_users_confessions_and_private_details(self):
     own_confession = Confession.objects.create(

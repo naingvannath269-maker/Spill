@@ -1,0 +1,146 @@
+{% extends 'confessions/base.html' %} {% load static %} {% block page_css %}
+<link rel="stylesheet" href="{% static 'confessions/CSS/about_us.css' %}?v=9" />
+{% endblock %} {% block content %}
+<div class="whisper-page about-page">
+  <header class="about-page__header" aria-labelledby="about-title">
+    <p class="wall-kicker" data-i18n="about_kicker">A little about Spill</p>
+    <h1 id="about-title" tabindex="-1" data-i18n="about_title">
+      A place to let it out
+    </h1>
+    <p class="about-page__intro" data-i18n="about_intro">
+      Spill is a kind, anonymous space to share what is on your mind, without
+      attaching your name.
+    </p>
+  </header>
+
+  <section class="about-panel" aria-labelledby="about-mission-title">
+    <span class="about-panel__icon" aria-hidden="true">♡</span>
+    <div>
+      <h2 id="about-mission-title" data-i18n="about_mission_title">
+        Our purpose
+      </h2>
+      <p data-i18n="about_mission">
+        We created Spill to make it easier to express thoughts and experiences,
+        read what others choose to share, and respond with care.
+      </p>
+    </div>
+  </section>
+
+  <section class="about-values" aria-label="What matters to us">
+    <article class="about-value">
+      <span class="about-value__number" aria-hidden="true">01</span>
+      <h2 data-i18n="about_value_privacy_title">Privacy first</h2>
+      <p data-i18n="about_value_privacy">
+        Confessions are shared anonymously on the wall, so the focus stays on
+        the words.
+      </p>
+    </article>
+    <article class="about-value">
+      <span class="about-value__number" aria-hidden="true">02</span>
+      <h2 data-i18n="about_value_kindness_title">Kindness matters</h2>
+      <p data-i18n="about_value_kindness">
+        We encourage thoughtful sharing and respectful responses.
+      </p>
+    </article>
+    <article class="about-value">
+      <span class="about-value__number" aria-hidden="true">03</span>
+      <h2 data-i18n="about_value_connection_title">We are here together</h2>
+      <p data-i18n="about_value_connection">
+        A reaction or a kind comment can remind someone that they are not alone.
+      </p>
+    </article>
+  </section>
+
+  <section
+    class="about-team"
+    id="about-team"
+    aria-labelledby="about-team-title"
+    tabindex="-1"
+  >
+    <h2 id="about-team-title" data-i18n="about_team_title">
+      The team behind Spill
+    </h2>
+    <p class="about-team__university" data-i18n="about_team_intro">
+      A student project from Angkor University.
+    </p>
+    <div class="about-org-chart" role="tree" aria-label="Spill project team">
+      <div class="about-org-chart__level about-org-chart__level--top">
+        <div class="about-person" role="treeitem" aria-level="1">
+          <img
+            class="about-person__photo"
+            src="{% static 'confessions/images/owner_asset/Khoeurt_Sopha.png' %}"
+            alt="Khoeurt Sopha"
+          />
+          <span class="about-person__name" data-i18n="about_member_professor">
+            Khoeurt Sopha - Professor
+          </span>
+        </div>
+      </div>
+      <div
+        class="about-org-chart__connector about-org-chart__connector--straight"
+        aria-hidden="true"
+      ></div>
+      <div class="about-org-chart__level about-org-chart__level--lead">
+        <div class="about-person" role="treeitem" aria-level="2">
+          <img
+            class="about-person__photo"
+            src="{% static 'confessions/images/owner_asset/Naing_Vannath.jpg' %}"
+            alt="Naing Vannath"
+          />
+          <span class="about-person__name" data-i18n="about_member_leader">
+            Naing Vannath - Leader, Backend
+          </span>
+        </div>
+      </div>
+      <div
+        class="about-org-chart__connector about-org-chart__connector--branch"
+        aria-hidden="true"
+      ></div>
+      <div class="about-org-chart__level about-org-chart__level--members">
+        <div class="about-person" role="treeitem" aria-level="3">
+          <img
+            class="about-person__photo"
+            src="{% static 'confessions/images/owner_asset/In_Nary.jpg' %}"
+            alt="In Nary"
+          />
+          <span class="about-person__name" data-i18n="about_member_in_nary">
+            In Nary - Frontend
+          </span>
+        </div>
+        <div class="about-person" role="treeitem" aria-level="3">
+          <img
+            class="about-person__photo"
+            src="{% static 'confessions/images/owner_asset/Tan_Rithyvireak.JPG' %}"
+            alt="Tan Rithyvireak"
+          />
+          <span class="about-person__name" data-i18n="about_member_tan">
+            Tan Rithyvireak - Frontend
+          </span>
+        </div>
+        <div class="about-person" role="treeitem" aria-level="3">
+          <img
+            class="about-person__photo"
+            src="{% static 'confessions/images/owner_asset/Morm_Sophearoth.jpg' %}"
+            alt="Morm Sophearoth"
+          />
+          <span class="about-person__name" data-i18n="about_member_morm">
+            Morm Sophearoth - Tester
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<button
+  class="about-team-jump"
+  id="about-team-jump"
+  type="button"
+  aria-controls="about-team"
+>
+  <span data-i18n="about_team_jump">Our Team Structure</span>
+  <span data-i18n="about_back_top" hidden>Back to top</span>
+  <span class="about-team-jump__icon" aria-hidden="true">↓</span>
+</button>
+{% endblock %} {% block page_js %}
+<script src="{% static 'confessions/JS/about_us.js' %}?v=3" defer></script>
+{% endblock %}
