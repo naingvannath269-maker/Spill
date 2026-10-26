@@ -31,7 +31,6 @@ const translations = {
     footer_rights:
       "Angkor University | Naing Vannath, In Nary, Tan Rithyvireak, Morm Sophearoth.",
     // Wall and Welcome page
-    wall_kicker: "A little honesty goes a long way",//គួរតែលុចចោល
     welcome_title: "Welcome to Spill",
     welcome_title_prefix: "Welcome ",
     welcome_title_suffix: " to Spill",
@@ -166,44 +165,43 @@ const translations = {
   km: {
     // Navigation
     nav_home: "ទំព័រដើម",
-    nav_confession: "សារភាព",//ការស្រាវជ្រាវ
+    nav_confession: "សារភាព",
     nav_profile: "គណនី",
     nav_about_us: "អំពីយើង",
-    nav_dark_mode: "ងងឹត",//ផ្ទៃងងឹត
-    nav_light_mode: "ពន្លឺ",//ផ្ទៃភ្លឺ
-    nav_login: "ចូលប្រើ",//ចូលគណនី
-    nav_logout: "ចាកចេញ",//ចាកចេញពីគណនី
-    nav_register: "ចុះឈ្មោះ",//បង្កើតគណនី
-    nav_main_navigation: "ម៉ឺនុយរុករកមេ",//ម៉ឺនុយរុករក
-    nav_open_menu: "បើកម៉ឺនុយរុករក",
-    nav_close_menu: "បិទម៉ឺនុយរុករក",
-    document_title: "Spill — បញ្ចេញអារម្មណ៍ ដោយមិនបង្ហាញឈ្មោះ។",//ចែករំលែកអារម្មណ៍ដោយមិនបង្ហាញឈ្មោះ
+    nav_dark_mode: "ផ្ទៃងងឹត",
+    nav_light_mode: "ផ្ទៃភ្លឺ",
+    nav_login: "ចូលគណនី",
+    nav_logout: "ចាកចេញពីគណនី",
+    nav_register: "ចុះឈ្មោះ",
+    nav_main_navigation: "មីនុយរុករក",
+    nav_open_menu: "បើកមីនុយរុករក",
+    nav_close_menu: "បិទមីនុយរុករក",
+    document_title: "Spill — បញ្ចេញអារម្មណ៍ ដោយមិនបង្ហាញឈ្មោះ។",
     aria_like_confession: "ចូលចិត្តសារសារភាព",
     aria_unlike_confession: "មិនចូលចិត្តសារសារភាព",
     aria_close_confession: "បិទទម្រង់សារសារភាព",
     aria_edit_profile: "កែសម្រួលគណនី",
     aria_latest_confessions: "សារសារភាពចុងក្រោយ",
     aria_confession_pages: "ទំព័រសារសារភាព",
-    theme_switch_to_dark: "ប្តូរទៅរបៀបងងឹត",//ប្ដូរទៅផ្ទៃងងឹត
-    theme_switch_to_light: "ប្តូរទៅរបៀបភ្លឺ",//ប្ដូរទៅផ្ទៃភ្លឺ
-    language_switch_to_km: "ខ្មែរ",//ភាសាខ្មែរ
+    theme_switch_to_dark: "ប្ដូរទៅផ្ទៃងងឹត",
+    theme_switch_to_light: "ប្ដូរទៅផ្ទៃភ្លឺ",
+    language_switch_to_km: "ភាសាខ្មែរ",
     language_switch_to_en: "English",
     language_aria_switch_to_km: "ប្តូរភាសាទៅជាភាសាខ្មែរ",
     language_aria_switch_to_en: "ប្តូរភាសាទៅជាភាសាអង់គ្លេស",
     footer_tagline: "បញ្ចេញអារម្មណ៍ ដោយមិនបង្ហាញឈ្មោះ។",
-    footer_navigation: "ការរុករកផ្នែកខាងក្រោម",
+    footer_navigation: "ការស្វែងរកផ្នែកខាងក្រោម",
     footer_rights:
       "សាកលវិទ្យាល័យអង្គរ | ណាំង វ៉ាន់ណាត់, អុិន ណារី, តាន់ រឹទ្ធីវីរៈ, ម៉ម សុភារ័ត្ន។",
     // Wall / Welcome Page
-    wall_kicker: "ភាពស្មោះត្រង់បន្តិចបន្តួច ផ្តល់តម្លៃយ៉ាងធំធេង",//គួរតែលុចចោល
     welcome_title: "សូមស្វាគមន៍មកកាន់ Spill",
     welcome_title_prefix: "សូមស្វាគមន៍ ",
     welcome_title_suffix: " មកកាន់ Spill",
     welcome_intro:
-      "ទីកន្លែងអនាមិក និងកក់ក្តៅ ដើម្បីចែករំលែកអារម្មណ៍ គំនិត និងបទពិសោធន៍របស់អ្នកដោយមិនបង្ហាញឈ្មោះ។",//ទីកន្លែងអនាមិក អាថ៌កំបាំង ដើម្បីចែករំលែកអារម្មណ៍ គំនិត និងបទពិសោធន៍របស់អ្នកដោយមិនបង្ហាញឈ្មោះ។
+      "ទីកន្លែងអនាមិក អាថ៌កំបាំង ដើម្បីចែករំលែកអារម្មណ៍ គំនិត និងបទពិសោធន៍របស់អ្នកដោយមិនបង្ហាញឈ្មោះ។",
     welcome_how:
-      "សរសេរអ្វីដែលមានក្នុងចិត្ត ចែករំលែកជាមួយសហគមន៍ និងអាន ឬប្រតិកម្មចំពោះគំនិតរបស់អ្នកដទៃ។",//សរសេរអ្វីដែលមានក្នុងចិត្ត ចែករំលែកជាមួយគ្នា និងអាន ឬប្រតិកម្មចំពោះគំនិតរបស់អ្នកដទៃ។"
-    btn_explore: "រុករកសារសារភាព",//ស្វែងរកសារសារភាព
+      "សរសេរអ្វីដែលមានក្នុងចិត្ត ចែករំលែកជាមួយគ្នា និងអាន ឬប្រតិកម្មចំពោះគំនិតរបស់អ្នកដទៃ។",
+    btn_explore: "ស្វែងរកសារសារភាព",
     btn_share_thoughts: "ចែករំលែកអារម្មណ៍របស់អ្នក",
     about_kicker: "ស្វែងយល់បន្តិចអំពី Spill",
     about_title: "វេទិការសារភាពបែបអនាមិក - Spill",
@@ -410,7 +408,7 @@ document.addEventListener("htmx:afterSwap", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  let savedLang = "km";
+  let savedLang = "en";
   try {
     savedLang = localStorage.getItem("selectedLanguage") || savedLang;
   } catch (error) {
