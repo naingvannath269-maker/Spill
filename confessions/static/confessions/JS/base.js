@@ -1,3 +1,4 @@
+
 const primaryNav = document.querySelector(".site-nav__links");
 if (primaryNav) {
   const primaryLinks = Array.from(primaryNav.querySelectorAll("a"));

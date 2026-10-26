@@ -1,7 +1,6 @@
 {% extends 'confessions/base.html' %} {% load static %} {% block content %}
 <div class="whisper-page">
   <section class="home-welcome" aria-labelledby="welcome-title">
-    <p class="wall-kicker" data-i18n="wall_kicker">A little honesty goes a long way</p>
     {% if user.is_authenticated %}
     <h1 id="welcome-title">
       <span data-i18n="welcome_title_prefix">Welcome </span><span class="home-welcome__username">{{ user.username }}</span><span data-i18n="welcome_title_suffix"> to Spill</span>
