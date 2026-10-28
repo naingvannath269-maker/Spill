@@ -893,7 +893,13 @@ class HomeAndProfileTests(TestCase):
     self.assertEqual(response.status_code, 200)
     self.assertContains(response, 'A place to let it out')
     self.assertContains(response, 'The team behind Spill')
+    self.assertContains(response, 'href="#about-team"')
+    self.assertContains(response, 'about_values_title')
     self.assertContains(response, 'Naing Vannath')
+    self.assertContains(response, 'Khoeurt Sopha')
+    self.assertContains(response, 'In Nary')
+    self.assertContains(response, 'Tan Rithyvireak')
+    self.assertContains(response, 'Morm Sophearoth')
     self.assertContains(response, reverse('about_us'))
 
   def test_profile_only_shows_signed_in_users_confessions_and_private_details(self):

@@ -1,9 +1,0 @@
-.auth-layout--signup {
-  grid-template-columns: 0.92fr 1.08fr;
-}
-
-@media (max-width: 760px) {
-  .auth-layout--signup {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}

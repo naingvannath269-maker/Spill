@@ -1,15 +1,15 @@
 {% extends 'confessions/base.html' %}
 {% load static %}
 {% block page_css %}
-<link rel="stylesheet" href="{% static 'accounts/profile.css' %}?v=1" />
+<link rel="stylesheet" href="{% static 'accounts/profile.css' %}?v=2" />
 {% endblock %}
 {% block content %}
-<div class="page-shell profile-page">
+<div class="page-shell profile-page container-fluid px-0">
   <section class="profile-card" aria-labelledby="profile-title">
     <p class="wall-kicker" data-i18n="profile_kicker">Your private space</p>
     <!-- <h1 id="profile-title">{{ user.username }}</h1> -->
-     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px;">
-  <h1 id="profile-title" style="margin-bottom: 0;">{{ user.username }}</h1>
+     <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+  <h1 id="profile-title" class="mb-0 text-break">{{ user.username }}</h1>
   <button type="button" id="openSettingsBtn" style="background: transparent; border: none; cursor: pointer; color: #880085; padding: 5px;" aria-label="Edit Profile" data-i18n-aria-label="aria_edit_profile">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="3"></circle>
@@ -18,16 +18,16 @@
   </button>
 </div>
 
-    <dl class="profile-details">
-      <div>
+    <dl class="profile-details row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+      <div class="col">
         <dt data-i18n="label_email">Email</dt>
         <dd>{{ user.email }}</dd>
       </div>
-      <div>
+      <div class="col">
         <dt data-i18n="label_member_since">Member since</dt>
         <dd>{{ user.date_joined|date:"M j, Y" }}</dd>
       </div>
-      <div>
+      <div class="col">
         <dt data-i18n="label_whispers_shared_profile">Whispers shared</dt>
         <dd><span data-profile-confession-count>{{ confession_count }}</span></dd>
       </div>
@@ -38,7 +38,7 @@
   </section>
 
   <section aria-labelledby="history-title">
-    <div class="feed-heading">
+    <div class="feed-heading d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2">
       <h2 id="history-title" data-i18n="profile_history_title">Your confession history</h2>
       <span><span data-profile-confession-count>{{ confession_count }}</span> <span data-i18n="text_shared_count">shared</span></span>
     </div>
