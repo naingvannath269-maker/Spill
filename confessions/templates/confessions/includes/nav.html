@@ -4,7 +4,7 @@
   aria-label="Main navigation"
   data-i18n-aria-label="nav_main_navigation"
 >
-  <div class="site-nav__inner">
+  <div class="site-nav__inner container-fluid">
     <a class="site-nav__brand" href="{% url 'wall' %}">
       <img
         class="site-nav__brand-logo"
@@ -116,8 +116,9 @@
             class="site-nav__action site-nav__language-toggle"
             id="language-toggle"
             type="button"
+            aria-label="Switch language to Khmer"
           >
-            ខ្មែរ
+            🇰🇭
           </button>
         </li>
         {% if user.is_authenticated %}

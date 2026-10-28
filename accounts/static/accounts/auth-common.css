@@ -1,11 +1,12 @@
 .auth-layout {
-  display: grid;
   max-width: 980px;
   min-height: 610px;
-  grid-template-columns: 0.92fr 1.08fr;
-  gap: 16px;
   margin: 20px auto 48px;
   animation: auth-arrive 420ms ease-out both;
+}
+
+.auth-layout.row {
+  gap: 0;
 }
 
 .auth-story {
@@ -276,13 +277,15 @@
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 767.98px) {
   .auth-layout {
     max-width: 540px;
     min-height: 0;
-    grid-template-columns: 1fr;
-    gap: 12px;
     margin-top: 8px;
+  }
+
+  .auth-layout.row {
+    gap: 0;
   }
 
   .auth-story {

@@ -1,0 +1,84 @@
+#about-contact-modal .modal-content {
+  background-color: #fff;
+  color: #000;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+#about-contact-modal .modal-header {
+  position: relative;
+  justify-content: center;
+  padding: 1rem 1.25rem 0.75rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+#about-contact-modal .modal-title,
+#about-contact-modal .modal-body {
+  color: #000;
+}
+
+#about-contact-modal .modal-title {
+  margin: 0;
+  text-align: center;
+  font-weight: 700;
+}
+
+#about-contact-modal .modal-header .btn-close {
+  position: absolute;
+  right: 1rem;
+}
+
+#about-contact-modal .modal-body {
+  padding: 1.25rem;
+}
+
+#about-contact-modal .contact-card {
+  padding: 1.25rem 1rem 0.75rem;
+  border-radius: 16px;
+}
+
+#about-contact-modal .contact-photo {
+  display: block;
+  margin: 0 auto 0.75rem;
+  object-fit: cover;
+  border: 3px solid #0d6efd;
+  box-shadow: 0 6px 18px rgba(13, 110, 253, 0.15);
+}
+
+#about-contact-modal .contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+}
+
+#about-contact-modal .contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0.5rem;
+  border-radius: 10px;
+  background: rgba(13, 110, 253, 0.03);
+}
+
+#about-contact-modal .contact-item__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0d6efd;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+#about-contact-modal .contact-item a {
+  color: #0d1117;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+#about-contact-modal .contact-item a:hover {
+  text-decoration: underline;
+}

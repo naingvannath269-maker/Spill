@@ -1,21 +1,27 @@
 {% extends 'confessions/base.html' %} {% load static %} {% block page_css %}
-<link rel="stylesheet" href="{% static 'confessions/CSS/about_us.css' %}?v=9" />
+<link
+  rel="stylesheet"
+  href="{% static 'confessions/CSS/about_us.css' %}?v=17"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'confessions/CSS/contact_us.css' %}?v=1"
+/>
 {% endblock %} {% block content %}
-<div class="whisper-page about-page">
+<div class="whisper-page about-page container-fluid px-0">
   <header class="about-page__header" aria-labelledby="about-title">
-    <p class="wall-kicker" data-i18n="about_kicker">A little about Spill</p>
+    <p class="wall-kicker" data-i18n="about_kicker">About US</p>
     <h1 id="about-title" tabindex="-1" data-i18n="about_title">
       A place to let it out
     </h1>
-    <p class="about-page__intro" data-i18n="about_intro">
-      Spill is a kind, anonymous space to share what is on your mind, without
-      attaching your name.
-    </p>
   </header>
 
-  <section class="about-panel" aria-labelledby="about-mission-title">
-    <span class="about-panel__icon" aria-hidden="true">♡</span>
-    <div>
+  <section class="about-overview row g-4" aria-labelledby="about-title">
+    <article class="about-overview__purpose col-12 col-md-6">
+      <p class="about-page__intro" data-i18n="about_intro">
+        Spill is a kind, anonymous space to share what is on your mind, without
+        attaching your name.
+      </p>
       <h2 id="about-mission-title" data-i18n="about_mission_title">
         Our purpose
       </h2>
@@ -23,33 +29,46 @@
         We created Spill to make it easier to express thoughts and experiences,
         read what others choose to share, and respond with care.
       </p>
-    </div>
+    </article>
+    <article class="about-overview__values col-12 col-md-6">
+      <h2 data-i18n="about_values_title">What matters to us</h2>
+      <div class="about-overview__value-list d-grid gap-3">
+        <section>
+          <h3 data-i18n="about_value_privacy_title">Privacy first</h3>
+          <p data-i18n="about_value_privacy">
+            Confessions are shared anonymously on the wall, so the focus stays
+            on the words.
+          </p>
+        </section>
+        <section>
+          <h3 data-i18n="about_value_kindness_title">Kindness matters</h3>
+          <p data-i18n="about_value_kindness">
+            We encourage thoughtful sharing and respectful responses.
+          </p>
+        </section>
+        <section>
+          <h3 data-i18n="about_value_connection_title">We are here together</h3>
+          <p data-i18n="about_value_connection">
+            A reaction or a kind comment can remind someone that they are not
+            alone.
+          </p>
+        </section>
+      </div>
+    </article>
   </section>
 
-  <section class="about-values" aria-label="What matters to us">
-    <article class="about-value">
-      <span class="about-value__number" aria-hidden="true">01</span>
-      <h2 data-i18n="about_value_privacy_title">Privacy first</h2>
-      <p data-i18n="about_value_privacy">
-        Confessions are shared anonymously on the wall, so the focus stays on
-        the words.
-      </p>
-    </article>
-    <article class="about-value">
-      <span class="about-value__number" aria-hidden="true">02</span>
-      <h2 data-i18n="about_value_kindness_title">Kindness matters</h2>
-      <p data-i18n="about_value_kindness">
-        We encourage thoughtful sharing and respectful responses.
-      </p>
-    </article>
-    <article class="about-value">
-      <span class="about-value__number" aria-hidden="true">03</span>
-      <h2 data-i18n="about_value_connection_title">We are here together</h2>
-      <p data-i18n="about_value_connection">
-        A reaction or a kind comment can remind someone that they are not alone.
-      </p>
-    </article>
-  </section>
+  <div class="about-page__cta">
+    <button
+      type="button"
+      data-bs-toggle="modal"
+      data-bs-target="#about-contact-modal"
+      data-i18n="about_contact_cta"
+    >
+      Contact Us
+    </button>
+  </div>
+
+  {% include 'confessions/includes/contact_us.html' %}
 
   <section
     class="about-team"
@@ -63,8 +82,14 @@
     <p class="about-team__university" data-i18n="about_team_intro">
       A student project from Angkor University.
     </p>
-    <div class="about-org-chart" role="tree" aria-label="Spill project team">
-      <div class="about-org-chart__level about-org-chart__level--top">
+    <div
+      class="about-org-chart container-fluid px-0"
+      role="tree"
+      aria-label="Spill project team"
+    >
+      <div
+        class="about-org-chart__level about-org-chart__level--top d-flex justify-content-center"
+      >
         <div class="about-person" role="treeitem" aria-level="1">
           <img
             class="about-person__photo"
@@ -80,7 +105,9 @@
         class="about-org-chart__connector about-org-chart__connector--straight"
         aria-hidden="true"
       ></div>
-      <div class="about-org-chart__level about-org-chart__level--lead">
+      <div
+        class="about-org-chart__level about-org-chart__level--lead d-flex justify-content-center"
+      >
         <div class="about-person" role="treeitem" aria-level="2">
           <img
             class="about-person__photo"
@@ -96,8 +123,14 @@
         class="about-org-chart__connector about-org-chart__connector--branch"
         aria-hidden="true"
       ></div>
-      <div class="about-org-chart__level about-org-chart__level--members">
-        <div class="about-person" role="treeitem" aria-level="3">
+      <div
+        class="about-org-chart__level about-org-chart__level--members row g-4 justify-content-center"
+      >
+        <div
+          class="about-person col-12 col-md-4"
+          role="treeitem"
+          aria-level="3"
+        >
           <img
             class="about-person__photo"
             src="{% static 'confessions/images/owner_asset/In_Nary.jpg' %}"
@@ -107,7 +140,11 @@
             In Nary - Frontend
           </span>
         </div>
-        <div class="about-person" role="treeitem" aria-level="3">
+        <div
+          class="about-person col-12 col-md-4"
+          role="treeitem"
+          aria-level="3"
+        >
           <img
             class="about-person__photo"
             src="{% static 'confessions/images/owner_asset/Tan_Rithyvireak.JPG' %}"
@@ -117,7 +154,11 @@
             Tan Rithyvireak - Frontend
           </span>
         </div>
-        <div class="about-person" role="treeitem" aria-level="3">
+        <div
+          class="about-person col-12 col-md-4"
+          role="treeitem"
+          aria-level="3"
+        >
           <img
             class="about-person__photo"
             src="{% static 'confessions/images/owner_asset/Morm_Sophearoth.jpg' %}"

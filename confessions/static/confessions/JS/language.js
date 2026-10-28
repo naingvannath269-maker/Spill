@@ -22,8 +22,8 @@ const translations = {
     aria_confession_pages: "Confession pages",
     theme_switch_to_dark: "Switch to dark mode",
     theme_switch_to_light: "Switch to light mode",
-    language_switch_to_km: "KM",
-    language_switch_to_en: "EN",
+    language_switch_to_km: "🇰🇭",
+    language_switch_to_en: "🇬🇧",
     language_aria_switch_to_km: "Switch language to Khmer",
     language_aria_switch_to_en: "Switch language to English",
     footer_tagline: "Let it out, leave your name out.",
@@ -40,13 +40,14 @@ const translations = {
       "Write what is on your mind, share it with the community, and read or react to the thoughts others have chosen to share.",
     btn_explore: "Explore Confessions",
     btn_share_thoughts: "Share Your Thoughts",
-    about_kicker: "A little about Spill",
+    about_kicker: "About US",
     about_title: "Anonymous Confession Platform - Spill",
     about_intro:
       "Spill is creating by using Python with Djago Framework and PostgreSQL",
     about_mission_title: "Our purpose",
     about_mission:
       "We created Spill to make it easier to express thoughts and experiences, read what others choose to share, and respond with care.",
+    about_values_title: "What matters to us",
     about_value_privacy_title: "Privacy first",
     about_value_privacy:
       "Confessions are shared anonymously on the wall, so the focus stays on the words.",
@@ -59,6 +60,7 @@ const translations = {
     about_team_title: "The team behind Spill",
     about_team_jump: "Our Team Structure",
     about_back_top: "Back to top",
+    about_contact_cta: "Contact Us",
     about_team_intro:
       "Develop by students of Angkor University | Year3 Semester1 | Python Programming II Subject.",
     about_member_professor: "Khoeurt Sopha - Professor",
@@ -76,8 +78,8 @@ const translations = {
     compose_footer_hint: "Up to 1000 characters. Please keep it kind.",
     btn_post_anonymously: "Post anonymously",
     btn_floating_confess: "Confess",
-    activity_kicker: "Together, one whisper at a time",//គួរតែលុចចោល
-    activity_title: "Community activity",//គួរតែលុចចោល
+    activity_kicker: "Together, one whisper at a time", //គួរតែលុចចោល
+    activity_title: "Community activity", //គួរតែលុចចោល
     stat_whispers_shared: "Whispers shared",
     stat_community_reactions: "Community reactions",
     heading_latest_whispers: "Latest whispers",
@@ -185,8 +187,8 @@ const translations = {
     aria_confession_pages: "ទំព័រសារសារភាព",
     theme_switch_to_dark: "ប្ដូរទៅផ្ទៃងងឹត",
     theme_switch_to_light: "ប្ដូរទៅផ្ទៃភ្លឺ",
-    language_switch_to_km: "ភាសាខ្មែរ",
-    language_switch_to_en: "English",
+    language_switch_to_km: "🇰🇭",
+    language_switch_to_en: "🇬🇧",
     language_aria_switch_to_km: "ប្តូរភាសាទៅជាភាសាខ្មែរ",
     language_aria_switch_to_en: "ប្តូរភាសាទៅជាភាសាអង់គ្លេស",
     footer_tagline: "បញ្ចេញអារម្មណ៍ ដោយមិនបង្ហាញឈ្មោះ។",
@@ -203,13 +205,14 @@ const translations = {
       "សរសេរអ្វីដែលមានក្នុងចិត្ត ចែករំលែកជាមួយគ្នា និងអាន ឬប្រតិកម្មចំពោះគំនិតរបស់អ្នកដទៃ។",
     btn_explore: "ស្វែងរកសារសារភាព",
     btn_share_thoughts: "ចែករំលែកអារម្មណ៍របស់អ្នក",
-    about_kicker: "ស្វែងយល់បន្តិចអំពី Spill",
+    about_kicker: "ស្វែងយល់អំពីពួកយើង",
     about_title: "វេទិការសារភាពបែបអនាមិក - Spill",
     about_intro:
       "Spill បង្កើតឡើងដោយប្រើប្រាស់ភាសា Python ជាមួយនិង Django Framework និង PostgeSQL",
     about_mission_title: "គោលបំណងរបស់យើង",
     about_mission:
       "យើងបង្កើត Spill ដើម្បីឱ្យការបញ្ចេញគំនិត និងបទពិសោធន៍ ការអានអ្វីដែលអ្នកដទៃចែករំលែក និងការឆ្លើយតបដោយការយកចិត្តទុកដាក់ កាន់តែងាយស្រួល។",
+    about_values_title: "អ្វីដែលយើងយកចិត្តទុកដាក់",
     about_value_privacy_title: "ឯកជនភាពជាចម្បង",
     about_value_privacy:
       "សារសារភាពត្រូវបានចែករំលែកដោយអនាមិក ដើម្បីផ្តោតលើខ្លឹមសារនៃសារ។",
@@ -222,6 +225,7 @@ const translations = {
     about_team_title: "ក្រុមការងារនៅពីក្រោយ Spill",
     about_team_jump: "រចនាសម្ព័ន្ធក្រុមរបស់យើង",
     about_back_top: "ត្រឡប់ទៅខាងលើ",
+    about_contact_cta: "ទាក់ទងមកយើង",
     about_team_intro:
       "អភិវឌ្ឍន៍ដោយនិស្សិតសាកលវិទ្យាល័យអង្គរ | ឆ្នាំទី៣ | ឆមាស១ | មុខវិជ្ជា Python Programming II។",
     about_member_professor: "ខឿត សុផា - សាស្ត្រាចារ្យ",
@@ -408,13 +412,18 @@ document.addEventListener("htmx:afterSwap", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  let savedLang = "en";
+  const defaultLang = "en";
+
   try {
-    savedLang = localStorage.getItem("selectedLanguage") || savedLang;
+    const savedLanguage = localStorage.getItem("selectedLanguage");
+    if (!savedLanguage || savedLanguage === "km") {
+      localStorage.setItem("selectedLanguage", defaultLang);
+    }
   } catch (error) {
     console.warn("Unable to read the saved language.", error);
   }
-  changeLanguage(savedLang);
+
+  changeLanguage(defaultLang);
 
   const languageToggle = document.getElementById("language-toggle");
   if (languageToggle) {
