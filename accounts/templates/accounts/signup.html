@@ -1,9 +1,9 @@
 {% extends 'confessions/base.html' %} {% load static %} {% block page_css %}
-<link rel="stylesheet" href="{% static 'accounts/auth-common.css' %}?v=1" />
-<link rel="stylesheet" href="{% static 'accounts/signup.css' %}?v=2" />
+<link rel="stylesheet" href="{% static 'accounts/auth-common.css' %}?v=2" />
+<link rel="stylesheet" href="{% static 'accounts/signup.css' %}?v=3" />
 {% endblock %} {% block content %}
-<section class="auth-layout auth-layout--signup" aria-labelledby="signup-title">
-  <aside class="auth-story">
+<section class="auth-layout auth-layout--signup row g-3" aria-labelledby="signup-title">
+  <aside class="auth-story col-12 col-md-5">
     <span class="auth-eyebrow" data-i18n="auth_eyebrow">LET IT OUT, LEAVE YOUR NAME OUT.</span>
     <h1 data-i18n="auth_story_heading">Some things feel lighter when shared.</h1>
     <p data-i18n="auth_story_intro">Make room for the thoughts you have been carrying around.</p>
@@ -17,7 +17,7 @@
     >
   </aside>
 
-  <div class="auth-panel">
+  <div class="auth-panel col-12 col-md-7">
     <div class="auth-heading">
       <span class="auth-kicker" data-i18n="signup_kicker">YOUR SPACE STARTS HERE</span>
       <h2 id="signup-title" data-i18n="signup_title">Create your account</h2>

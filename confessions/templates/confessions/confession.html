@@ -41,8 +41,8 @@
   </dialog>
   {% endif %}
 
-  <section class="confession-wall-content" aria-labelledby="latest-title">
-    <div class="feed-heading">
+  <section class="confession-wall-content container-fluid px-0" aria-labelledby="latest-title">
+    <div class="feed-heading d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2">
       <h2 id="latest-title" data-i18n="heading_latest_whispers">Latest whispers</h2>
       <span><span id="confession-total">{{ confession_count }}</span> <span data-i18n="text_shared_count">shared</span></span>
     </div>
@@ -76,7 +76,7 @@
     </div>
     {% if page_obj.has_previous or page_obj.has_next %}
     <nav
-      class="feed-pagination"
+      class="feed-pagination d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3"
       aria-label="Confession pages"
       data-i18n-aria-label="aria_confession_pages"
     >
@@ -102,6 +102,13 @@
       {% endif %}
     </nav>
     {% endif %}
+    <div
+      id="activity-updates"
+      hx-get="{% url 'activity_updates' %}"
+      hx-trigger="every 15s"
+      hx-swap="none"
+      hidden
+    ></div>
     <div
       id="reaction-updates"
       hx-get="{% url 'reaction_updates' %}"

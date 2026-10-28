@@ -1,3 +1,4 @@
+{% load tz %}
 {% for comment in confession.main_comments %}
 <article class="fb-comment-item" id="comment-item-{{ comment.id }}">
   <span
@@ -16,7 +17,11 @@
     </div>
 
     <div class="fb-comment-actions">
-      <small>{{ comment.created_at|timesince }} ago</small>
+      <time
+        class="fb-comment-time"
+        data-relative-time
+        datetime="{{ comment.created_at|timezone:'Asia/Bangkok'|date:'c' }}"
+      >{{ comment.created_at|timesince }} ago</time>
       <button
         type="button"
         class="fb-action-btn"
@@ -44,9 +49,13 @@
             </strong>
             <div class="fb-comment-text">{{ reply.content }}</div>
           </div>
-          <small class="fb-comment-time">
+          <time
+            class="fb-comment-time"
+            data-relative-time
+            datetime="{{ reply.created_at|timezone:'Asia/Bangkok'|date:'c' }}"
+          >
             {{ reply.created_at|timesince }} ago
-          </small>
+          </time>
         </div>
       </article>
       {% endfor %}
