@@ -26,6 +26,8 @@ class CustomUserCreationForm(UserCreationForm):
     super().__init__(*args, **kwargs)
     # Make username field optional so the system can auto-generate it if left blank
     self.fields['username'].required = False
+    self.fields['username'].widget.attrs['placeholder'] = 'Do not use your real name.'
+    self.fields['username'].widget.attrs['data-i18n-placeholder'] = 'signup_username_placeholder'
     self.fields['username'].help_text = (
         format_html(
             '<span data-i18n="signup_username_optional">{}</span>',

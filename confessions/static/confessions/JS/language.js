@@ -147,6 +147,7 @@ const translations = {
     signup_intro: "Just the basics. You can share when you are ready.",
     signup_username_optional:
       "Optional. Leave blank to auto-generate a username.",
+    signup_username_placeholder: "Do not use your real name.",
     signup_password_similarity:
       "Your password can’t be too similar to your other personal information.",
     signup_password_min_length:
@@ -298,7 +299,7 @@ const translations = {
     signup_here: "ចុះឈ្មោះនៅទីនេះ",
     login_here: "ចូលប្រើនៅទីនេះ",
     auth_eyebrow: "បញ្ចេញអារម្មណ៍ ដោយមិនបង្ហាញឈ្មោះ។",
-    auth_story_heading: "ការចែករំលែកអាចធ្វើឱ្យអារម្មណ៍ស្រាលជាងមុន។",
+    auth_story_heading: "ការចែករំលែកអាចធ្វើឱ្យអារម្មណ៍ធូរស្រាលជាងមុន។",
     auth_story_intro: "ចែករំលែកគំនិតដែលអ្នកបានគិតទុកក្នុងចិត្ត។",
     auth_note_label: "សាររំលឹកខ្លួនឯង",
     auth_note_message: "អ្នកអាចនិយាយដោយស្មោះត្រង់នៅទីនេះ។",
@@ -309,6 +310,7 @@ const translations = {
     signup_intro: "បំពេញព័ត៌មានមូលដ្ឋាន។ អ្នកអាចចែករំលែកនៅពេលរួចរាល់។",
     signup_username_optional:
       "ជាជម្រើស។ ទុកចោលដើម្បីបង្កើតឈ្មោះអ្នកប្រើប្រាស់ដោយស្វ័យប្រវត្តិ។",
+    signup_username_placeholder: "សូមកុំប្រើប្រាស់ឈ្មោះពិតរបស់អ្នក។",
     signup_password_similarity:
       "ពាក្យសម្ងាត់មិនគួរស្រដៀងនឹងព័ត៌មានផ្ទាល់ខ្លួនផ្សេងទៀតរបស់អ្នកពេកទេ។",
     signup_password_min_length: "ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៨ តួអក្សរ។",
@@ -414,16 +416,18 @@ document.addEventListener("htmx:afterSwap", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const defaultLang = "en";
 
+  let savedLanguage = defaultLang;
   try {
-    const savedLanguage = localStorage.getItem("selectedLanguage");
-    if (!savedLanguage || savedLanguage === "km") {
-      localStorage.setItem("selectedLanguage", defaultLang);
+    const storedLanguage = localStorage.getItem("selectedLanguage");
+    if (storedLanguage === "en" || storedLanguage === "km") {
+      savedLanguage = storedLanguage;
     }
+    localStorage.setItem("selectedLanguage", savedLanguage);
   } catch (error) {
     console.warn("Unable to read the saved language.", error);
   }
 
-  changeLanguage(defaultLang);
+  changeLanguage(savedLanguage);
 
   const languageToggle = document.getElementById("language-toggle");
   if (languageToggle) {

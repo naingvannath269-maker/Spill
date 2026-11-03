@@ -1,3 +1,4 @@
+
 const primaryNav = document.querySelector(".site-nav__links");
 if (primaryNav) {
   const primaryLinks = Array.from(primaryNav.querySelectorAll("a"));
@@ -205,6 +206,44 @@ function closeCommentsModal(modal) {
     document.getElementById(modal.dataset.openerId)?.focus();
   }
 }
+
+function updateRelativeCommentTimes(container = document) {
+  container.querySelectorAll("[data-relative-time]").forEach((time) => {
+    const createdAt = new Date(time.dateTime);
+    if (Number.isNaN(createdAt.getTime())) {
+      console.error("Unable to parse comment timestamp.", time.dateTime);
+      return;
+    }
+
+    const elapsedMinutes = Math.floor(
+      Math.max(0, Date.now() - createdAt.getTime()) / 60_000,
+    );
+    let value = elapsedMinutes;
+    let unit = "minute";
+
+    if (elapsedMinutes >= 60) {
+      value = Math.floor(elapsedMinutes / 60);
+      unit = "hour";
+    }
+    if (elapsedMinutes >= 60 * 24) {
+      value = Math.floor(elapsedMinutes / (60 * 24));
+      unit = "day";
+    }
+    if (elapsedMinutes >= 60 * 24 * 30) {
+      value = Math.floor(elapsedMinutes / (60 * 24 * 30));
+      unit = "month";
+    }
+    if (elapsedMinutes >= 60 * 24 * 365) {
+      value = Math.floor(elapsedMinutes / (60 * 24 * 365));
+      unit = "year";
+    }
+
+    time.textContent = `${value} ${unit}${value === 1 ? "" : "s"} ago`;
+  });
+}
+
+updateRelativeCommentTimes();
+window.setInterval(() => updateRelativeCommentTimes(), 30_000);
 
 const commentRefreshRequests = new WeakMap();
 const commentRefreshTimers = new WeakMap();
@@ -559,6 +598,7 @@ async function refreshComments(modal) {
 
       commentList.innerHTML = updatedComments;
       applyCommentAvatarColors(commentList);
+      updateRelativeCommentTimes(commentList);
       for (const state of formState) {
         const form = document.getElementById(state.id);
         if (!form) {

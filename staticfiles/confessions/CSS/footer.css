@@ -31,3 +31,13 @@ html[data-theme="dark"] .site-footer {
 html[data-theme="dark"] .site-footer__copyright {
   color: #a7b1bb;
 }
+
+@media (max-width: 760px) {
+  .site-footer {
+    position: static;
+  }
+
+  body.whisper-body {
+    padding-bottom: 0;
+  }
+}
