@@ -1,7 +1,3 @@
-.auth-layout--login {
-  grid-template-columns: 0.78fr 1.22fr;
-}
-
 .auth-layout--login .auth-field .form-control {
   min-height: 52px;
 }

@@ -214,10 +214,11 @@
 }
 
 .site-nav__language-toggle {
-  min-width: 82px;
+  min-width: 44px;
   border-color: #880085;
   background: #880085;
   color: #fff;
+  font-size: 1.2rem;
 }
 
 .site-nav__action:hover,
