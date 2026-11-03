@@ -16,17 +16,10 @@
 }
 
 .profile-details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px 28px;
   margin: 0;
   padding: 18px 0;
   border-top: 1px solid #e4edf2;
   border-bottom: 1px solid #e4edf2;
-}
-
-.profile-details div {
-  min-width: 105px;
 }
 
 .profile-details dt {
