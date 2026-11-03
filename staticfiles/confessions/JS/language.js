@@ -378,7 +378,19 @@ function changeLanguage(lang, persist = true) {
     const nextLang = lang === "en" ? "km" : "en";
     const languageKey =
       nextLang === "en" ? "language_switch_to_en" : "language_switch_to_km";
-    languageToggle.textContent = translations[lang][languageKey];
+    const flagFile =
+      lang === "km"
+        ? "/static/confessions/images/flags/Flag_of_Cambodia.svg"
+        : "/static/confessions/images/flags/Flag_of_the_United_Kingdom.svg";
+
+    languageToggle.innerHTML = `
+      <img
+        class="site-nav__language-flag"
+        src="${flagFile}"
+        alt=""
+        aria-hidden="true"
+      />
+    `;
     languageToggle.setAttribute(
       "aria-label",
       translations[lang][
@@ -387,6 +399,7 @@ function changeLanguage(lang, persist = true) {
           : "language_aria_switch_to_km"
       ],
     );
+    languageToggle.title = translations[lang][languageKey];
   }
 
   const navToggle = document.getElementById("site-nav-toggle");

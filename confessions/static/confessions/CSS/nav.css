@@ -214,11 +214,25 @@
 }
 
 .site-nav__language-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: 44px;
+  padding: 0 10px;
   border-color: #880085;
   background: #880085;
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.site-nav__language-toggle img {
+  display: block;
+  width: 20px;
+  height: 14px;
+  border-radius: 2px;
+  object-fit: cover;
+  pointer-events: none;
 }
 
 .site-nav__action:hover,
