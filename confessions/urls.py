@@ -18,6 +18,11 @@ urlpatterns = [
         views.comment_list,
         name='comment_list',
     ),
+    path(
+        'confession/<int:confession_id>/comments/<int:comment_id>/delete/',
+        views.delete_comment,
+        name='delete_comment',
+    ),
     path('profile/', views.profile_view, name='profile'),
     path('upvote/<int:pk>/', views.upvote_confession, name='upvote'),
     path('profile/update/', views.update_profile, name='update_profile'),

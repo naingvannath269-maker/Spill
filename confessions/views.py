@@ -393,6 +393,29 @@ def upvote_confession(request, pk):
     })
   return redirect('confession')
 
+
+@login_required
+@require_POST
+def delete_comment(request, confession_id, comment_id):
+  comment = get_object_or_404(
+      Comment,
+      pk=comment_id,
+      confession_id=confession_id,
+      author=request.user,
+  )
+  confession = comment.confession
+  comment.delete()
+
+  if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+    return render(
+        request,
+        'confessions/includes/comment_list.html',
+        {'confession': confession},
+    )
+
+  return redirect(f'{reverse("confession")}#comments-modal-{confession.pk}')
+
+
 @login_required
 def update_profile(request):
     if request.method == 'POST':
@@ -428,7 +451,6 @@ def add_comment(request, confession_id):
             Comment,
             pk=parent_id,
             confession=confession,
-            parent__isnull=True,
         )
 
     Comment.objects.create(

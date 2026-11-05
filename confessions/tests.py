@@ -629,6 +629,47 @@ class CommentTests(TestCase):
         'Keep the reply thread open.',
     )
 
+  def test_author_can_delete_a_comment_with_ajax_and_refresh_the_thread(self):
+    comment = Comment.objects.create(
+        author=self.user,
+        confession=self.confession,
+        content='Delete me.',
+    )
+    self.client.force_login(self.user)
+
+    response = self.client.post(
+        reverse('delete_comment', args=(self.confession.pk, comment.pk)),
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertFalse(Comment.objects.filter(pk=comment.pk).exists())
+    self.assertContains(response, 'No comments yet')
+
+  def test_reply_can_be_posted_to_an_existing_reply(self):
+    parent = Comment.objects.create(
+        author=self.user,
+        confession=self.confession,
+        content='Original comment.',
+    )
+    reply = Comment.objects.create(
+        author=self.user,
+        confession=self.confession,
+        parent=parent,
+        content='Nested reply.',
+    )
+
+    response = self.client.post(
+        reverse('add_comment', args=(self.confession.pk,)),
+        {'content': 'Reply to the reply.', 'parent_id': reply.pk},
+    )
+
+    self.assertEqual(response.status_code, 302)
+    self.assertEqual(
+        Comment.objects.filter(parent=reply).get().content,
+        'Reply to the reply.',
+    )
+
   def test_anonymous_comment_can_still_be_posted(self):
     response = self.client.post(
         reverse('add_comment', args=(self.confession.pk,)),
