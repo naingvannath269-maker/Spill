@@ -10,9 +10,30 @@
   </span>
   <div class="fb-comment-body">
     <div class="fb-comment-bubble">
-      <strong class="fb-comment-author">
-        @{{ comment.author.username|default:'anonymous' }}
-      </strong>
+      <div class="fb-comment-head">
+        <strong class="fb-comment-author">
+          @{{ comment.author.username|default:'anonymous' }}
+        </strong>
+        {% if user.is_authenticated and comment.author_id == user.id %}
+        <form
+          method="post"
+          action="{% url 'delete_comment' confession.pk comment.id %}"
+          class="delete-comment-form"
+        >
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="delete-comment-button"
+            aria-label="Delete comment"
+            title="Delete comment"
+          >
+            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+              <path d="M16 18h32v4h-4v28c0 3.3-2.7 6-6 6H26c-3.3 0-6-2.7-6-6V22h-4v-4zm8 0V12c0-2.2 1.8-4 4-4h8c2.2 0 4 1.8 4 4v6h-16zm4 8v22h4V26h-4zm8 0v22h4V26h-4z" fill="currentColor"/>
+            </svg>
+          </button>
+        </form>
+        {% endif %}
+      </div>
       <div class="fb-comment-text">{{ comment.content }}</div>
     </div>
 
@@ -44,18 +65,42 @@
         </span>
         <div class="fb-comment-body">
           <div class="fb-comment-bubble">
-            <strong class="fb-comment-author">
-              @{{ reply.author.username|default:'anonymous' }}
-            </strong>
+            <div class="fb-comment-head">
+              <strong class="fb-comment-author">
+                @{{ reply.author.username|default:'anonymous' }}
+              </strong>
+              {% if user.is_authenticated and reply.author_id == user.id %}
+              <form
+                method="post"
+                action="{% url 'delete_comment' confession.pk reply.id %}"
+                class="delete-comment-form"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  class="delete-comment-button"
+                  aria-label="Delete reply"
+                  title="Delete reply"
+                >
+                  <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                    <path d="M16 18h32v4h-4v28c0 3.3-2.7 6-6 6H26c-3.3 0-6-2.7-6-6V22h-4v-4zm8 0V12c0-2.2 1.8-4 4-4h8c2.2 0 4 1.8 4 4v6h-16zm4 8v22h4V26h-4zm8 0v22h4V26h-4z" fill="currentColor"/>
+                  </svg>
+                </button>
+              </form>
+              {% endif %}
+            </div>
             <div class="fb-comment-text">{{ reply.content }}</div>
           </div>
-          <time
-            class="fb-comment-time"
-            data-relative-time
-            datetime="{{ reply.created_at|timezone:'Asia/Bangkok'|date:'c' }}"
-          >
-            {{ reply.created_at|timesince }} ago
-          </time>
+
+          <div class="fb-comment-actions">
+            <time
+              class="fb-comment-time"
+              data-relative-time
+              datetime="{{ reply.created_at|timezone:'Asia/Bangkok'|date:'c' }}"
+            >
+              {{ reply.created_at|timesince }} ago
+            </time>
+          </div>
         </div>
       </article>
       {% endfor %}

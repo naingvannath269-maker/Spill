@@ -67,9 +67,10 @@
 }
 
 .confession-modal {
-  width: min(560px, calc(100vw - 28px));
+  width: min(520px, calc(100vw - 28px));
   max-width: none;
   max-height: min(90dvh, 720px);
+  margin: 24px auto;
   padding: 0;
   overflow: visible;
   border: 0;
@@ -88,12 +89,14 @@
 }
 
 .confession-modal__panel {
+  width: min(100%, 420px);
   max-height: min(90dvh, 720px);
+  margin: 0 auto;
   overflow-y: auto;
   padding: clamp(20px, 5vw, 30px);
   border: 1px solid rgba(39, 65, 83, 0.1);
-  border-radius: 17px;
-  background: #fff;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 249, 251, 0.96));
   box-shadow: 0 24px 70px rgba(19, 35, 48, 0.24);
 }
 
@@ -332,6 +335,16 @@ html[data-theme="dark"] .confession-success {
 
   .share-card__button {
     width: 100%;
+  }
+
+  .confession-modal {
+    width: min(100%, 420px);
+    margin: 16px auto;
+  }
+
+  .confession-modal__panel {
+    width: min(100%, 420px);
+    padding: 22px 18px 20px;
   }
 
   .floating-confess {

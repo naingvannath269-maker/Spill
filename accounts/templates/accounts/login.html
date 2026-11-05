@@ -1,23 +1,8 @@
 {% extends 'confessions/base.html' %} {% load static %} {% block page_css %}
-<link rel="stylesheet" href="{% static 'accounts/auth-common.css' %}?v=39" />
 <link rel="stylesheet" href="{% static 'accounts/login.css' %}?v=39" />
 {% endblock %} {% block content %}
-<section class="auth-layout auth-layout--login row g-3" aria-labelledby="login-title">
-  <aside class="auth-story col-12 col-md-5">
-    <span class="auth-eyebrow" data-i18n="auth_eyebrow">LET IT OUT, LEAVE YOUR NAME OUT.</span>
-    <h1 data-i18n="auth_story_heading">Some things feel lighter when shared.</h1>
-    <p data-i18n="auth_story_intro">Make room for the thoughts you have been carrying around.</p>
-    <div class="auth-note" aria-hidden="true">
-      <span class="auth-note-label" data-i18n="auth_note_label">A NOTE TO SELF</span>
-      <span class="auth-note-message" data-i18n="auth_note_message">You can be honest here.</span>
-      <span class="auth-note-mark">•••</span>
-    </div>
-    <span class="auth-story-foot"
-      >SPILL <span>·</span> <span data-i18n="auth_story_footer">READ, WRITE, LET GO</span></span
-    >
-  </aside>
-
-  <div class="auth-panel col-12 col-md-7">
+<section class="auth-layout auth-layout--login" aria-labelledby="login-title">
+  <div class="auth-panel col-12">
     <div class="auth-heading">
       <span class="auth-kicker" data-i18n="login_kicker">GOOD TO HAVE YOU BACK</span>
       <h2 id="login-title" data-i18n="login_title">Welcome back</h2>
