@@ -548,19 +548,21 @@ body.whisper-body {
 
 .auth-layout {
   display: grid;
-  max-width: 960px;
+  width: min(100%, 520px);
+  max-width: 520px;
   min-height: 520px;
-  grid-template-columns: 0.9fr 1.1fr;
+  grid-template-columns: 1fr;
   gap: 14px;
   margin: 8px auto 20px;
   align-items: center;
+  justify-content: center;
   justify-items: center;
   animation: auth-arrive 420ms ease-out both;
 }
 
 .auth-layout--login,
 .auth-layout--signup {
-  grid-template-columns: 0.9fr 1.1fr;
+  grid-template-columns: 1fr;
 }
 
 .auth-story {
@@ -683,6 +685,7 @@ body.whisper-body {
 
 .auth-panel {
   align-self: center;
+  justify-self: center;
   width: min(100%, 420px);
   padding: 22px clamp(18px, 3vw, 32px);
   border: 1px solid rgba(39, 65, 83, 0.08);

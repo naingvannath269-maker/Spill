@@ -473,6 +473,75 @@ document.addEventListener("submit", async (event) => {
 
 document.addEventListener("submit", async (event) => {
   const form = event.target;
+  if (
+    !(form instanceof HTMLFormElement) ||
+    !form.matches(".delete-comment-form")
+  ) {
+    return;
+  }
+
+  event.preventDefault();
+  const modal = form.closest(".comments-modal-overlay");
+  const status = modal?.querySelector("[data-comment-status]");
+  const button = form.querySelector(".delete-comment-button");
+  if (!modal || !status || !button) {
+    return;
+  }
+
+  const confirmationMessage =
+    translations[document.documentElement.lang]?.delete_confession_confirm ??
+    "Are you sure you want to delete this comment?";
+  if (!window.confirm(confirmationMessage)) {
+    return;
+  }
+
+  status.textContent = "";
+  status.classList.remove("is-error");
+  status.removeAttribute("data-i18n");
+  button.disabled = true;
+
+  try {
+    const response = await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        Accept: "text/html",
+      },
+      credentials: "same-origin",
+    });
+
+    if (response.redirected) {
+      window.location.assign(response.url);
+      return;
+    }
+    if (!response.ok) {
+      throw new Error(`Comment deletion failed with status ${response.status}.`);
+    }
+
+    const commentList = modal.querySelector("[data-comment-list]");
+    if (!commentList) {
+      throw new Error("Comment list container is missing.");
+    }
+
+    const updatedComments = await response.text();
+    commentList.innerHTML = updatedComments;
+    applyCommentAvatarColors(commentList);
+    updateRelativeCommentTimes(commentList);
+    changeLanguage(document.documentElement.lang, false);
+  } catch (error) {
+    console.error("Unable to delete comment.", error);
+    status.textContent =
+      translations[document.documentElement.lang]?.delete_confession_error ??
+      "Could not delete this comment. Please try again.";
+    status.classList.add("is-error");
+  } finally {
+    button.disabled = false;
+  }
+});
+
+document.addEventListener("submit", async (event) => {
+  const form = event.target;
   if (!(form instanceof HTMLFormElement) || !form.matches(".fb-comment-form")) {
     return;
   }
