@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="{% static 'accounts/signup.css' %}?v=39" />
 {% endblock %} {% block content %}
 <section class="auth-layout auth-layout--signup" aria-labelledby="signup-title">
-  <div class="auth-panel col-12">
+  <div class="auth-panel">
     <div class="auth-heading">
       <span class="auth-kicker" data-i18n="signup_kicker">YOUR SPACE STARTS HERE</span>
       <h2 id="signup-title" data-i18n="signup_title">Create your account</h2>
@@ -11,14 +11,14 @@
 
     <form method="post" class="auth-form">
       {% csrf_token %} {% for error in form.non_field_errors %}
-      <p class="auth-error" role="alert">{{ error }}</p>
+      <p class="auth-error" role="alert" data-i18n="auth_error_invalid_login">{{ error }}</p>
       {% endfor %} {% for field in form %}
       <div class="auth-field">
         <label for="{{ field.id_for_label }}"{% if field.name == 'username' %} data-i18n="label_username"{% elif field.name == 'email' %} data-i18n="label_email"{% elif field.name == 'password1' %} data-i18n="label_password"{% elif field.name == 'password2' %} data-i18n="label_confirm_password"{% endif %}>{{ field.label }}</label>
         {{ field }} {% if field.help_text %}
         <div class="auth-help">{{ field.help_text }}</div>
         {% endif %} {% for error in field.errors %}
-        <p class="auth-error" role="alert">{{ error }}</p>
+        <p class="auth-error" role="alert" data-i18n="{% if field.name == 'email' %}auth_error_required_email{% elif field.name == 'username' %}auth_error_required_username{% elif field.name == 'password1' %}auth_error_required_password{% elif field.name == 'password2' %}auth_error_password_mismatch{% endif %}">{{ error }}</p>
         {% endfor %}
       </div>
       {% endfor %}
