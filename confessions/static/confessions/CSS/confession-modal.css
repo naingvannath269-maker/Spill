@@ -67,7 +67,7 @@
 }
 
 .confession-modal {
-  width: min(520px, calc(100vw - 28px));
+  width: min(760px, calc(100vw - 28px));
   max-width: none;
   max-height: min(90dvh, 720px);
   margin: 24px auto;
@@ -89,7 +89,7 @@
 }
 
 .confession-modal__panel {
-  width: min(100%, 420px);
+  width: min(100%, 680px);
   max-height: min(90dvh, 720px);
   margin: 0 auto;
   overflow-y: auto;
@@ -151,7 +151,7 @@
 .confession-modal__form textarea {
   display: block;
   width: 100%;
-  min-height: 180px;
+  min-height: 220px;
   resize: vertical;
   padding: 14px;
   border: 1px solid #cddce5;

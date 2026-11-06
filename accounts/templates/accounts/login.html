@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="{% static 'accounts/login.css' %}?v=39" />
 {% endblock %} {% block content %}
 <section class="auth-layout auth-layout--login" aria-labelledby="login-title">
-  <div class="auth-panel col-12">
+  <div class="auth-panel">
     <div class="auth-heading">
       <span class="auth-kicker" data-i18n="login_kicker">GOOD TO HAVE YOU BACK</span>
       <h2 id="login-title" data-i18n="login_title">Welcome back</h2>
@@ -15,12 +15,12 @@
         name="next"
         value="{{ next }}"
       />{% endif %} {% for error in form.non_field_errors %}
-      <p class="auth-error" role="alert">{{ error }}</p>
+      <p class="auth-error" role="alert" data-i18n="auth_error_invalid_login">{{ error }}</p>
       {% endfor %} {% for field in form %}
       <div class="auth-field">
         <label for="{{ field.id_for_label }}"{% if field.name == 'username' %} data-i18n="label_email"{% elif field.name == 'password' %} data-i18n="label_password"{% endif %}>{{ field.label }}</label>
         {{ field }} {% for error in field.errors %}
-        <p class="auth-error" role="alert">{{ error }}</p>
+        <p class="auth-error" role="alert" data-i18n="{% if field.name == 'username' %}auth_error_required_email{% elif field.name == 'password' %}auth_error_required_password{% endif %}">{{ error }}</p>
         {% endfor %}
       </div>
       {% endfor %}
