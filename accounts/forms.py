@@ -18,13 +18,18 @@ class CustomUserCreationForm(UserCreationForm):
       'Your password can’t be entirely numeric.',
   )
 
+  error_messages = {
+      'password_mismatch': 'Passwords do not match.',
+      'duplicate_email': 'This email is already registered.',
+      'duplicate_username': 'This username is already taken.',
+  }
+
   class Meta:
     model = CustomUser
-    fields = ('email', 'username')  # Explicitly declare fields here
+    fields = ('email', 'username')
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
-    # Make username field optional so the system can auto-generate it if left blank
     self.fields['username'].required = False
     self.fields['username'].widget.attrs['placeholder'] = 'Do not use your real name.'
     self.fields['username'].widget.attrs['data-i18n-placeholder'] = 'signup_username_placeholder'
@@ -34,13 +39,26 @@ class CustomUserCreationForm(UserCreationForm):
             'Optional. Leave blank to auto-generate a username.',
         )
     )
+    self.fields['email'].error_messages = {
+        'required': 'Please enter your email.',
+        'invalid': 'Invalid email address.',
+    }
+    self.fields['username'].error_messages = {
+        'required': 'Please enter a username.',
+    }
+    self.fields['password1'].error_messages = {
+        'required': 'Please enter a password.',
+    }
+    self.fields['password2'].error_messages = {
+        'required': 'Please confirm your password.',
+        'password_mismatch': 'Passwords do not match.',
+    }
     self.fields['password1'].help_text = self.password_help_text
     self.fields['password2'].help_text = format_html(
         '<span data-i18n="signup_password_confirmation_hint">{}</span>',
         'Enter the same password as before, for verification.',
     )
 
-    # Add Bootstrap styling to form fields
     for field_name, field in self.fields.items():
       field.widget.attrs['class'] = 'form-control'
 
@@ -55,9 +73,22 @@ class CustomUserCreationForm(UserCreationForm):
 
 class CustomAuthenticationForm(AuthenticationForm):
   username = forms.EmailField(
-      label='Email', widget=forms.EmailInput(attrs={'class': 'form-control'})
+      label='Email',
+      widget=forms.EmailInput(attrs={'class': 'form-control'}),
+      error_messages={
+          'required': 'Please enter your email.',
+          'invalid': 'Invalid email address.',
+      },
   )
+
+  error_messages = {
+      'invalid_login': 'Invalid email or password.',
+      'inactive': 'This account is inactive.',
+  }
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.fields['password'].widget.attrs['class'] = 'form-control'
+    self.fields['password'].error_messages = {
+        'required': 'Please enter your password.',
+    }

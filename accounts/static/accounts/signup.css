@@ -1,14 +1,21 @@
+body:has(.auth-layout) main.whisper-main {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding-top: 36px;
+}
+
 .auth-layout {
-  display: grid;
-  width: min(100%, 520px);
+  display: flex;
+  width: 100%;
   max-width: 520px;
   min-height: calc(100vh - 140px);
-  grid-template-columns: 1fr;
-  gap: 10px;
   margin: 0 auto;
   align-items: center;
   justify-content: center;
-  justify-items: center;
+  padding: 32px 16px;
+  box-sizing: border-box;
   animation: auth-arrive 420ms ease-out both;
 }
 
@@ -203,8 +210,7 @@ html[data-theme="dark"] .auth-layout--signup .form-control::placeholder {
   .auth-layout {
     max-width: 540px;
     min-height: auto;
-    grid-template-columns: 1fr;
-    gap: 12px;
+    padding: 24px 12px;
     margin-top: 8px;
   }
 
@@ -213,6 +219,7 @@ html[data-theme="dark"] .auth-layout--signup .form-control::placeholder {
   }
 
   .auth-panel {
+    width: 100%;
     padding: 30px 24px;
   }
 }
