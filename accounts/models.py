@@ -36,6 +36,9 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
+  first_name = None
+  last_name = None
+
   email = models.EmailField(unique=True)
   username = models.CharField(max_length=150, unique=True, blank=True)
 
@@ -43,6 +46,12 @@ class CustomUser(AbstractUser):
 
   USERNAME_FIELD = 'email'
   REQUIRED_FIELDS = []  # No extra fields required for createsuperuser besides email & password
+
+  def get_full_name(self):
+    return self.username
+
+  def get_short_name(self):
+    return self.username
 
   def __str__(self):
     return self.username
