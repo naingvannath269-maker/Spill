@@ -6,6 +6,18 @@ from .models import CustomUser
 
 
 class CustomUserUsernameGenerationTests(TestCase):
+  def test_name_fields_are_not_part_of_custom_user(self):
+    field_names = {field.name for field in CustomUser._meta.get_fields()}
+
+    self.assertNotIn('first_name', field_names)
+    self.assertNotIn('last_name', field_names)
+
+  def test_name_helpers_use_username(self):
+    user = CustomUser(username='anonymous_1')
+
+    self.assertEqual(user.get_full_name(), 'anonymous_1')
+    self.assertEqual(user.get_short_name(), 'anonymous_1')
+
   def test_signup_help_text_has_translation_keys(self):
     form = CustomUserCreationForm()
 
