@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     ".vercel.app",
+    "spill-au.vercel.app",
 ]
 
 
@@ -83,6 +84,7 @@ TEMPLATES = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.vercel.app",
+    "https://spill-au.vercel.app",
 ]
 
 WSGI_APPLICATION = 'Spill.wsgi.application'
